@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { HomeScreen } from '../screens/home'
 import { HoldOnScreen } from '../screens/hold-on'
 import { HoldOnSettingsScreen } from '../screens/hold-on-settings'
+import { HoldOnInfoScreen } from '../screens/hold-on-info'
 import { IconButtonGroup } from '../components/icon-button-group'
 
 const Stack = createNativeStackNavigator()
@@ -22,7 +23,7 @@ export function RootNavigator() {
                 configs={[
                   {
                     name: 'information-circle-outline',
-                    onPress: () => {}, // TODO: HoldOnInfo
+                    onPress: () => navigation.navigate('HoldOnInfo'),
                     accessibilityLabel: 'Info',
                   },
                   {
@@ -49,6 +50,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="HoldOnSettings"
           component={HoldOnSettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="HoldOnInfo"
+          component={HoldOnInfoScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
