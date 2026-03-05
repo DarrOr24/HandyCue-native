@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   footer: {
-    paddingVertical: 12,
+    paddingTop: 24,
+    paddingBottom: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },

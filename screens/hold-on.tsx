@@ -237,21 +237,21 @@ export function HoldOnScreen() {
           label="Hold time"
           value={holdTime}
           onDecrease={() => setHoldTime((v) => Math.max(5, v - 5))}
-          onIncrease={() => setHoldTime((v) => Math.min(90, v + 5))}
+          onIncrease={() => setHoldTime((v) => Math.min(600, v + 5))}
           disabled={inputsDisabled}
         />
         <NumberInput
           label="Get ready"
           value={getReadyTime}
           onDecrease={() => setGetReadyTime((v) => Math.max(0, v - 1))}
-          onIncrease={() => setGetReadyTime((v) => Math.min(5, v + 1))}
+          onIncrease={() => setGetReadyTime((v) => Math.min(30, v + 1))}
           disabled={inputsDisabled}
         />
         <NumberInput
           label="Sets"
           value={numSets}
           onDecrease={() => setNumSets((v) => Math.max(1, v - 1))}
-          onIncrease={() => setNumSets((v) => Math.min(10, v + 1))}
+          onIncrease={() => setNumSets((v) => Math.min(20, v + 1))}
           disabled={inputsDisabled}
         />
         {numSets > 1 && (
@@ -259,7 +259,7 @@ export function HoldOnScreen() {
             label="Rest time"
             value={restTime}
             onDecrease={() => setRestTime((v) => Math.max(5, v - 5))}
-            onIncrease={() => setRestTime((v) => Math.min(90, v + 5))}
+            onIncrease={() => setRestTime((v) => Math.min(600, v + 5))}
             disabled={inputsDisabled}
           />
         )}
@@ -286,7 +286,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignSelf: 'center',
     maxWidth: 320,
-    gap: 12,
+    columnGap: 12,
+    rowGap: 24,
   },
-  note: { fontSize: 12, color: '#999' },
+  note: { fontSize: 12, color: '#999', fontStyle: 'italic' },
 })

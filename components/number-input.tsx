@@ -34,7 +34,7 @@ export function NumberInput({
 const styles = StyleSheet.create({
   row: {
     width: '48%',
-    marginBottom: 16,
+    marginBottom: 12,
     backgroundColor: '#f8f9fa',
     borderRadius: 10,
     padding: 12,
