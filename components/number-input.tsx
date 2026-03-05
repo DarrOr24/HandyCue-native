@@ -17,7 +17,9 @@ export function NumberInput({
 }: NumberInputProps) {
   return (
     <View style={styles.row}>
-      <Text style={[styles.label, disabled && styles.labelDisabled]}>{label}</Text>
+      <Text style={[styles.label, disabled && styles.labelDisabled]} numberOfLines={2}>
+        {label}
+      </Text>
       <View style={styles.controls}>
         <TouchableOpacity disabled={disabled} onPress={onDecrease}>
           <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
@@ -33,13 +35,13 @@ export function NumberInput({
 
 const styles = StyleSheet.create({
   row: {
-    width: '48%',
-    marginBottom: 12,
+    flex: 1,
+    minWidth: 140,
     backgroundColor: '#f8f9fa',
     borderRadius: 10,
     padding: 12,
   },
-  label: { fontSize: 16, color: '#666', marginBottom: 4 },
+  label: { fontSize: 15, color: '#666', marginBottom: 4, flexShrink: 1 },
   labelDisabled: { color: '#999' },
   controls: { flexDirection: 'row', alignItems: 'center' },
   value: { fontSize: 20, fontWeight: '600', minWidth: 36, textAlign: 'center', color: '#374151' },

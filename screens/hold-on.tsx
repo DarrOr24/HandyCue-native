@@ -283,9 +283,8 @@ const styles = StyleSheet.create({
   inputs: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    alignSelf: 'center',
-    maxWidth: 320,
+    justifyContent: 'space-between',
+    width: '100%',
     columnGap: 12,
     rowGap: 24,
   },

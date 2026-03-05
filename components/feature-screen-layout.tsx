@@ -22,7 +22,7 @@ export function FeatureScreenLayout({
   footer,
 }: FeatureScreenLayoutProps) {
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.content}>
         <View style={styles.timerSection}>{timerContent}</View>
 
@@ -39,15 +39,16 @@ export function FeatureScreenLayout({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, width: '100%', backgroundColor: '#fff' },
   content: {
     flex: 1,
+    width: '100%',
     paddingHorizontal: 16,
     paddingTop: 0,
     paddingBottom: 16,
   },
   timerSection: {
-    marginTop: -36,
+    marginTop: 8,
     marginBottom: 8,
   },
   actionsSection: {
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
-  inputsSection: { flex: 1 },
+  inputsSection: { flex: 1, width: '100%', overflow: 'visible' as const },
   inputsDisabled: {
     opacity: 0.5,
   },
