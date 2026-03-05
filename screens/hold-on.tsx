@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { StyleSheet, Text, View } from 'react-native'
 import { TimerDisplay } from '../components/timer-display'
 import { ActionButton } from '../components/action-button'
@@ -10,6 +11,7 @@ import {
   speak,
   stopSpeech,
   createResetSignal,
+  getStoredVoice,
 } from '../services/cueCoach'
 
 const DEFAULT_HOLD = 60
@@ -34,7 +36,18 @@ export function HoldOnScreen() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const resetSignalRef = useRef(createResetSignal())
   const numSetsRef = useRef(numSets)
+  const voiceRef = useRef<{ identifier: string; name: string } | null>(null)
   numSetsRef.current = numSets
+
+  useFocusEffect(
+    useCallback(() => {
+      getStoredVoice().then((v) => { voiceRef.current = v })
+    }, [])
+  )
+
+  function say(text: string) {
+    speak(text, voiceRef.current)
+  }
 
   useEffect(() => {
     return () => {
@@ -70,6 +83,7 @@ export function HoldOnScreen() {
 
   async function handleStart() {
     resetSignalRef.current.reset()
+    voiceRef.current = await getStoredVoice()
     if (phase === 'done') {
       clearIntervalRef()
       stopSpeech()
@@ -78,13 +92,19 @@ export function HoldOnScreen() {
     setDisplayContent('Ready!')
 
     if (getReadyTime > 0) {
-      await speak('Get ready in...')
+      await Promise.all([
+        say('Get ready in...'),
+        delay(1800),
+      ])
+      if (resetSignalRef.current.isCancelled()) return
       let countdown = getReadyTime
       while (countdown > 0) {
         if (resetSignalRef.current.isCancelled()) return
         setDisplayContent(String(countdown))
-        await speak(String(countdown))
-        await delay(200)
+        await delay(150)
+        if (resetSignalRef.current.isCancelled()) return
+        await say(String(countdown))
+        await delay(1000)
         if (resetSignalRef.current.isCancelled()) return
         countdown--
       }
@@ -98,7 +118,7 @@ export function HoldOnScreen() {
     currentSetRef.current = 1
 
     const msg = numSets > 1 ? `Round 1: Hold for ${holdTime} seconds` : `Hold for ${holdTime} seconds`
-    await speak(msg)
+    await say(msg)
 
     if (resetSignalRef.current.isCancelled()) return
 
@@ -120,13 +140,13 @@ export function HoldOnScreen() {
       const remaining = holdTime - current
 
       if (calloutStep && current % calloutStep === 0 && remaining > 10) {
-        speak(String(current))
+        say(String(current))
       }
       if (holdTime >= 30 && current === Math.floor(holdTime / 2)) {
-        speak('Halfway')
+        say('Halfway')
       }
       if (remaining <= 10 && remaining > 0) {
-        speak(String(remaining))
+        say(String(remaining))
       }
 
       if (current >= holdTime) {
@@ -135,7 +155,7 @@ export function HoldOnScreen() {
         if (isFinal) {
           setPhase('done')
           setDisplayContent('Done!')
-          speak('Session over. Good job!')
+          say('Session over. Good job!')
         } else {
           runRestCycle()
         }
@@ -147,7 +167,7 @@ export function HoldOnScreen() {
     if (resetSignalRef.current.isCancelled()) return
     setPhase('rest')
     setDisplayContent(`Rest ${restTime}`)
-    speak(`Rest for ${restTime} seconds`)
+    say(`Rest for ${restTime} seconds`)
 
     let current = 0
     intervalRef.current = setInterval(() => {
@@ -160,7 +180,7 @@ export function HoldOnScreen() {
 
       const remaining = restTime - current
       if (remaining <= 10 && remaining > 0) {
-        speak(String(remaining))
+        say(String(remaining))
       }
 
       if (current >= restTime) {
@@ -175,7 +195,7 @@ export function HoldOnScreen() {
         const msg = isFinal
           ? `Final round: Hold for ${holdTime} seconds`
           : `Round ${nextSet}: Hold for ${holdTime} seconds`
-        speak(msg)
+        say(msg)
 
         runHoldInterval()
       }

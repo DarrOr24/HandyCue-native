@@ -22,6 +22,7 @@ export function HoldOnInfoScreen() {
       <View style={styles.iconSection}>
         <Text style={styles.sectionTitle}>Header icons explained</Text>
         <IconRow icon="information-circle-outline" text="View feature info" />
+        <IconRow icon="mic-outline" text="Set voice for audio callouts" />
         <IconRow icon="bookmark-outline" text="Save current input as a favorite" />
         <IconRow icon="heart-outline" text="Load your saved favorites" />
         <IconRow icon="settings-outline" text="Adjust default settings" />

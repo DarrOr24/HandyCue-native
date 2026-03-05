@@ -4,6 +4,7 @@ import { HomeScreen } from '../screens/home'
 import { HoldOnScreen } from '../screens/hold-on'
 import { HoldOnSettingsScreen } from '../screens/hold-on-settings'
 import { HoldOnInfoScreen } from '../screens/hold-on-info'
+import { VoiceSetScreen } from '../screens/voice-set'
 import { IconButtonGroup } from '../components/icon-button-group'
 
 const Stack = createNativeStackNavigator()
@@ -25,6 +26,11 @@ export function RootNavigator() {
                     name: 'information-circle-outline',
                     onPress: () => navigation.navigate('HoldOnInfo'),
                     accessibilityLabel: 'Info',
+                  },
+                  {
+                    name: 'mic-outline',
+                    onPress: () => navigation.navigate('VoiceSet'),
+                    accessibilityLabel: 'Set voice',
                   },
                   {
                     name: 'heart-outline',
@@ -55,6 +61,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="HoldOnInfo"
           component={HoldOnInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VoiceSet"
+          component={VoiceSetScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
