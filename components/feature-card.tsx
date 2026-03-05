@@ -4,11 +4,12 @@ interface FeatureCardProps {
   label: string
   subtitle: string
   img: ImageSourcePropType
+  onPress?: () => void
 }
 
-export function FeatureCard({ label, subtitle, img }: FeatureCardProps) {
+export function FeatureCard({ label, subtitle, img, onPress }: FeatureCardProps) {
   return (
-    <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={onPress}>
       <View style={styles.imageWrap}>
         <Image source={img} style={styles.image} resizeMode="cover" />
       </View>
