@@ -5,7 +5,7 @@ import { HoldOnScreen } from '../screens/hold-on'
 import { HoldOnSettingsScreen } from '../screens/hold-on-settings'
 import { HoldOnInfoScreen } from '../screens/hold-on-info'
 import { VoiceSetScreen } from '../screens/voice-set'
-import { IconButtonGroup } from '../components/icon-button-group'
+import { OverflowMenu } from '../components/overflow-menu'
 
 const Stack = createNativeStackNavigator()
 
@@ -20,33 +20,13 @@ export function RootNavigator() {
           options={({ navigation }) => ({
             title: 'HoldOn',
             headerRight: () => (
-              <IconButtonGroup
-                configs={[
-                  {
-                    name: 'information-circle-outline',
-                    onPress: () => navigation.navigate('HoldOnInfo'),
-                    accessibilityLabel: 'Info',
-                  },
-                  {
-                    name: 'mic-outline',
-                    onPress: () => navigation.navigate('VoiceSet'),
-                    accessibilityLabel: 'Set voice',
-                  },
-                  {
-                    name: 'heart-outline',
-                    onPress: () => {}, // TODO: Favorites
-                    accessibilityLabel: 'Favorites',
-                  },
-                  {
-                    name: 'bookmark-outline',
-                    onPress: () => {}, // TODO: Save
-                    accessibilityLabel: 'Save',
-                  },
-                  {
-                    name: 'settings-outline',
-                    onPress: () => navigation.navigate('HoldOnSettings'),
-                    accessibilityLabel: 'Settings',
-                  },
+              <OverflowMenu
+                items={[
+                  { icon: 'information-circle-outline', label: 'Info', onPress: () => navigation.navigate('HoldOnInfo') },
+                  { icon: 'mic-outline', label: 'Set voice', onPress: () => navigation.navigate('VoiceSet') },
+                  { icon: 'heart-outline', label: 'Favorites', onPress: () => {} },
+                  { icon: 'bookmark-outline', label: 'Save', onPress: () => {} },
+                  { icon: 'settings-outline', label: 'Settings', onPress: () => navigation.navigate('HoldOnSettings') },
                 ]}
               />
             ),
