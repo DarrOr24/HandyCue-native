@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HandyCue-native",
-    "slug": "HandyCue-native",
+    "slug": "handycue",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5f749b3c-ddc0-47fa-884f-7e982708e5d5"
+      }
+    },
+    "owner": "darrmorgan"
   }
 }
