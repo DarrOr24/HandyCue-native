@@ -327,6 +327,21 @@ export function EntryBuddyScreen() {
       >
         <View style={styles.inputs}>
           <NumberInput
+            label="Get ready"
+            value={getReadyTime}
+            onDecrease={() =>
+              setGetReadyTime((v) =>
+                Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+              )
+            }
+            onIncrease={() =>
+              setGetReadyTime((v) =>
+                Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+              )
+            }
+            disabled={inputsDisabled}
+          />
+          <NumberInput
             label="Entries"
             value={numEntries}
             onDecrease={() =>
@@ -372,21 +387,6 @@ export function EntryBuddyScreen() {
             disabled={inputsDisabled}
           />
           <NumberInput
-            label="Get ready"
-            value={getReadyTime}
-            onDecrease={() =>
-              setGetReadyTime((v) =>
-                Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
-              )
-            }
-            onIncrease={() =>
-              setGetReadyTime((v) =>
-                Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
-              )
-            }
-            disabled={inputsDisabled}
-          />
-          <NumberInput
             label="Sets"
             value={numSets}
             onDecrease={() =>
@@ -425,6 +425,7 @@ export function EntryBuddyScreen() {
         visible={isSaveModalOpen}
         onSave={saveFavorite}
         onCancel={() => setIsSaveModalOpen(false)}
+        placeholder="e.g. Tuck entries"
       />
 
       <FavoritesModal

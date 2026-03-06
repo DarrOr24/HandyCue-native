@@ -379,17 +379,6 @@ export function HoldOnScreen() {
     >
       <View style={styles.inputs}>
         <NumberInput
-          label="Hold time"
-          value={holdTime}
-          onDecrease={() =>
-            setHoldTime((v) => Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step))
-          }
-          onIncrease={() =>
-            setHoldTime((v) => Math.min(inputSettings.holdTime.max, v + inputSettings.holdTime.step))
-          }
-          disabled={inputsDisabled}
-        />
-        <NumberInput
           label="Get ready"
           value={getReadyTime}
           onDecrease={() =>
@@ -404,6 +393,28 @@ export function HoldOnScreen() {
           }
           disabled={inputsDisabled}
         />
+        <NumberInput
+          label="Hold time"
+          value={holdTime}
+          onDecrease={() =>
+            setHoldTime((v) => Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step))
+          }
+          onIncrease={() =>
+            setHoldTime((v) => Math.min(inputSettings.holdTime.max, v + inputSettings.holdTime.step))
+          }
+          disabled={inputsDisabled}
+        />
+        {holdTime >= 10 && (
+          <NumberInput
+            label="Callout step"
+            value={calloutStep}
+            onDecrease={() => setCalloutStep((v) => Math.max(5, v - 5))}
+            onIncrease={() =>
+              setCalloutStep((v) => Math.min(Math.floor(holdTime / 2), v + 5))
+            }
+            disabled={inputsDisabled}
+          />
+        )}
         <NumberInput
           label="Sets"
           value={numSets}
@@ -432,17 +443,6 @@ export function HoldOnScreen() {
               setRestTime((v) =>
                 Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
               )
-            }
-            disabled={inputsDisabled}
-          />
-        )}
-        {holdTime >= 10 && (
-          <NumberInput
-            label="Callout step"
-            value={calloutStep}
-            onDecrease={() => setCalloutStep((v) => Math.max(5, v - 5))}
-            onIncrease={() =>
-              setCalloutStep((v) => Math.min(Math.floor(holdTime / 2), v + 5))
             }
             disabled={inputsDisabled}
           />
