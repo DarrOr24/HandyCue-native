@@ -340,6 +340,8 @@ export function DrillDJScreen() {
       timeBetweenFloats,
       switchTime,
       timeBetweenSwitches,
+      sayRepCount,
+      metronomeEnabled,
     }
   }
 
@@ -393,6 +395,8 @@ export function DrillDJScreen() {
     if (inp.timeBetweenFloats != null) setTimeBetweenFloats(inp.timeBetweenFloats)
     if (inp.switchTime != null) setSwitchTime(inp.switchTime)
     if (inp.timeBetweenSwitches != null) setTimeBetweenSwitches(inp.timeBetweenSwitches)
+    if (inp.sayRepCount != null) setSayRepCount(inp.sayRepCount)
+    if (inp.metronomeEnabled != null) setMetronomeEnabled(inp.metronomeEnabled)
     setIsFavoritesModalOpen(false)
   }
 

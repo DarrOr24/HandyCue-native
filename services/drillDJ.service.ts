@@ -39,7 +39,7 @@ export async function performPhase(options: {
   await speak(announceLabel, voice)
   if (isCancelled()) return
 
-  if (duration < 2 || !enableMetronome) {
+  if (duration < 5 || !enableMetronome) {
     await delay(duration * 1000)
     return
   }
@@ -51,6 +51,8 @@ export async function performPhase(options: {
     6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
   }
 
+  const halfwayPoint = duration >= 30 ? Math.floor(duration / 2) : -1
+
   for (let i = 0; i < duration; i++) {
     if (isCancelled()) break
 
@@ -60,7 +62,9 @@ export async function performPhase(options: {
       countWord = ordinals[countValue] ?? String(countValue)
     } else {
       const secondsLeft = duration - i
-      if (secondsLeft <= 10) {
+      if (i === halfwayPoint) {
+        countWord = 'halfway'
+      } else if (secondsLeft <= 10 && secondsLeft >= 1) {
         countWord = ordinals[secondsLeft] ?? String(secondsLeft)
       }
     }

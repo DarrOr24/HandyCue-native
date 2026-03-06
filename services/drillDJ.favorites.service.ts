@@ -16,6 +16,8 @@ export type DrillDJInputs = {
   timeBetweenFloats?: number
   switchTime?: number
   timeBetweenSwitches?: number
+  sayRepCount?: boolean
+  metronomeEnabled?: boolean
 }
 
 export { getFavoritesForFeature, checkIsDuplicateName, saveFavoriteForFeature }

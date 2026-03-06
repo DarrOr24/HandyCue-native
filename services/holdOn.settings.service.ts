@@ -35,7 +35,7 @@ export function getFeatureInputSettings(
 
 export const sharedDefaults = {
   inputSettings: {
-    getReadyTime: { min: 0, max: 5, step: 1 },
+    getReadyTime: { min: 0, max: 60, step: 1 },
     restTime: { min: 5, max: 90, step: 5 },
     numSets: { min: 1, max: 10, step: 1 },
   },
@@ -59,7 +59,7 @@ export const holdOnDefaults = {
 } as const
 
 export const SHARED_FIELD_LIMITS = {
-  getReadyTime: { minLimit: 0, maxLimit: 30 },
+  getReadyTime: { minLimit: 0, maxLimit: 60 },
   numSets: { minLimit: 1, maxLimit: 20 },
   restTime: { minLimit: 5, maxLimit: 400 },
 }
