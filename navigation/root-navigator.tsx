@@ -4,9 +4,13 @@ import { HomeScreen } from '../screens/home'
 import { HoldOnScreen } from '../screens/hold-on'
 import { HoldOnSettingsScreen } from '../screens/hold-on-settings'
 import { HoldOnInfoScreen } from '../screens/hold-on-info'
+import { EntryBuddyScreen } from '../screens/entry-buddy'
+import { EntryBuddySettingsScreen } from '../screens/entry-buddy-settings'
+import { EntryBuddyInfoScreen } from '../screens/entry-buddy-info'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { LoginScreen } from '../screens/login'
+
 const Stack = createNativeStackNavigator()
 
 export function RootNavigator() {
@@ -37,6 +41,21 @@ export function RootNavigator() {
         <Stack.Screen
           name="HoldOnInfo"
           component={HoldOnInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EntryBuddy"
+          component={EntryBuddyScreen}
+          options={{ title: 'EntryBuddy' }}
+        />
+        <Stack.Screen
+          name="EntryBuddySettings"
+          component={EntryBuddySettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EntryBuddyInfo"
+          component={EntryBuddyInfoScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

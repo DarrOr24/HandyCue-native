@@ -83,7 +83,10 @@ export function HomeScreen() {
             label={f.label}
             subtitle={f.subtitle}
             img={f.img}
-            onPress={() => f.id === "holdOn" && navigation.navigate("HoldOn")}
+            onPress={() => {
+              if (f.id === "holdOn") navigation.navigate("HoldOn")
+              else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
+            }}
           />
         ))}
 

@@ -12,12 +12,15 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import type { Favorite } from '../../services/holdOn.favorites.service'
-import { deleteFavorite } from '../../services/holdOn.favorites.service'
+import { deleteFavorite } from '../../services/cueCoach.favorites.service'
+
+interface FavoriteItem {
+  name: string
+}
 
 interface FavoritesModalProps {
   visible: boolean
-  favorites: Favorite[]
+  favorites: FavoriteItem[]
   userId: string
   featureKey: string
   onSelect: (name: string) => void

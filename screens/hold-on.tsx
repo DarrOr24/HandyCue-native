@@ -4,8 +4,9 @@ import { StyleSheet, Text, View, Alert } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
 
 import { TimerDisplay } from '../components/timer-display'
-import { ActionButton } from '../components/action-button'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
+import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
+import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { NumberInput } from '../components/number-input'
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
@@ -27,7 +28,6 @@ import {
 } from '../services/holdOn.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile } from '../services/profile.service'
-import { OverflowMenu } from '../components/overflow-menu'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -59,63 +59,25 @@ export function HoldOnScreen() {
   const favorites = getFavoritesForFeature(profile, FEATURE_KEY)
 
   const menuHandlersRef = useRef({
-    setIsSaveModalOpen,
-    setIsFavoritesModalOpen,
+    onInfo: () => navigation.navigate('HoldOnInfo'),
+    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onFavorites: () => setIsFavoritesModalOpen(true),
+    onSave: () => setIsSaveModalOpen(true),
+    onSettings: () => navigation.navigate('HoldOnSettings'),
     session,
   })
   menuHandlersRef.current = {
-    setIsSaveModalOpen,
-    setIsFavoritesModalOpen,
+    onInfo: () => navigation.navigate('HoldOnInfo'),
+    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onFavorites: () => setIsFavoritesModalOpen(true),
+    onSave: () => setIsSaveModalOpen(true),
+    onSettings: () => navigation.navigate('HoldOnSettings'),
     session,
   }
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <OverflowMenu
-          items={[
-            {
-              icon: 'information-circle-outline',
-              label: 'Info',
-              onPress: () => navigation.navigate('HoldOnInfo'),
-            },
-            {
-              icon: 'mic-outline',
-              label: 'Set voice',
-              onPress: () => navigation.navigate('VoiceSet'),
-            },
-            {
-              icon: 'heart-outline',
-              label: 'Favorites',
-              onPress: () => {
-                const { session: s, setIsFavoritesModalOpen: open } = menuHandlersRef.current
-                if (!s?.user?.id) {
-                  Alert.alert('Log in required', 'Please log in to view your favorites.')
-                  return
-                }
-                requestAnimationFrame(() => open(true))
-              },
-            },
-            {
-              icon: 'bookmark-outline',
-              label: 'Save',
-              onPress: () => {
-                const { session: s, setIsSaveModalOpen: open } = menuHandlersRef.current
-                if (!s?.user?.id) {
-                  Alert.alert('Log in required', 'Please log in to save favorites.')
-                  return
-                }
-                requestAnimationFrame(() => open(true))
-              },
-            },
-            {
-              icon: 'settings-outline',
-              label: 'Settings',
-              onPress: () => navigation.navigate('HoldOnSettings'),
-            },
-          ]}
-        />
-      ),
+      headerRight: () => <FeatureOverflowMenu handlersRef={menuHandlersRef} />,
     })
   }, [navigation])
 
@@ -387,20 +349,13 @@ export function HoldOnScreen() {
     <FeatureScreenLayout
       timerContent={<TimerDisplay content={displayContent} />}
       actions={
-        <>
-          <ActionButton
-            icon={startPlayIcon}
-            onPress={onStartPlayPress}
-            disabled={startPlayDisabled}
-            variant="primary"
-          />
-          <ActionButton
-            icon="refresh"
-            onPress={handleReset}
-            disabled={!resetEnabled}
-            variant="danger"
-          />
-        </>
+        <FeatureActionButtons
+          primaryIcon={startPlayIcon}
+          onPrimaryPress={onStartPlayPress}
+          primaryDisabled={startPlayDisabled}
+          onReset={handleReset}
+          resetDisabled={!resetEnabled}
+        />
       }
       inputsDisabled={inputsDisabled}
       footer={<Text style={styles.note}>* All time values are in seconds</Text>}

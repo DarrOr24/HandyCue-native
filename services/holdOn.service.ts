@@ -83,14 +83,16 @@ export function runRestCycle(options: {
   onTick: (elapsed: number, displayContent: string) => void
   onRestComplete: () => void
   isCancelled: () => boolean
+  onCancelled?: () => void
 }): () => void {
-  const { restTime, storedVoice, onTick, onRestComplete, isCancelled } = options
+  const { restTime, storedVoice, onTick, onRestComplete, isCancelled, onCancelled } = options
   const startTime = Date.now()
   let lastElapsed = -1
 
   const interval = setInterval(() => {
     if (isCancelled()) {
       clearInterval(interval)
+      onCancelled?.()
       return
     }
 
