@@ -16,7 +16,7 @@ import {
   getDefaultVoiceIdentifier,
   VOICE_STORAGE_KEY,
   type VoiceOption,
-} from '../services/cueCoach'
+} from '../services/core.service'
 
 export function VoiceSetScreen() {
   const navigation = useNavigation<any>()

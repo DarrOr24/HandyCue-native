@@ -5,7 +5,7 @@ import {
   holdOnDefaults,
   SHARED_FIELD_LIMITS,
   HOLD_TIME_LIMITS,
-} from '../services/cueCoach/cueCoach.settings.service'
+} from '../services/holdOn.settings.service'
 
 export function HoldOnSettingsScreen() {
   const { inputSettings, defaultValues } = holdOnDefaults

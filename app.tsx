@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { View } from 'react-native'
 import { RootNavigator } from './navigation/root-navigator'
 
 export default function App() {
   return (
-    <SafeAreaProvider>
+    <View style={{ flex: 1 }}>
       <RootNavigator />
       <StatusBar style="auto" />
-    </SafeAreaProvider>
+    </View>
   )
 }

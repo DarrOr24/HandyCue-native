@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
+import { ProfileMenu } from "../components/profile-menu";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
 
 const FEATURES = [
   {
@@ -33,6 +36,35 @@ const FEATURES = [
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
+  const { session } = useAuth();
+
+  const profileMenuItems = [
+    {
+      icon: "person-outline" as const,
+      label: "Account",
+      onPress: () => {
+        if (session) {
+          navigation.navigate("Account");
+        } else {
+          Alert.alert("Log in required", "Please log in to manage your account.");
+        }
+      },
+    },
+    session
+      ? {
+          icon: "log-out-outline" as const,
+          label: "Log out",
+          onPress: async () => {
+            await supabase.auth.signOut();
+          },
+          variant: "danger" as const,
+        }
+      : {
+          icon: "log-in-outline" as const,
+          label: "Log in",
+          onPress: () => navigation.navigate("Login"),
+        },
+  ];
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -42,6 +74,7 @@ export function HomeScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.title}>HandyCue</Text>
+          <ProfileMenu items={profileMenuItems} />
         </View>
 
         {FEATURES.map((f) => (
@@ -64,7 +97,12 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#fff" },
   container: { flex: 1, backgroundColor: "#fff" },
   content: { padding: 20, paddingBottom: 40 },
-  header: { marginBottom: 24 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
   title: { fontSize: 28, fontWeight: "bold" },
   subtitle: { fontSize: 16, color: "#666", marginTop: 4 },
   sectionTitle: { fontSize: 16, fontWeight: "600", marginBottom: 12 },

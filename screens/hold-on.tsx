@@ -8,13 +8,16 @@ import { ActionButton } from '../components/action-button'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { NumberInput } from '../components/number-input'
 import {
-  delay,
-  formatTime,
-  speak,
   stopSpeech,
   createResetSignal,
   getStoredVoice,
-} from '../services/cueCoach'
+  speak,
+} from '../services/core.service'
+import {
+  runGetReadyCountdown,
+  runHoldInterval,
+  runRestCycle,
+} from '../services/holdOn.service'
 
 const DEFAULT_HOLD = 60
 const DEFAULT_GET_READY = 5
@@ -23,8 +26,6 @@ const DEFAULT_REST = 60
 const DEFAULT_CALLOUT_STEP = 10
 
 export function HoldOnScreen() {
-  // Keeps the screen awake while this screen is open.
-  // Simple, reliable, no conditional hook issues.
   useKeepAwake()
 
   const [holdTime, setHoldTime] = useState(DEFAULT_HOLD)
@@ -39,7 +40,7 @@ export function HoldOnScreen() {
   const [isPaused, setIsPaused] = useState(false)
 
   const currentSetRef = useRef(1)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const cleanupRef = useRef<(() => void) | null>(null)
   const resetSignalRef = useRef(createResetSignal())
   const numSetsRef = useRef(numSets)
   const voiceRef = useRef<{ identifier: string; name: string } | null>(null)
@@ -54,13 +55,9 @@ export function HoldOnScreen() {
     }, [])
   )
 
-  function say(text: string) {
-    speak(text, voiceRef.current)
-  }
-
   useEffect(() => {
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (cleanupRef.current) cleanupRef.current()
       stopSpeech()
     }
   }, [])
@@ -68,12 +65,12 @@ export function HoldOnScreen() {
   useEffect(() => {
     const max = Math.floor(holdTime / 2)
     if (calloutStep > max && max >= 5) setCalloutStep(max)
-  }, [holdTime]) // intentionally not including calloutStep to avoid loop
+  }, [holdTime])
 
   function clearIntervalRef() {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
+    if (cleanupRef.current) {
+      cleanupRef.current()
+      cleanupRef.current = null
     }
   }
 
@@ -100,30 +97,17 @@ export function HoldOnScreen() {
     setPhase('getReady')
     setDisplayContent('Ready!')
 
-    if (getReadyTime > 0) {
-      await Promise.all([say('Get ready in...'), delay(1800)])
-      if (resetSignalRef.current.isCancelled()) return
-
-      let countdown = getReadyTime
-      while (countdown > 0) {
-        if (resetSignalRef.current.isCancelled()) return
-
-        setDisplayContent(String(countdown))
-        await delay(150)
-        if (resetSignalRef.current.isCancelled()) return
-
-        await say(String(countdown))
-        await delay(1000)
-        if (resetSignalRef.current.isCancelled()) return
-
-        countdown--
-      }
-    }
+    await runGetReadyCountdown({
+      getReadyTime,
+      storedVoice: voiceRef.current,
+      onTick: setDisplayContent,
+      isCancelled: () => resetSignalRef.current.isCancelled(),
+    })
 
     if (resetSignalRef.current.isCancelled()) return
 
     setPhase('hold')
-    setDisplayContent(formatTime(0))
+    setDisplayContent('0:00')
     setElapsed(0)
     currentSetRef.current = 1
 
@@ -132,96 +116,69 @@ export function HoldOnScreen() {
         ? `Round 1: Hold for ${holdTime} seconds`
         : `Hold for ${holdTime} seconds`
 
-    await say(msg)
+    await speak(msg, voiceRef.current)
     if (resetSignalRef.current.isCancelled()) return
 
-    runHoldInterval()
+    startHoldInterval()
   }
 
-  function runHoldInterval(startAt = 0) {
+  function startHoldInterval(startAt = 0) {
     if (resetSignalRef.current.isCancelled()) return
 
-    let current = startAt
-
-    intervalRef.current = setInterval(() => {
-      if (resetSignalRef.current.isCancelled()) {
-        clearIntervalRef()
-        return
-      }
-
-      current++
-      setElapsed(current)
-      setDisplayContent(formatTime(current))
-
-      const remaining = holdTime - current
-
-      if (calloutStep && current % calloutStep === 0 && remaining > 10) {
-        say(String(current))
-      }
-      if (holdTime >= 30 && current === Math.floor(holdTime / 2)) {
-        say('Halfway')
-      }
-      if (remaining <= 10 && remaining > 0) {
-        say(String(remaining))
-      }
-
-      if (current >= holdTime) {
-        clearIntervalRef()
-
+    cleanupRef.current = runHoldInterval({
+      holdTime,
+      calloutStep,
+      storedVoice: voiceRef.current,
+      startAt,
+      onTick: (e, display) => {
+        setElapsed(e)
+        setDisplayContent(display)
+      },
+      onHoldComplete: () => {
+        if (resetSignalRef.current.isCancelled()) return
         const isFinal = currentSetRef.current >= numSetsRef.current
         if (isFinal) {
           setPhase('done')
           setDisplayContent('Done!')
-          say('Session over. Good job!')
+          speak('Session over. Good job!', voiceRef.current)
         } else {
-          runRestCycle()
+          startRestCycle()
         }
-      }
-    }, 1000)
+      },
+      isCancelled: () => resetSignalRef.current.isCancelled(),
+    })
   }
 
-  function runRestCycle() {
+  function startRestCycle() {
     if (resetSignalRef.current.isCancelled()) return
 
     setPhase('rest')
     setDisplayContent(`Rest ${restTime}`)
-    say(`Rest for ${restTime} seconds`)
+    speak(`Rest for ${restTime} seconds`, voiceRef.current)
 
-    let current = 0
-
-    intervalRef.current = setInterval(() => {
-      if (resetSignalRef.current.isCancelled()) {
-        clearIntervalRef()
-        return
-      }
-
-      current++
-      setDisplayContent(formatTime(current))
-
-      const remaining = restTime - current
-      if (remaining <= 10 && remaining > 0) {
-        say(String(remaining))
-      }
-
-      if (current >= restTime) {
-        clearIntervalRef()
-
+    cleanupRef.current = runRestCycle({
+      restTime,
+      storedVoice: voiceRef.current,
+      onTick: (_, display) => setDisplayContent(display),
+      onRestComplete: () => {
+        if (resetSignalRef.current.isCancelled()) return
         currentSetRef.current += 1
         const nextSet = currentSetRef.current
         const isFinal = nextSet >= numSetsRef.current
 
         setPhase('hold')
         setElapsed(0)
-        setDisplayContent(formatTime(0))
+        setDisplayContent('0:00')
 
         const msg = isFinal
           ? `Final round: Hold for ${holdTime} seconds`
           : `Round ${nextSet}: Hold for ${holdTime} seconds`
 
-        say(msg)
-        runHoldInterval()
-      }
-    }, 1000)
+        speak(msg, voiceRef.current)
+        startHoldInterval()
+      },
+      isCancelled: () => resetSignalRef.current.isCancelled(),
+    })
   }
 
   function handlePause() {
@@ -232,8 +189,7 @@ export function HoldOnScreen() {
 
   function handleResume() {
     setIsPaused(false)
-    if (phase === 'hold') runHoldInterval(elapsed)
-    // If you want resume during rest too, tell me and I’ll adjust.
+    if (phase === 'hold') startHoldInterval(elapsed)
   }
 
   const isActive = phase === 'getReady' || phase === 'hold' || phase === 'rest'

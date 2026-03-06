@@ -30,7 +30,15 @@ EXPO_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-### 4. Run the app
+### 4. Supabase Storage (for profile avatars)
+
+Create a storage bucket named `avatars` in your Supabase project:
+
+1. Storage → New bucket → name: `avatars`
+2. Make it **public**
+3. Run the policies in `supabase-storage-policies.sql` (Supabase Dashboard → SQL Editor)
+
+### 5. Run the app
 
 ```bash
 npm run ios     # iOS Simulator

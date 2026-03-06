@@ -1,9 +1,8 @@
 /**
- * Default settings for cue coach features.
- * Mirrors the frontend structure (min, max, step, defaultValues).
+ * Default settings for HoldOn feature.
  */
 
-export const sharedCueCoachDefaults = {
+export const sharedDefaults = {
   inputSettings: {
     getReadyTime: { min: 0, max: 5, step: 1 },
     restTime: { min: 5, max: 90, step: 5 },
@@ -17,13 +16,13 @@ export const sharedCueCoachDefaults = {
 }
 
 export const holdOnDefaults = {
-  ...sharedCueCoachDefaults,
+  ...sharedDefaults,
   inputSettings: {
-    ...sharedCueCoachDefaults.inputSettings,
+    ...sharedDefaults.inputSettings,
     holdTime: { min: 5, max: 90, step: 5 },
   },
   defaultValues: {
-    ...sharedCueCoachDefaults.defaultValues,
+    ...sharedDefaults.defaultValues,
     holdTime: 60,
   },
 }

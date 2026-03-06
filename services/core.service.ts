@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const VOICE_STORAGE_KEY = '@handycue/voice'
 
 /**
- * Shared cue coach service - used by HoldOn, EntryBuddy, ShapeJam, DrillDJ.
- * Mirrors structure of HandyCue-frontend services/cueCoach/cueCoach.service.js
+ * Core shared service - voice, speech, timing utilities.
+ * Used by HoldOn, voice settings, and future features.
  */
 
 export function delay(ms: number): Promise<void> {
