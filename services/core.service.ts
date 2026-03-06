@@ -55,13 +55,18 @@ export async function getStoredVoice(): Promise<StoredVoice | null> {
 export { VOICE_STORAGE_KEY }
 
 /** iOS uses identifier, Android uses name for voice matching. */
-export function speak(text: string, storedVoice?: StoredVoice | null): Promise<void> {
+export function speak(
+  text: string,
+  storedVoice?: StoredVoice | null,
+  opts?: { rate?: number }
+): Promise<void> {
   if (!text) return Promise.resolve()
   return new Promise((resolve) => {
-    const options: { onDone: () => void; voice?: string } = { onDone: resolve }
+    const options: { onDone: () => void; voice?: string; rate?: number } = { onDone: resolve }
     if (storedVoice) {
       options.voice = Platform.OS === 'ios' ? storedVoice.identifier : storedVoice.name
     }
+    if (opts?.rate != null) options.rate = opts.rate
     Speech.speak(text, options)
   })
 }

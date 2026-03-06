@@ -10,6 +10,9 @@ import { EntryBuddyInfoScreen } from '../screens/entry-buddy-info'
 import { ShapeJamScreen } from '../screens/shape-jam'
 import { ShapeJamInfoScreen } from '../screens/shape-jam-info'
 import { ShapeJamSettingsScreen } from '../screens/shape-jam-settings'
+import { DrillDJScreen } from '../screens/drill-dj'
+import { DrillDJInfoScreen } from '../screens/drill-dj-info'
+import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { LoginScreen } from '../screens/login'
@@ -74,6 +77,21 @@ export function RootNavigator() {
         <Stack.Screen
           name="ShapeJamInfo"
           component={ShapeJamInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DrillDJ"
+          component={DrillDJScreen}
+          options={{ title: 'DrillDJ' }}
+        />
+        <Stack.Screen
+          name="DrillDJSettings"
+          component={DrillDJSettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DrillDJInfo"
+          component={DrillDJInfoScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

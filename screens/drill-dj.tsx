@@ -1,0 +1,685 @@
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+  Switch,
+} from 'react-native'
+import { useKeepAwake } from 'expo-keep-awake'
+import { Ionicons } from '@expo/vector-icons'
+
+import { TimerDisplay } from '../components/timer-display'
+import { FeatureScreenLayout } from '../components/feature-screen-layout'
+import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
+import { FeatureHeaderRight } from '../components/feature-header-right'
+import { FeatureActionButtons } from '../components/feature-action-buttons'
+import { NumberInput } from '../components/number-input'
+import { SelectInput, type SelectOption } from '../components/select-input'
+
+import { stopSpeech, createResetSignal, speak } from '../services/core.service'
+import { getVoice } from '../services/voice.service'
+import { runGetReadyCountdown, runRestCycle, performPhase } from '../services/drillDJ.service'
+import {
+  drillDJDefaults,
+  getFeatureInputSettings,
+  type DrillDJUserSettings,
+} from '../services/drillDJ.settings.service'
+import {
+  getFavoritesForFeature,
+  checkIsDuplicateName,
+  saveFavoriteForFeature,
+  type DrillDJInputs,
+} from '../services/drillDJ.favorites.service'
+import { useAuth } from '../contexts/AuthContext'
+import { getProfile } from '../services/profile.service'
+import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
+import { FavoritesModal } from '../components/Modals/FavoritesModal'
+
+const FEATURE_KEY = 'drillDJ'
+
+type DrillType = 'slide' | 'float' | 'switch'
+
+const DRILL_OPTIONS: SelectOption[] = [
+  { value: 'slide', label: 'Slide' },
+  { value: 'float', label: 'Float' },
+  { value: 'switch', label: 'Switch' },
+]
+
+export function DrillDJScreen() {
+  useKeepAwake()
+  const navigation = useNavigation<any>()
+  const { session } = useAuth()
+
+  const [getReadyTime, setGetReadyTime] = useState<number>(drillDJDefaults.defaultValues.getReadyTime)
+  const [numReps, setNumReps] = useState<number>(drillDJDefaults.defaultValues.numReps)
+  const [numSets, setNumSets] = useState<number>(drillDJDefaults.defaultValues.numSets)
+  const [restTime, setRestTime] = useState<number>(drillDJDefaults.defaultValues.restTime)
+  const [drillType, setDrillType] = useState<DrillType>('slide')
+  const [sayRepCount, setSayRepCount] = useState(true)
+  const [metronomeEnabled, setMetronomeEnabled] = useState(false)
+
+  // Slide
+  const [slideTime, setSlideTime] = useState<number>(drillDJDefaults.defaultValues.slideTime)
+  const [timeBetweenSlides, setTimeBetweenSlides] = useState<number>(drillDJDefaults.defaultValues.timeBetweenSlides)
+  // Float
+  const [floatTime, setFloatTime] = useState<number>(drillDJDefaults.defaultValues.floatTime)
+  const [timeBetweenFloats, setTimeBetweenFloats] = useState<number>(drillDJDefaults.defaultValues.timeBetweenFloats)
+  // Switch
+  const [switchTime, setSwitchTime] = useState<number>(drillDJDefaults.defaultValues.switchTime)
+  const [timeBetweenSwitches, setTimeBetweenSwitches] = useState<number>(drillDJDefaults.defaultValues.timeBetweenSwitches)
+
+  const [inputSettings, setInputSettings] = useState(
+    drillDJDefaults.inputSettings as typeof drillDJDefaults.inputSettings
+  )
+  const [profile, setProfile] = useState<Awaited<ReturnType<typeof getProfile>>>(null)
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
+  const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false)
+
+  const [displayContent, setDisplayContent] = useState<string | null>(null)
+  const [phase, setPhase] = useState<'idle' | 'getReady' | 'drill' | 'rest' | 'done'>('idle')
+
+  const resetSignalRef = useRef(createResetSignal())
+  const voiceRef = useRef<{ identifier: string; name: string } | null>(null)
+  const currentSetRef = useRef(1)
+
+  const favorites = getFavoritesForFeature<DrillDJInputs>(profile, FEATURE_KEY)
+
+  const menuHandlersRef = useRef({
+    onInfo: () => navigation.navigate('DrillDJInfo'),
+    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onFavorites: () => setIsFavoritesModalOpen(true),
+    onSave: () => setIsSaveModalOpen(true),
+    onSettings: () => navigation.navigate('DrillDJSettings'),
+    session,
+  })
+  menuHandlersRef.current = {
+    onInfo: () => navigation.navigate('DrillDJInfo'),
+    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onFavorites: () => setIsFavoritesModalOpen(true),
+    onSave: () => setIsSaveModalOpen(true),
+    onSettings: () => navigation.navigate('DrillDJSettings'),
+    session,
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <FeatureHeaderRight
+          session={session}
+          overflowMenu={<FeatureOverflowMenu handlersRef={menuHandlersRef} />}
+        />
+      ),
+    })
+  }, [navigation, session])
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!session?.user?.id) {
+        setProfile(null)
+        setInputSettings(drillDJDefaults.inputSettings)
+        return
+      }
+      getProfile(session.user.id)
+        .then((p) => {
+          setProfile(p)
+          const userSettings = (p?.settings as Record<string, unknown>)?.drillDJ as
+            | DrillDJUserSettings
+            | null
+            | undefined
+          const { inputSettings: is, defaultValues } = getFeatureInputSettings(
+            userSettings,
+            drillDJDefaults
+          )
+          const merged = { ...drillDJDefaults.inputSettings, ...is } as typeof drillDJDefaults.inputSettings
+          setInputSettings(merged)
+          const dv = defaultValues as Record<string, number>
+          setGetReadyTime((dv.getReadyTime as number) ?? drillDJDefaults.defaultValues.getReadyTime)
+          setNumReps((dv.numReps as number) ?? drillDJDefaults.defaultValues.numReps)
+          setNumSets((dv.numSets as number) ?? drillDJDefaults.defaultValues.numSets)
+          setRestTime((dv.restTime as number) ?? drillDJDefaults.defaultValues.restTime)
+          setSlideTime((dv.slideTime as number) ?? drillDJDefaults.defaultValues.slideTime)
+          setTimeBetweenSlides((dv.timeBetweenSlides as number) ?? drillDJDefaults.defaultValues.timeBetweenSlides)
+          setFloatTime((dv.floatTime as number) ?? drillDJDefaults.defaultValues.floatTime)
+          setTimeBetweenFloats((dv.timeBetweenFloats as number) ?? drillDJDefaults.defaultValues.timeBetweenFloats)
+          setSwitchTime((dv.switchTime as number) ?? drillDJDefaults.defaultValues.switchTime)
+          setTimeBetweenSwitches((dv.timeBetweenSwitches as number) ?? drillDJDefaults.defaultValues.timeBetweenSwitches)
+        })
+        .catch(() => {
+          setProfile(null)
+          setInputSettings(drillDJDefaults.inputSettings)
+        })
+    }, [session?.user?.id])
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+      getVoice(session?.user?.id).then((v) => {
+        voiceRef.current = v
+      })
+    }, [session?.user?.id])
+  )
+
+  useEffect(() => {
+    return () => {
+      stopSpeech()
+    }
+  }, [])
+
+  const inputsDisabled = phase !== 'idle' && phase !== 'done'
+  const sessionDone = phase === 'done'
+
+  async function runDrillSets() {
+    const numSetsVal = numSets
+    const drillNameMap = { slide: 'Slide Drill', float: 'Float Drill', switch: 'Switch Drill' }
+    const displayMap = { slide: 'Slide', float: 'Float', switch: 'Switch' }
+
+    for (let set = 1; set <= numSetsVal; set++) {
+      if (resetSignalRef.current.isCancelled()) return
+      const isFinal = set === numSetsVal
+
+      if (numSetsVal === 1) {
+        setDisplayContent(displayMap[drillType])
+        await speak(drillNameMap[drillType], voiceRef.current)
+      } else {
+        const ordinals = ['st', 'nd', 'rd']
+        const suffix = ordinals[set - 1] ?? 'th'
+        const label = isFinal
+          ? `Final Set: ${drillNameMap[drillType]}`
+          : `${set}${suffix} Set: ${drillNameMap[drillType]}`
+        setDisplayContent(displayMap[drillType])
+        await speak(label, voiceRef.current)
+      }
+      if (resetSignalRef.current.isCancelled()) return
+
+      await runDrill()
+      if (resetSignalRef.current.isCancelled()) return
+
+      if (!isFinal) {
+        await new Promise<void>((resolve) => {
+          runRestCycle({
+            restTime,
+            storedVoice: voiceRef.current,
+            onTick: (_, display) => setDisplayContent(display),
+            onRestComplete: resolve,
+            isCancelled: () => resetSignalRef.current.isCancelled(),
+            onCancelled: resolve,
+          })
+        })
+      }
+    }
+
+    if (resetSignalRef.current.isCancelled()) return
+    await speak('Session over. Good job!', voiceRef.current)
+    if (resetSignalRef.current.isCancelled()) return
+    setPhase('done')
+    setDisplayContent('')
+  }
+
+  async function runDrill() {
+    const runPhase = (opts: {
+      label: string
+      displayLabel: string
+      duration: number
+    }) =>
+      performPhase({
+        ...opts,
+        setDisplayStep: setDisplayContent,
+        voice: voiceRef.current,
+        enableMetronome: metronomeEnabled,
+        isCancelled: () => resetSignalRef.current.isCancelled(),
+      })
+
+    if (sayRepCount) {
+      setDisplayContent(`${numReps}!`)
+      await speak(`${numReps} ${numReps === 1 ? 'rep' : 'reps'}`, voiceRef.current)
+      if (resetSignalRef.current.isCancelled()) return
+    }
+
+    if (drillType === 'slide') {
+      for (let i = 1; i <= numReps; i++) {
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: `Slide down ${i}`,
+          displayLabel: `Down ${i}`,
+          duration: slideTime,
+        })
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: 'Hold',
+          displayLabel: `Hold ${i}`,
+          duration: timeBetweenSlides,
+        })
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: 'Slide up',
+          displayLabel: `Up ${i}`,
+          duration: slideTime,
+        })
+      }
+    } else if (drillType === 'float') {
+      for (let i = 1; i <= numReps; i++) {
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: `Float ${i}`,
+          displayLabel: `Float ${i}`,
+          duration: floatTime,
+        })
+        if (resetSignalRef.current.isCancelled()) return
+        setDisplayContent('Return')
+        await speak('Return', voiceRef.current)
+        if (resetSignalRef.current.isCancelled()) return
+        await new Promise((r) => setTimeout(r, timeBetweenFloats * 1000))
+      }
+    } else {
+      for (let i = 1; i <= numReps; i++) {
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: 'Hold',
+          displayLabel: 'Hold',
+          duration: timeBetweenSwitches,
+        })
+        if (resetSignalRef.current.isCancelled()) return
+        await runPhase({
+          label: `Switch ${i}`,
+          displayLabel: `Switch ${i}`,
+          duration: switchTime,
+        })
+      }
+    }
+  }
+
+  async function handleStart() {
+    if (inputsDisabled) return
+    resetSignalRef.current.reset()
+    voiceRef.current = await getVoice(session?.user?.id)
+
+    if (phase === 'done') {
+      setPhase('idle')
+      setDisplayContent(null)
+    }
+
+    setPhase('getReady')
+    setDisplayContent('Ready!')
+
+    await runGetReadyCountdown({
+      getReadyTime,
+      storedVoice: voiceRef.current,
+      onTick: setDisplayContent,
+      isCancelled: () => resetSignalRef.current.isCancelled(),
+    })
+
+    if (resetSignalRef.current.isCancelled()) return
+
+    setPhase('drill')
+    setDisplayContent('')
+    currentSetRef.current = 1
+
+    runDrillSets()
+  }
+
+  function handleReset() {
+    resetSignalRef.current.signal()
+    stopSpeech()
+    setPhase('idle')
+    setDisplayContent(null)
+  }
+
+  function getCurrentInputs(): DrillDJInputs {
+    return {
+      getReadyTime,
+      numReps,
+      numSets,
+      restTime,
+      drillType,
+      slideTime,
+      timeBetweenSlides,
+      floatTime,
+      timeBetweenFloats,
+      switchTime,
+      timeBetweenSwitches,
+    }
+  }
+
+  function saveFavorite(name: string) {
+    const trimmed = name.trim()
+    const isDuplicate = checkIsDuplicateName(trimmed, favorites)
+    if (isDuplicate) {
+      Alert.alert(
+        'Replace favorite?',
+        `There is already a favorite named "${trimmed}". Replace it?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Replace', onPress: () => doSaveFavorite(trimmed) },
+        ]
+      )
+    } else {
+      doSaveFavorite(trimmed)
+    }
+  }
+
+  async function doSaveFavorite(name: string) {
+    if (!session?.user?.id) return
+    try {
+      await saveFavoriteForFeature({
+        userId: session.user.id,
+        featureKey: FEATURE_KEY,
+        favoriteName: name,
+        inputs: getCurrentInputs(),
+      })
+      setIsSaveModalOpen(false)
+      const p = await getProfile(session.user.id)
+      setProfile(p)
+      Alert.alert('Saved', 'Favorite saved!')
+    } catch (err) {
+      Alert.alert('Error', (err as Error)?.message ?? 'Failed to save favorite.')
+    }
+  }
+
+  function loadFavorite(name: string) {
+    const fav = favorites.find((f) => f.name === name)
+    if (!fav) return
+    const inp = fav.inputs
+    setGetReadyTime(inp.getReadyTime)
+    setNumReps(inp.numReps)
+    setNumSets(inp.numSets)
+    setRestTime(inp.restTime)
+    setDrillType(inp.drillType ?? 'slide')
+    if (inp.slideTime != null) setSlideTime(inp.slideTime)
+    if (inp.timeBetweenSlides != null) setTimeBetweenSlides(inp.timeBetweenSlides)
+    if (inp.floatTime != null) setFloatTime(inp.floatTime)
+    if (inp.timeBetweenFloats != null) setTimeBetweenFloats(inp.timeBetweenFloats)
+    if (inp.switchTime != null) setSwitchTime(inp.switchTime)
+    if (inp.timeBetweenSwitches != null) setTimeBetweenSwitches(inp.timeBetweenSwitches)
+    setIsFavoritesModalOpen(false)
+  }
+
+  const timerContent =
+    phase === 'done' ? (
+      <TimerDisplay content={<Ionicons name="trophy" size={48} color="#5B9A8B" />} />
+    ) : phase === 'idle' && !displayContent ? (
+      <TimerDisplay content={<Ionicons name="musical-notes-outline" size={48} color="#5B9A8B" />} />
+    ) : (
+      <TimerDisplay content={displayContent} />
+    )
+
+  return (
+    <>
+      <View style={styles.screenWrapper}>
+        <FeatureScreenLayout
+          timerContent={timerContent}
+          actions={
+            <FeatureActionButtons
+              primaryIcon="play"
+              onPrimaryPress={handleStart}
+              primaryDisabled={inputsDisabled}
+              onReset={handleReset}
+              resetDisabled={!sessionDone && phase === 'idle'}
+            />
+          }
+          inputsDisabled={inputsDisabled}
+          footer={<Text style={styles.note}>* All time values are in seconds</Text>}
+        >
+          <View style={styles.inputs}>
+            <View style={styles.toggleRow}>
+              <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
+                Say reps
+              </Text>
+              <Switch
+                value={sayRepCount}
+                onValueChange={setSayRepCount}
+                disabled={inputsDisabled}
+                trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                thumbColor="#fff"
+              />
+            </View>
+            <View style={styles.toggleRow}>
+              <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
+                Voice count
+              </Text>
+              <Switch
+                value={metronomeEnabled}
+                onValueChange={setMetronomeEnabled}
+                disabled={inputsDisabled}
+                trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                thumbColor="#fff"
+              />
+            </View>
+            <NumberInput
+                label="Get ready"
+              value={getReadyTime}
+              onDecrease={() =>
+                setGetReadyTime((v) =>
+                  Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+                )
+              }
+              onIncrease={() =>
+                setGetReadyTime((v) =>
+                  Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+                )
+              }
+              disabled={inputsDisabled}
+            />
+            <NumberInput
+              label="Reps"
+              value={numReps}
+              onDecrease={() =>
+                setNumReps((v) =>
+                  Math.max(inputSettings.numReps.min, v - inputSettings.numReps.step)
+                )
+              }
+              onIncrease={() =>
+                setNumReps((v) =>
+                  Math.min(inputSettings.numReps.max, v + inputSettings.numReps.step)
+                )
+              }
+              disabled={inputsDisabled}
+            />
+
+            <SelectInput
+              label="Drill type"
+              options={DRILL_OPTIONS}
+              value={drillType}
+              onChange={(v) => setDrillType(v as DrillType)}
+              disabled={inputsDisabled}
+            />
+
+            {drillType === 'slide' && (
+              <>
+                <NumberInput
+                  label="Slide time"
+                  value={slideTime}
+                  onDecrease={() =>
+                    setSlideTime((v) =>
+                      Math.max(inputSettings.slideTime.min, v - inputSettings.slideTime.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setSlideTime((v) =>
+                      Math.min(inputSettings.slideTime.max, v + inputSettings.slideTime.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+                <NumberInput
+                  label="Hold time"
+                    value={timeBetweenSlides}
+                  onDecrease={() =>
+                    setTimeBetweenSlides((v) =>
+                      Math.max(inputSettings.timeBetweenSlides.min, v - inputSettings.timeBetweenSlides.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setTimeBetweenSlides((v) =>
+                      Math.min(inputSettings.timeBetweenSlides.max, v + inputSettings.timeBetweenSlides.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+              </>
+            )}
+
+            {drillType === 'float' && (
+              <>
+                <NumberInput
+                  label="Float time"
+                  value={floatTime}
+                  onDecrease={() =>
+                    setFloatTime((v) =>
+                      Math.max(inputSettings.floatTime.min, v - inputSettings.floatTime.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setFloatTime((v) =>
+                      Math.min(inputSettings.floatTime.max, v + inputSettings.floatTime.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+                <NumberInput
+                  label="Time between"
+                  value={timeBetweenFloats}
+                  onDecrease={() =>
+                    setTimeBetweenFloats((v) =>
+                      Math.max(inputSettings.timeBetweenFloats.min, v - inputSettings.timeBetweenFloats.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setTimeBetweenFloats((v) =>
+                      Math.min(inputSettings.timeBetweenFloats.max, v + inputSettings.timeBetweenFloats.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+              </>
+            )}
+
+            {drillType === 'switch' && (
+              <>
+                <NumberInput
+                  label="Time between"
+                  value={timeBetweenSwitches}
+                  onDecrease={() =>
+                    setTimeBetweenSwitches((v) =>
+                      Math.max(inputSettings.timeBetweenSwitches.min, v - inputSettings.timeBetweenSwitches.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setTimeBetweenSwitches((v) =>
+                      Math.min(inputSettings.timeBetweenSwitches.max, v + inputSettings.timeBetweenSwitches.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+                <NumberInput
+                  label="Switch time"
+                    value={switchTime}
+                  onDecrease={() =>
+                    setSwitchTime((v) =>
+                      Math.max(inputSettings.switchTime.min, v - inputSettings.switchTime.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setSwitchTime((v) =>
+                      Math.min(inputSettings.switchTime.max, v + inputSettings.switchTime.step)
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+              </>
+            )}
+
+            <NumberInput
+              label="Sets"
+              value={numSets}
+              onDecrease={() =>
+                setNumSets((v) =>
+                  Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                )
+              }
+              onIncrease={() =>
+                setNumSets((v) =>
+                  Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
+                )
+              }
+              disabled={inputsDisabled}
+            />
+            {numSets > 1 && (
+              <NumberInput
+                label="Rest time"
+                value={restTime}
+                onDecrease={() =>
+                  setRestTime((v) =>
+                    Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                  )
+                }
+                onIncrease={() =>
+                  setRestTime((v) =>
+                    Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
+                  )
+                }
+                disabled={inputsDisabled}
+              />
+            )}
+          </View>
+        </FeatureScreenLayout>
+      </View>
+
+      <SaveFavoriteModal
+        visible={isSaveModalOpen}
+        onSave={saveFavorite}
+        onCancel={() => setIsSaveModalOpen(false)}
+        placeholder="e.g. Fingertip hold switches"
+      />
+
+      <FavoritesModal
+        visible={isFavoritesModalOpen}
+        favorites={favorites}
+        userId={session?.user?.id ?? ''}
+        featureKey={FEATURE_KEY}
+        onSelect={loadFavorite}
+        onClose={() => setIsFavoritesModalOpen(false)}
+        onFavoritesChanged={async () => {
+          if (session?.user?.id) {
+            const p = await getProfile(session.user.id)
+            setProfile(p)
+          }
+        }}
+      />
+    </>
+  )
+}
+
+const styles = StyleSheet.create({
+  screenWrapper: { flex: 1 },
+  inputs: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+    columnGap: 12,
+    rowGap: 24,
+  },
+  toggleRow: {
+    flex: 1,
+    minWidth: 140,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 10,
+  },
+  toggleLabel: {
+    fontSize: 14,
+    color: '#374151',
+  },
+  toggleLabelDisabled: {
+    color: '#999',
+  },
+  note: { fontSize: 12, color: '#999', fontStyle: 'italic' },
+})

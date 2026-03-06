@@ -454,6 +454,7 @@ export function HoldOnScreen() {
       visible={isSaveModalOpen}
       onSave={saveFavorite}
       onCancel={() => setIsSaveModalOpen(false)}
+      placeholder="e.g. Fingertip hold switches"
     />
 
     <FavoritesModal

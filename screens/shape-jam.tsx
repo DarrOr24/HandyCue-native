@@ -304,7 +304,7 @@ export function ShapeJamScreen() {
       <TimerDisplay content={<Ionicons name="trophy" size={48} color="#5B9A8B" />} />
     ) : phase === 'idle' && !displayContent ? (
       <TimerDisplay
-        content={<Ionicons name="musical-notes-outline" size={48} color="#5B9A8B" />}
+        content={<Ionicons name="shapes-outline" size={48} color="#5B9A8B" />}
       />
     ) : (
       <TimerDisplay content={displayContent} />

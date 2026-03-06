@@ -31,6 +31,9 @@
         "projectId": "5f749b3c-ddc0-47fa-884f-7e982708e5d5"
       }
     },
-    "owner": "darrmorgan"
+    "owner": "darrmorgan",
+    "plugins": [
+      "expo-audio"
+    ]
   }
 }

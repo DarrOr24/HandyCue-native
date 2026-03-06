@@ -87,6 +87,7 @@ export function HomeScreen() {
               if (f.id === "holdOn") navigation.navigate("HoldOn")
               else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
               else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
+              else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
             }}
           />
         ))}
