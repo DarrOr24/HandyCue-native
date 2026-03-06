@@ -15,6 +15,7 @@ interface SaveFavoriteModalProps {
   visible: boolean
   onSave: (name: string) => void
   onCancel: () => void
+  placeholder?: string
 }
 
 /**
@@ -24,6 +25,7 @@ export function SaveFavoriteModal({
   visible,
   onSave,
   onCancel,
+  placeholder = 'e.g. Chest to wall handstand...',
 }: SaveFavoriteModalProps) {
   const [favoriteName, setFavoriteName] = useState('')
 
@@ -55,7 +57,7 @@ export function SaveFavoriteModal({
               <Text style={styles.label}>Favorite name</Text>
               <TextInput
                 style={styles.input}
-                placeholder="e.g. Chest to wall handstand..."
+                placeholder={placeholder}
                 placeholderTextColor="#9ca3af"
                 value={favoriteName}
                 onChangeText={setFavoriteName}
