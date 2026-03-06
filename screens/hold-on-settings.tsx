@@ -1,14 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Alert, ActivityIndicator, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { SettingsScreenLayout } from '../components/settings-screen-layout'
 import { SettingGroup } from '../components/setting-group'
 import {
   holdOnDefaults,
   SHARED_FIELD_LIMITS,
   HOLD_TIME_LIMITS,
+  getFeatureInputSettings,
+  type HoldOnUserSettings,
 } from '../services/holdOn.settings.service'
+import { useAuth } from '../contexts/AuthContext'
+import { getProfile, upsertProfile } from '../services/profile.service'
 
 export function HoldOnSettingsScreen() {
-  const { inputSettings, defaultValues } = holdOnDefaults
+  const navigation = useNavigation<any>()
+  const { session } = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const { inputSettings, defaultValues } = getFeatureInputSettings(undefined, holdOnDefaults)
 
   // Get Ready
   const [getReadyRange, setGetReadyRange] = useState<[number, number]>([
@@ -42,8 +53,65 @@ export function HoldOnSettingsScreen() {
   const [holdTimeStep, setHoldTimeStep] = useState(inputSettings.holdTime.step)
   const [holdTimeDefault, setHoldTimeDefault] = useState(defaultValues.holdTime)
 
-  function handleSave() {
-    // Placeholder: no backend yet
+  useEffect(() => {
+    if (!session?.user?.id) {
+      setLoading(false)
+      return
+    }
+    getProfile(session.user.id)
+      .then((p) => {
+        const userSettings = (p?.settings as Record<string, unknown>)?.holdOn as HoldOnUserSettings | undefined
+        const { inputSettings: is, defaultValues: dv } = getFeatureInputSettings(userSettings, holdOnDefaults)
+        setGetReadyRange([is.getReadyTime.min, is.getReadyTime.max])
+        setGetReadyStep(is.getReadyTime.step)
+        setGetReadyDefault(dv.getReadyTime)
+        setNumSetsRange([is.numSets.min, is.numSets.max])
+        setNumSetsStep(is.numSets.step)
+        setNumSetsDefault(dv.numSets)
+        setRestTimeRange([is.restTime.min, is.restTime.max])
+        setRestTimeStep(is.restTime.step)
+        setRestTimeDefault(dv.restTime)
+        setHoldTimeRange([is.holdTime.min, is.holdTime.max])
+        setHoldTimeStep(is.holdTime.step)
+        setHoldTimeDefault(dv.holdTime)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [session?.user?.id])
+
+  async function handleSave() {
+    if (!session?.user?.id) {
+      Alert.alert('Log in required', 'Please log in to save your settings.')
+      return
+    }
+    setSaving(true)
+    try {
+      const profile = await getProfile(session.user.id)
+      const currentSettings = (profile?.settings as Record<string, unknown>) ?? {}
+      const holdOnSettings = {
+        inputSettings: {
+          getReadyTime: { min: getReadyRange[0], max: getReadyRange[1], step: getReadyStep },
+          numSets: { min: numSetsRange[0], max: numSetsRange[1], step: numSetsStep },
+          restTime: { min: restTimeRange[0], max: restTimeRange[1], step: restTimeStep },
+          holdTime: { min: holdTimeRange[0], max: holdTimeRange[1], step: holdTimeStep },
+        },
+        defaultValues: {
+          getReadyTime: getReadyDefault,
+          numSets: numSetsDefault,
+          restTime: restTimeDefault,
+          holdTime: holdTimeDefault,
+        },
+      }
+      await upsertProfile(session.user.id, {
+        settings: { ...currentSettings, holdOn: holdOnSettings },
+      })
+      Alert.alert('Saved', 'HoldOn settings saved successfully.')
+      navigation.goBack()
+    } catch (err: any) {
+      Alert.alert('Error', err.message ?? 'Failed to save settings')
+    } finally {
+      setSaving(false)
+    }
   }
 
   function handleReset() {
@@ -62,6 +130,16 @@ export function HoldOnSettingsScreen() {
     setHoldTimeRange([holdOnDefaults.inputSettings.holdTime.min, holdOnDefaults.inputSettings.holdTime.max])
     setHoldTimeStep(holdOnDefaults.inputSettings.holdTime.step)
     setHoldTimeDefault(holdOnDefaults.defaultValues.holdTime)
+  }
+
+  if (loading) {
+    return (
+      <SettingsScreenLayout title="HoldOn" onSave={() => {}} onReset={() => {}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 48 }}>
+          <ActivityIndicator size="large" color="#5B9A8B" />
+        </View>
+      </SettingsScreenLayout>
+    )
   }
 
   return (

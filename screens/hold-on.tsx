@@ -18,6 +18,9 @@ import {
   runHoldInterval,
   runRestCycle,
 } from '../services/holdOn.service'
+import { holdOnDefaults, getFeatureInputSettings } from '../services/holdOn.settings.service'
+import { useAuth } from '../contexts/AuthContext'
+import { getProfile } from '../services/profile.service'
 
 const DEFAULT_HOLD = 60
 const DEFAULT_GET_READY = 5
@@ -27,12 +30,36 @@ const DEFAULT_CALLOUT_STEP = 10
 
 export function HoldOnScreen() {
   useKeepAwake()
+  const { session } = useAuth()
 
   const [holdTime, setHoldTime] = useState(DEFAULT_HOLD)
   const [getReadyTime, setGetReadyTime] = useState(DEFAULT_GET_READY)
   const [numSets, setNumSets] = useState(DEFAULT_SETS)
   const [restTime, setRestTime] = useState(DEFAULT_REST)
   const [calloutStep, setCalloutStep] = useState(DEFAULT_CALLOUT_STEP)
+
+  const [inputSettings, setInputSettings] = useState(holdOnDefaults.inputSettings)
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!session?.user?.id) {
+        setInputSettings(holdOnDefaults.inputSettings)
+        return
+      }
+      getProfile(session.user.id)
+        .then((p) => {
+          const userSettings = (p?.settings as Record<string, unknown>)?.holdOn
+          const { inputSettings: is, defaultValues } = getFeatureInputSettings(userSettings, holdOnDefaults)
+          setInputSettings(is)
+          setHoldTime(defaultValues.holdTime)
+          setGetReadyTime(defaultValues.getReadyTime)
+          setNumSets(defaultValues.numSets)
+          setRestTime(defaultValues.restTime)
+          setCalloutStep(Math.max(5, Math.min(10, Math.floor(defaultValues.holdTime / 2))))
+        })
+        .catch(() => setInputSettings(holdOnDefaults.inputSettings))
+    }, [session?.user?.id])
+  )
 
   const [displayContent, setDisplayContent] = useState<string | null>(null)
   const [phase, setPhase] = useState<'idle' | 'getReady' | 'hold' | 'rest' | 'done'>('idle')
@@ -229,30 +256,58 @@ export function HoldOnScreen() {
         <NumberInput
           label="Hold time"
           value={holdTime}
-          onDecrease={() => setHoldTime((v) => Math.max(5, v - 5))}
-          onIncrease={() => setHoldTime((v) => Math.min(600, v + 5))}
+          onDecrease={() =>
+            setHoldTime((v) => Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step))
+          }
+          onIncrease={() =>
+            setHoldTime((v) => Math.min(inputSettings.holdTime.max, v + inputSettings.holdTime.step))
+          }
           disabled={inputsDisabled}
         />
         <NumberInput
           label="Get ready"
           value={getReadyTime}
-          onDecrease={() => setGetReadyTime((v) => Math.max(0, v - 1))}
-          onIncrease={() => setGetReadyTime((v) => Math.min(30, v + 1))}
+          onDecrease={() =>
+            setGetReadyTime((v) =>
+              Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+            )
+          }
+          onIncrease={() =>
+            setGetReadyTime((v) =>
+              Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+            )
+          }
           disabled={inputsDisabled}
         />
         <NumberInput
           label="Sets"
           value={numSets}
-          onDecrease={() => setNumSets((v) => Math.max(1, v - 1))}
-          onIncrease={() => setNumSets((v) => Math.min(20, v + 1))}
+          onDecrease={() =>
+            setNumSets((v) =>
+              Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+            )
+          }
+          onIncrease={() =>
+            setNumSets((v) =>
+              Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
+            )
+          }
           disabled={inputsDisabled}
         />
         {numSets > 1 && (
           <NumberInput
             label="Rest time"
             value={restTime}
-            onDecrease={() => setRestTime((v) => Math.max(5, v - 5))}
-            onIncrease={() => setRestTime((v) => Math.min(600, v + 5))}
+            onDecrease={() =>
+              setRestTime((v) =>
+                Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+              )
+            }
+            onIncrease={() =>
+              setRestTime((v) =>
+                Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
+              )
+            }
             disabled={inputsDisabled}
           />
         )}
