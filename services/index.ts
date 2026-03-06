@@ -12,6 +12,8 @@ export {
   type StoredVoice,
 } from './core.service'
 
+export { getVoice, setVoice } from './voice.service'
+
 export {
   runGetReadyCountdown,
   runHoldInterval,

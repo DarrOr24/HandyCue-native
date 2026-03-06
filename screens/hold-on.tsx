@@ -7,12 +7,8 @@ import { TimerDisplay } from '../components/timer-display'
 import { ActionButton } from '../components/action-button'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { NumberInput } from '../components/number-input'
-import {
-  stopSpeech,
-  createResetSignal,
-  getStoredVoice,
-  speak,
-} from '../services/core.service'
+import { stopSpeech, createResetSignal, speak } from '../services/core.service'
+import { getVoice } from '../services/voice.service'
 import {
   runGetReadyCountdown,
   runHoldInterval,
@@ -175,10 +171,10 @@ export function HoldOnScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      getStoredVoice().then((v) => {
+      getVoice(session?.user?.id).then((v) => {
         voiceRef.current = v
       })
-    }, [])
+    }, [session?.user?.id])
   )
 
   useEffect(() => {
@@ -213,7 +209,7 @@ export function HoldOnScreen() {
 
   async function handleStart() {
     resetSignalRef.current.reset()
-    voiceRef.current = await getStoredVoice()
+    voiceRef.current = await getVoice(session?.user?.id)
 
     if (phase === 'done') {
       clearIntervalRef()

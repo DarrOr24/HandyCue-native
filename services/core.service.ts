@@ -1,8 +1,7 @@
 import { Platform } from 'react-native'
 import * as Speech from 'expo-speech'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const VOICE_STORAGE_KEY = '@handycue/voice'
+import { VOICE_STORAGE_KEY } from './voice.constants'
 
 /**
  * Core shared service - voice, speech, timing utilities.

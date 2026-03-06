@@ -6,27 +6,29 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   getAvailableVoicesAsync,
   getDefaultVoiceIdentifier,
-  VOICE_STORAGE_KEY,
   type VoiceOption,
 } from '../services/core.service'
+import { getVoice, setVoice } from '../services/voice.service'
+import { useAuth } from '../contexts/AuthContext'
 
 export function VoiceSetScreen() {
   const navigation = useNavigation<any>()
+  const { session } = useAuth()
   const [voices, setVoices] = useState<VoiceOption[]>([])
   const [selectedId, setSelectedId] = useState<string>('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadVoices()
-  }, [])
+  }, [session?.user?.id])
 
   async function loadVoices() {
     setLoading(true)
@@ -34,19 +36,15 @@ export function VoiceSetScreen() {
       const available = await getAvailableVoicesAsync()
       setVoices(available)
 
-      const storedRaw = await AsyncStorage.getItem(VOICE_STORAGE_KEY)
-      if (storedRaw) {
-        try {
-          const stored = JSON.parse(storedRaw) as { identifier: string; name: string }
-          setSelectedId(stored.identifier)
-        } catch {
-          const defaultId = getDefaultVoiceIdentifier(available)
-          setSelectedId(defaultId)
-        }
+      const stored = await getVoice(session?.user?.id)
+      if (stored) {
+        setSelectedId(stored.identifier)
       } else {
-        const defaultId = getDefaultVoiceIdentifier(available)
-        setSelectedId(defaultId)
+        setSelectedId(getDefaultVoiceIdentifier(available))
       }
+    } catch {
+      const available = await getAvailableVoicesAsync()
+      setSelectedId(getDefaultVoiceIdentifier(available))
     } finally {
       setLoading(false)
     }
@@ -54,8 +52,12 @@ export function VoiceSetScreen() {
 
   async function handleSelectVoice(voice: VoiceOption) {
     setSelectedId(voice.identifier)
-    await AsyncStorage.setItem(VOICE_STORAGE_KEY, JSON.stringify({ identifier: voice.identifier, name: voice.name }))
-    navigation.goBack()
+    try {
+      await setVoice({ identifier: voice.identifier, name: voice.name }, session?.user?.id)
+      navigation.goBack()
+    } catch (err) {
+      Alert.alert('Error', (err as Error)?.message ?? 'Failed to save voice.')
+    }
   }
 
   return (
