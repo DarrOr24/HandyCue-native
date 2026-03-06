@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Alert } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
 
 import { TimerDisplay } from '../components/timer-display'
+import { Ionicons } from '@expo/vector-icons'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
@@ -347,7 +348,17 @@ export function HoldOnScreen() {
   return (
     <>
     <FeatureScreenLayout
-      timerContent={<TimerDisplay content={displayContent} />}
+      timerContent={
+        <TimerDisplay
+          content={
+            phase === 'done' ? (
+              <Ionicons name="trophy" size={48} color="#5B9A8B" />
+            ) : (
+              displayContent
+            )
+          }
+        />
+      }
       actions={
         <FeatureActionButtons
           primaryIcon={startPlayIcon}

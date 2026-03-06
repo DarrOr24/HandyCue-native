@@ -12,7 +12,7 @@ export function TimerDisplay({ content }: TimerDisplayProps) {
     <View style={styles.watchCell}>
       <View style={styles.inner}>
         {isEmpty ? (
-          <Ionicons name="timer-outline" size={48} color="#9ca3af" />
+          <Ionicons name="timer-outline" size={48} color="#5B9A8B" />
         ) : typeof content === 'string' ? (
           <Text style={styles.text}>{content}</Text>
         ) : (
