@@ -86,6 +86,7 @@ export function HomeScreen() {
             onPress={() => {
               if (f.id === "holdOn") navigation.navigate("HoldOn")
               else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
+              else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
             }}
           />
         ))}

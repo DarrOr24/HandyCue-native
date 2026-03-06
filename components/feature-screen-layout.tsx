@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ReactNode } from 'react'
 
@@ -28,9 +28,14 @@ export function FeatureScreenLayout({
 
         <View style={styles.actionsSection}>{actions}</View>
 
-        <View style={[styles.inputsSection, inputsDisabled && styles.inputsDisabled]}>
+        <ScrollView
+          style={styles.inputsSection}
+          contentContainerStyle={[styles.inputsContent, inputsDisabled && styles.inputsDisabled]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           {children}
-        </View>
+        </ScrollView>
 
         {footer && <View style={styles.footer}>{footer}</View>}
       </View>
@@ -58,11 +63,16 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
-  inputsSection: { flex: 1, width: '100%', overflow: 'visible' as const },
+  inputsSection: { flex: 1, width: '100%' },
+  inputsContent: {
+    flexGrow: 1,
+    paddingBottom: 16,
+  },
   inputsDisabled: {
     opacity: 0.5,
   },
   footer: {
+    flexShrink: 0,
     paddingTop: 24,
     paddingBottom: 12,
     alignItems: 'center',

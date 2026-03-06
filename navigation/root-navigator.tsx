@@ -7,6 +7,9 @@ import { HoldOnInfoScreen } from '../screens/hold-on-info'
 import { EntryBuddyScreen } from '../screens/entry-buddy'
 import { EntryBuddySettingsScreen } from '../screens/entry-buddy-settings'
 import { EntryBuddyInfoScreen } from '../screens/entry-buddy-info'
+import { ShapeJamScreen } from '../screens/shape-jam'
+import { ShapeJamInfoScreen } from '../screens/shape-jam-info'
+import { ShapeJamSettingsScreen } from '../screens/shape-jam-settings'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { LoginScreen } from '../screens/login'
@@ -56,6 +59,21 @@ export function RootNavigator() {
         <Stack.Screen
           name="EntryBuddyInfo"
           component={EntryBuddyInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ShapeJam"
+          component={ShapeJamScreen}
+          options={{ title: 'ShapeJam' }}
+        />
+        <Stack.Screen
+          name="ShapeJamSettings"
+          component={ShapeJamSettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ShapeJamInfo"
+          component={ShapeJamInfoScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
