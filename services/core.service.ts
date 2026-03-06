@@ -25,10 +25,14 @@ export interface VoiceOption {
 }
 
 export async function getAvailableVoicesAsync(): Promise<VoiceOption[]> {
-  const voices = await Speech.getAvailableVoicesAsync()
-  return voices
-    .filter((v) => v.language?.startsWith('en'))
-    .map((v) => ({ identifier: v.identifier, name: v.name, language: v.language }))
+  try {
+    const voices = await Speech.getAvailableVoicesAsync()
+    return voices
+      .filter((v) => v.language?.startsWith('en'))
+      .map((v) => ({ identifier: v.identifier, name: v.name, language: v.language }))
+  } catch {
+    return []
+  }
 }
 
 export function getDefaultVoiceIdentifier(voices: VoiceOption[]): string {
@@ -62,12 +66,27 @@ export function speak(
 ): Promise<void> {
   if (!text) return Promise.resolve()
   return new Promise((resolve) => {
-    const options: { onDone: () => void; voice?: string; rate?: number } = { onDone: resolve }
-    if (storedVoice) {
-      options.voice = Platform.OS === 'ios' ? storedVoice.identifier : storedVoice.name
+    const baseOptions = { rate: opts?.rate, onDone: resolve }
+    const voiceValue = storedVoice
+      ? Platform.OS === 'ios'
+        ? storedVoice.identifier
+        : storedVoice.name
+      : undefined
+
+    const doSpeak = (voiceOpt: string | undefined) => {
+      const options = { ...baseOptions } as { onDone: () => void; voice?: string; rate?: number; onError?: (e: Error) => void }
+      if (voiceOpt != null) options.voice = voiceOpt
+      options.onError = (e) => {
+        if (voiceOpt != null) {
+          if (__DEV__) console.warn('[Speech] Voice failed, retrying with default:', e?.message)
+          doSpeak(undefined)
+        } else {
+          resolve()
+        }
+      }
+      Speech.speak(text, options)
     }
-    if (opts?.rate != null) options.rate = opts.rate
-    Speech.speak(text, options)
+    doSpeak(voiceValue)
   })
 }
 

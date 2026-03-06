@@ -43,8 +43,7 @@ export function VoiceSetScreen() {
         setSelectedId(getDefaultVoiceIdentifier(available))
       }
     } catch {
-      const available = await getAvailableVoicesAsync()
-      setSelectedId(getDefaultVoiceIdentifier(available))
+      setVoices([])
     } finally {
       setLoading(false)
     }
@@ -85,7 +84,13 @@ export function VoiceSetScreen() {
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.subtitle}>Choose a voice for audio callouts</Text>
-          {voices.map((voice) => (
+          {voices.length === 0 ? (
+            <Text style={styles.emptyText}>
+              No voices available. Speech will use your device&apos;s default voice. Try opening
+              Settings → Accessibility → Text-to-speech to install or enable a voice.
+            </Text>
+          ) : (
+          voices.map((voice) => (
             <TouchableOpacity
               key={voice.identifier}
               style={[styles.voiceRow, selectedId === voice.identifier && styles.voiceRowSelected]}
@@ -97,7 +102,7 @@ export function VoiceSetScreen() {
                 <Ionicons name="checkmark-circle" size={24} color="#5B9A8B" />
               )}
             </TouchableOpacity>
-          ))}
+          )))}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -142,4 +147,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f7f5',
   },
   voiceName: { fontSize: 16, color: '#374151', fontWeight: '500' },
+  emptyText: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 22,
+    paddingVertical: 16,
+  },
 })
