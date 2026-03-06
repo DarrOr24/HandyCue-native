@@ -7,8 +7,6 @@ import { HoldOnInfoScreen } from '../screens/hold-on-info'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { LoginScreen } from '../screens/login'
-import { OverflowMenu } from '../components/overflow-menu'
-
 const Stack = createNativeStackNavigator()
 
 export function RootNavigator() {
@@ -29,21 +27,7 @@ export function RootNavigator() {
         <Stack.Screen
           name="HoldOn"
           component={HoldOnScreen}
-          options={({ navigation }) => ({
-            title: 'HoldOn',
-            headerRight: () => (
-              <OverflowMenu
-                items={[
-                  { icon: 'information-circle-outline', label: 'Info', onPress: () => navigation.navigate('HoldOnInfo') },
-                  { icon: 'mic-outline', label: 'Set voice', onPress: () => navigation.navigate('VoiceSet') },
-                  { icon: 'heart-outline', label: 'Favorites', onPress: () => {} },
-                  { icon: 'bookmark-outline', label: 'Save', onPress: () => {} },
-                  { icon: 'settings-outline', label: 'Settings', onPress: () => navigation.navigate('HoldOnSettings') },
-                ]}
-              />
-            ),
-            headerRightContainerStyle: { alignItems: 'center' },
-          })}
+          options={{ title: 'HoldOn' }}
         />
         <Stack.Screen
           name="HoldOnSettings"

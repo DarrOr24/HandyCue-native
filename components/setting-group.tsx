@@ -41,7 +41,6 @@ export function SettingGroup({
           <NumberInput
             label="Min"
             value={min}
-            step={step}
             onDecrease={() => onRangeChange([Math.max(minLimit, min - step), max])}
             onIncrease={() => onRangeChange([Math.min(max - step, min + step), max])}
           />
@@ -50,7 +49,6 @@ export function SettingGroup({
           <NumberInput
             label="Max"
             value={max}
-            step={step}
             onDecrease={() => onRangeChange([min, Math.max(min + step, max - step)])}
             onIncrease={() => onRangeChange([min, Math.min(maxLimit, max + step)])}
           />
@@ -70,7 +68,6 @@ export function SettingGroup({
           <NumberInput
             label={startLabel}
             value={startValue}
-            step={step}
             onDecrease={() => {
               const next = Math.max(min, startValue - step)
               onStartValueChange(Math.min(max, next))

@@ -19,7 +19,9 @@ export function HoldOnSettingsScreen() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const { inputSettings, defaultValues } = getFeatureInputSettings(undefined, holdOnDefaults)
+  const { inputSettings: is0, defaultValues: dv0 } = getFeatureInputSettings(undefined, holdOnDefaults)
+  const inputSettings = { ...holdOnDefaults.inputSettings, ...is0 }
+  const defaultValues = { ...holdOnDefaults.defaultValues, ...dv0 }
 
   // Get Ready
   const [getReadyRange, setGetReadyRange] = useState<[number, number]>([
@@ -62,18 +64,20 @@ export function HoldOnSettingsScreen() {
       .then((p) => {
         const userSettings = (p?.settings as Record<string, unknown>)?.holdOn as HoldOnUserSettings | undefined
         const { inputSettings: is, defaultValues: dv } = getFeatureInputSettings(userSettings, holdOnDefaults)
-        setGetReadyRange([is.getReadyTime.min, is.getReadyTime.max])
-        setGetReadyStep(is.getReadyTime.step)
-        setGetReadyDefault(dv.getReadyTime)
-        setNumSetsRange([is.numSets.min, is.numSets.max])
-        setNumSetsStep(is.numSets.step)
-        setNumSetsDefault(dv.numSets)
-        setRestTimeRange([is.restTime.min, is.restTime.max])
-        setRestTimeStep(is.restTime.step)
-        setRestTimeDefault(dv.restTime)
-        setHoldTimeRange([is.holdTime.min, is.holdTime.max])
-        setHoldTimeStep(is.holdTime.step)
-        setHoldTimeDefault(dv.holdTime)
+        const mergedInput = { ...holdOnDefaults.inputSettings, ...is }
+        const mergedDef = { ...holdOnDefaults.defaultValues, ...dv }
+        setGetReadyRange([mergedInput.getReadyTime.min, mergedInput.getReadyTime.max])
+        setGetReadyStep(mergedInput.getReadyTime.step)
+        setGetReadyDefault(mergedDef.getReadyTime)
+        setNumSetsRange([mergedInput.numSets.min, mergedInput.numSets.max])
+        setNumSetsStep(mergedInput.numSets.step)
+        setNumSetsDefault(mergedDef.numSets)
+        setRestTimeRange([mergedInput.restTime.min, mergedInput.restTime.max])
+        setRestTimeStep(mergedInput.restTime.step)
+        setRestTimeDefault(mergedDef.restTime)
+        setHoldTimeRange([mergedInput.holdTime.min, mergedInput.holdTime.max])
+        setHoldTimeStep(mergedInput.holdTime.step)
+        setHoldTimeDefault(mergedDef.holdTime)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -154,7 +158,7 @@ export function HoldOnSettingsScreen() {
         onRangeChange={setHoldTimeRange}
         step={holdTimeStep}
         onStepChange={setHoldTimeStep}
-        startValue={holdTimeDefault}
+        startValue={holdTimeDefault ?? holdOnDefaults.defaultValues.holdTime}
         onStartValueChange={setHoldTimeDefault}
         minLimit={HOLD_TIME_LIMITS.minLimit}
         maxLimit={HOLD_TIME_LIMITS.maxLimit}
@@ -166,7 +170,7 @@ export function HoldOnSettingsScreen() {
         onRangeChange={setGetReadyRange}
         step={getReadyStep}
         onStepChange={setGetReadyStep}
-        startValue={getReadyDefault}
+        startValue={getReadyDefault ?? holdOnDefaults.defaultValues.getReadyTime}
         onStartValueChange={setGetReadyDefault}
         minLimit={SHARED_FIELD_LIMITS.getReadyTime.minLimit}
         maxLimit={SHARED_FIELD_LIMITS.getReadyTime.maxLimit}
@@ -178,7 +182,7 @@ export function HoldOnSettingsScreen() {
         onRangeChange={setNumSetsRange}
         step={numSetsStep}
         onStepChange={setNumSetsStep}
-        startValue={numSetsDefault}
+        startValue={numSetsDefault ?? holdOnDefaults.defaultValues.numSets}
         onStartValueChange={setNumSetsDefault}
         minLimit={SHARED_FIELD_LIMITS.numSets.minLimit}
         maxLimit={SHARED_FIELD_LIMITS.numSets.maxLimit}
@@ -190,7 +194,7 @@ export function HoldOnSettingsScreen() {
         onRangeChange={setRestTimeRange}
         step={restTimeStep}
         onStepChange={setRestTimeStep}
-        startValue={restTimeDefault}
+        startValue={restTimeDefault ?? holdOnDefaults.defaultValues.restTime}
         onStartValueChange={setRestTimeDefault}
         minLimit={SHARED_FIELD_LIMITS.restTime.minLimit}
         maxLimit={SHARED_FIELD_LIMITS.restTime.maxLimit}

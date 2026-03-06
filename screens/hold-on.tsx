@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useFocusEffect } from '@react-navigation/native'
-import { StyleSheet, Text, View } from 'react-native'
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { StyleSheet, Text, View, Alert } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
 
 import { TimerDisplay } from '../components/timer-display'
@@ -18,9 +18,22 @@ import {
   runHoldInterval,
   runRestCycle,
 } from '../services/holdOn.service'
-import { holdOnDefaults, getFeatureInputSettings } from '../services/holdOn.settings.service'
+import {
+  holdOnDefaults,
+  getFeatureInputSettings,
+  type HoldOnUserSettings,
+} from '../services/holdOn.settings.service'
+import {
+  getFavoritesForFeature,
+  checkIsDuplicateName,
+  saveFavoriteForFeature,
+  type HoldOnInputs,
+} from '../services/holdOn.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile } from '../services/profile.service'
+import { OverflowMenu } from '../components/overflow-menu'
+import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
+import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
 const DEFAULT_HOLD = 60
 const DEFAULT_GET_READY = 5
@@ -28,8 +41,11 @@ const DEFAULT_SETS = 1
 const DEFAULT_REST = 60
 const DEFAULT_CALLOUT_STEP = 10
 
+const FEATURE_KEY = 'holdOn'
+
 export function HoldOnScreen() {
   useKeepAwake()
+  const navigation = useNavigation<any>()
   const { session } = useAuth()
 
   const [holdTime, setHoldTime] = useState(DEFAULT_HOLD)
@@ -40,24 +56,107 @@ export function HoldOnScreen() {
 
   const [inputSettings, setInputSettings] = useState(holdOnDefaults.inputSettings)
 
+  const [profile, setProfile] = useState<Awaited<ReturnType<typeof getProfile>>>(null)
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
+  const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false)
+
+  const favorites = getFavoritesForFeature(profile, FEATURE_KEY)
+
+  const menuHandlersRef = useRef({
+    setIsSaveModalOpen,
+    setIsFavoritesModalOpen,
+    session,
+  })
+  menuHandlersRef.current = {
+    setIsSaveModalOpen,
+    setIsFavoritesModalOpen,
+    session,
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <OverflowMenu
+          items={[
+            {
+              icon: 'information-circle-outline',
+              label: 'Info',
+              onPress: () => navigation.navigate('HoldOnInfo'),
+            },
+            {
+              icon: 'mic-outline',
+              label: 'Set voice',
+              onPress: () => navigation.navigate('VoiceSet'),
+            },
+            {
+              icon: 'heart-outline',
+              label: 'Favorites',
+              onPress: () => {
+                const { session: s, setIsFavoritesModalOpen: open } = menuHandlersRef.current
+                if (!s?.user?.id) {
+                  Alert.alert('Log in required', 'Please log in to view your favorites.')
+                  return
+                }
+                requestAnimationFrame(() => open(true))
+              },
+            },
+            {
+              icon: 'bookmark-outline',
+              label: 'Save',
+              onPress: () => {
+                const { session: s, setIsSaveModalOpen: open } = menuHandlersRef.current
+                if (!s?.user?.id) {
+                  Alert.alert('Log in required', 'Please log in to save favorites.')
+                  return
+                }
+                requestAnimationFrame(() => open(true))
+              },
+            },
+            {
+              icon: 'settings-outline',
+              label: 'Settings',
+              onPress: () => navigation.navigate('HoldOnSettings'),
+            },
+          ]}
+        />
+      ),
+    })
+  }, [navigation])
+
   useFocusEffect(
     useCallback(() => {
       if (!session?.user?.id) {
+        setProfile(null)
         setInputSettings(holdOnDefaults.inputSettings)
         return
       }
       getProfile(session.user.id)
         .then((p) => {
-          const userSettings = (p?.settings as Record<string, unknown>)?.holdOn
-          const { inputSettings: is, defaultValues } = getFeatureInputSettings(userSettings, holdOnDefaults)
-          setInputSettings(is)
-          setHoldTime(defaultValues.holdTime)
-          setGetReadyTime(defaultValues.getReadyTime)
-          setNumSets(defaultValues.numSets)
-          setRestTime(defaultValues.restTime)
-          setCalloutStep(Math.max(5, Math.min(10, Math.floor(defaultValues.holdTime / 2))))
+          setProfile(p)
+          const userSettings = (p?.settings as Record<string, unknown>)?.holdOn as
+            | HoldOnUserSettings
+            | null
+            | undefined
+          const { inputSettings: is, defaultValues } = getFeatureInputSettings(
+            userSettings,
+            holdOnDefaults
+          )
+          const mergedInputSettings = {
+            ...holdOnDefaults.inputSettings,
+            ...is,
+          } as typeof holdOnDefaults.inputSettings
+          setInputSettings(mergedInputSettings)
+          setHoldTime(defaultValues.holdTime ?? holdOnDefaults.defaultValues.holdTime)
+          setGetReadyTime(defaultValues.getReadyTime ?? holdOnDefaults.defaultValues.getReadyTime)
+          setNumSets(defaultValues.numSets ?? holdOnDefaults.defaultValues.numSets)
+          setRestTime(defaultValues.restTime ?? holdOnDefaults.defaultValues.restTime)
+          const ht = defaultValues.holdTime ?? holdOnDefaults.defaultValues.holdTime
+          setCalloutStep(Math.max(5, Math.min(10, Math.floor(ht / 2))))
         })
-        .catch(() => setInputSettings(holdOnDefaults.inputSettings))
+        .catch(() => {
+          setProfile(null)
+          setInputSettings(holdOnDefaults.inputSettings)
+        })
     }, [session?.user?.id])
   )
 
@@ -230,7 +329,65 @@ export function HoldOnScreen() {
 
   const onStartPlayPress = showStart ? handleStart : showPause ? handlePause : handleResume
 
+  function getCurrentInputs(): HoldOnInputs {
+    return {
+      getReadyTime,
+      holdTime,
+      numSets,
+      restTime,
+      calloutStep,
+    }
+  }
+
+  function saveFavorite(name: string) {
+    const trimmed = name.trim()
+    const isDuplicate = checkIsDuplicateName(trimmed, favorites)
+    if (isDuplicate) {
+      Alert.alert(
+        'Replace favorite?',
+        `There is already a favorite named "${trimmed}". Replace it?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Replace', onPress: () => doSaveFavorite(trimmed) },
+        ]
+      )
+    } else {
+      doSaveFavorite(trimmed)
+    }
+  }
+
+  async function doSaveFavorite(name: string) {
+    if (!session?.user?.id) return
+    try {
+      await saveFavoriteForFeature({
+        userId: session.user.id,
+        featureKey: FEATURE_KEY,
+        favoriteName: name,
+        inputs: getCurrentInputs(),
+      })
+      setIsSaveModalOpen(false)
+      const p = await getProfile(session.user.id)
+      setProfile(p)
+      Alert.alert('Saved', 'Favorite saved!')
+    } catch (err) {
+      Alert.alert('Error', (err as Error)?.message ?? 'Failed to save favorite.')
+    }
+  }
+
+  function loadFavorite(name: string) {
+    const fav = favorites.find((f) => f.name === name)
+    if (!fav) return
+    const { getReadyTime: gr, holdTime: ht, numSets: ns, restTime: rt, calloutStep: cs = 10 } = fav.inputs
+    setGetReadyTime(gr)
+    setHoldTime(ht)
+    setNumSets(ns)
+    setRestTime(rt)
+    setCalloutStep(Math.max(5, Math.min(10, Math.floor(ht / 2), cs)))
+    setIsFavoritesModalOpen(false)
+  }
+
   return (
+    <>
     <FeatureScreenLayout
       timerContent={<TimerDisplay content={displayContent} />}
       actions={
@@ -324,6 +481,29 @@ export function HoldOnScreen() {
         )}
       </View>
     </FeatureScreenLayout>
+
+    <SaveFavoriteModal
+      visible={isSaveModalOpen}
+      onSave={saveFavorite}
+      onCancel={() => setIsSaveModalOpen(false)}
+    />
+
+    <FavoritesModal
+      visible={isFavoritesModalOpen}
+      favorites={favorites}
+      userId={session?.user?.id ?? ''}
+      featureKey={FEATURE_KEY}
+      onSelect={loadFavorite}
+      onClose={() => setIsFavoritesModalOpen(false)}
+      onFavoritesChanged={async () => {
+        if (session?.user?.id) {
+          const p = await getProfile(session.user.id)
+          setProfile(p)
+        }
+      }}
+    />
+
+    </>
   )
 }
 
