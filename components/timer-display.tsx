@@ -14,7 +14,9 @@ export function TimerDisplay({ content }: TimerDisplayProps) {
         {isEmpty ? (
           <Ionicons name="timer-outline" size={48} color="#5B9A8B" />
         ) : typeof content === 'string' ? (
-          <Text style={styles.text}>{content}</Text>
+          <Text style={styles.text} numberOfLines={1} adjustsFontSizeToFit>
+          {content}
+        </Text>
         ) : (
           content
         )}
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 34,
+    fontSize: 24,
     fontWeight: '600',
     fontVariant: ['tabular-nums'],
     minWidth: 72,
