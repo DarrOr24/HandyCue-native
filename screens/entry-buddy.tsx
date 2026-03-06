@@ -8,6 +8,7 @@ import { TimerDisplay } from '../components/timer-display'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { NumberInput } from '../components/number-input'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
+import { FeatureHeaderRight } from '../components/feature-header-right'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
@@ -81,9 +82,14 @@ export function EntryBuddyScreen() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => <FeatureOverflowMenu handlersRef={menuHandlersRef} />,
+      headerRight: () => (
+        <FeatureHeaderRight
+          session={session}
+          overflowMenu={<FeatureOverflowMenu handlersRef={menuHandlersRef} />}
+        />
+      ),
     })
-  }, [navigation])
+  }, [navigation, session])
 
   useFocusEffect(
     useCallback(() => {

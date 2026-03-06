@@ -7,6 +7,7 @@ import { TimerDisplay } from '../components/timer-display'
 import { Ionicons } from '@expo/vector-icons'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
+import { FeatureHeaderRight } from '../components/feature-header-right'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { NumberInput } from '../components/number-input'
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
@@ -78,9 +79,14 @@ export function HoldOnScreen() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => <FeatureOverflowMenu handlersRef={menuHandlersRef} />,
+      headerRight: () => (
+        <FeatureHeaderRight
+          session={session}
+          overflowMenu={<FeatureOverflowMenu handlersRef={menuHandlersRef} />}
+        />
+      ),
     })
-  }, [navigation])
+  }, [navigation, session])
 
   useFocusEffect(
     useCallback(() => {
