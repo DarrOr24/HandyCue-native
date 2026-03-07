@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView, Alert } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Alert, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -78,7 +78,14 @@ export function HomeScreen() {
         contentContainerStyle={styles.content}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>HandyCue</Text>
+          <View style={styles.titleRow}>
+            <Image
+              source={require("../assets/app-icon.png")}
+              style={styles.titleIcon}
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>HandyCue</Text>
+          </View>
           <ProfileMenu items={profileMenuItems} />
         </View>
 
@@ -112,6 +119,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 24,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  titleIcon: {
+    width: 36,
+    height: 36,
+    marginRight: 10,
   },
   title: { fontSize: 28, fontWeight: "bold" },
   subtitle: { fontSize: 16, color: "#666", marginTop: 4 },

@@ -83,7 +83,9 @@ export function ProfileMenu({ items }: ProfileMenuProps) {
 
 const styles = StyleSheet.create({
   trigger: {
-    padding: 8,
+    paddingVertical: 8,
+    paddingLeft: 8,
+    paddingRight: 0,
     justifyContent: 'center',
     alignItems: 'center',
     minWidth: 40,
