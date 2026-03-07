@@ -15,10 +15,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setIsLoading(false)
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        if (__DEV__) console.warn('[Auth] getSession failed:', err?.message)
+        setSession(null)
+        setIsLoading(false)
+      })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
@@ -29,7 +36,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (session?.user?.id) {
-      upsertProfile(session.user.id, {}).catch(() => {})
+      upsertProfile(session.user.id, {}).catch((err) => {
+        if (__DEV__) console.warn('[Auth] upsertProfile failed:', err?.message)
+      })
     }
   }, [session?.user?.id])
 

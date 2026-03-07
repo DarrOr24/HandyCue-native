@@ -46,6 +46,17 @@ npm run android # Android Emulator
 npm run web     # Web browser
 ```
 
+### 6. EAS Build (production)
+
+For `eas build`, set environment variables in EAS (`.env` is gitignored and not uploaded):
+
+```bash
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://xxxxx.supabase.co" --scope project
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your-anon-key" --scope project
+```
+
+Or add them in [expo.dev](https://expo.dev) → your project → Secrets.
+
 ## Migration status
 
 See [MIGRATION_ROADMAP.md](../MIGRATION_ROADMAP.md) in the project root for the full migration plan.
