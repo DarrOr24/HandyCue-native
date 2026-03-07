@@ -461,7 +461,7 @@ export function DrillDJScreen() {
               }
               onIncrease={() =>
                 setGetReadyTime((v) =>
-                  Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+                  v + inputSettings.getReadyTime.step
                 )
               }
               disabled={inputsDisabled}
@@ -476,7 +476,7 @@ export function DrillDJScreen() {
               }
               onIncrease={() =>
                 setNumReps((v) =>
-                  Math.min(inputSettings.numReps.max, v + inputSettings.numReps.step)
+                  v + inputSettings.numReps.step
                 )
               }
               disabled={inputsDisabled}
@@ -502,7 +502,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setSlideTime((v) =>
-                      Math.min(inputSettings.slideTime.max, v + inputSettings.slideTime.step)
+                      v + inputSettings.slideTime.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -517,7 +517,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setTimeBetweenSlides((v) =>
-                      Math.min(inputSettings.timeBetweenSlides.max, v + inputSettings.timeBetweenSlides.step)
+                      v + inputSettings.timeBetweenSlides.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -537,7 +537,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setFloatTime((v) =>
-                      Math.min(inputSettings.floatTime.max, v + inputSettings.floatTime.step)
+                      v + inputSettings.floatTime.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -552,7 +552,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setTimeBetweenFloats((v) =>
-                      Math.min(inputSettings.timeBetweenFloats.max, v + inputSettings.timeBetweenFloats.step)
+                      v + inputSettings.timeBetweenFloats.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -572,7 +572,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setTimeBetweenSwitches((v) =>
-                      Math.min(inputSettings.timeBetweenSwitches.max, v + inputSettings.timeBetweenSwitches.step)
+                      v + inputSettings.timeBetweenSwitches.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -587,7 +587,7 @@ export function DrillDJScreen() {
                   }
                   onIncrease={() =>
                     setSwitchTime((v) =>
-                      Math.min(inputSettings.switchTime.max, v + inputSettings.switchTime.step)
+                      v + inputSettings.switchTime.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -605,7 +605,7 @@ export function DrillDJScreen() {
               }
               onIncrease={() =>
                 setNumSets((v) =>
-                  Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
+                  v + inputSettings.numSets.step
                 )
               }
               disabled={inputsDisabled}
@@ -621,7 +621,7 @@ export function DrillDJScreen() {
                 }
                 onIncrease={() =>
                   setRestTime((v) =>
-                    Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
+                    v + inputSettings.restTime.step
                   )
                 }
                 disabled={inputsDisabled}

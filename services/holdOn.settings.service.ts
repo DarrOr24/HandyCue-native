@@ -4,10 +4,10 @@
 
 export type HoldOnUserSettings = {
   inputSettings?: {
-    getReadyTime?: { min: number; max: number; step: number }
-    numSets?: { min: number; max: number; step: number }
-    restTime?: { min: number; max: number; step: number }
-    holdTime?: { min: number; max: number; step: number }
+    getReadyTime?: { min: number; step: number }
+    numSets?: { min: number; step: number }
+    restTime?: { min: number; step: number }
+    holdTime?: { min: number; step: number }
   }
   defaultValues?: {
     getReadyTime?: number
@@ -35,9 +35,9 @@ export function getFeatureInputSettings(
 
 export const sharedDefaults = {
   inputSettings: {
-    getReadyTime: { min: 0, max: 60, step: 1 },
-    restTime: { min: 5, max: 90, step: 5 },
-    numSets: { min: 1, max: 10, step: 1 },
+    getReadyTime: { min: 0, step: 1 },
+    restTime: { min: 1, step: 5 },
+    numSets: { min: 1, step: 1 },
   },
   defaultValues: {
     getReadyTime: 5,
@@ -50,7 +50,7 @@ export const holdOnDefaults = {
   ...sharedDefaults,
   inputSettings: {
     ...sharedDefaults.inputSettings,
-    holdTime: { min: 5, max: 90, step: 5 },
+    holdTime: { min: 1, step: 5 },
   },
   defaultValues: {
     ...sharedDefaults.defaultValues,
@@ -59,9 +59,9 @@ export const holdOnDefaults = {
 } as const
 
 export const SHARED_FIELD_LIMITS = {
-  getReadyTime: { minLimit: 0, maxLimit: 60 },
-  numSets: { minLimit: 1, maxLimit: 20 },
-  restTime: { minLimit: 5, maxLimit: 400 },
+  getReadyTime: { minLimit: 0 },
+  numSets: { minLimit: 1 },
+  restTime: { minLimit: 1 },
 }
 
-export const HOLD_TIME_LIMITS = { minLimit: 5, maxLimit: 400 }
+export const HOLD_TIME_LIMITS = { minLimit: 1 }

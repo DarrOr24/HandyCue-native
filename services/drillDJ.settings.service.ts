@@ -4,16 +4,16 @@
 
 export type DrillDJUserSettings = {
   inputSettings?: {
-    getReadyTime?: { min: number; max: number; step: number }
-    numSets?: { min: number; max: number; step: number }
-    restTime?: { min: number; max: number; step: number }
-    numReps?: { min: number; max: number; step: number }
-    floatTime?: { min: number; max: number; step: number }
-    timeBetweenFloats?: { min: number; max: number; step: number }
-    switchTime?: { min: number; max: number; step: number }
-    timeBetweenSwitches?: { min: number; max: number; step: number }
-    slideTime?: { min: number; max: number; step: number }
-    timeBetweenSlides?: { min: number; max: number; step: number }
+    getReadyTime?: { min: number; step: number }
+    numSets?: { min: number; step: number }
+    restTime?: { min: number; step: number }
+    numReps?: { min: number; step: number }
+    floatTime?: { min: number; step: number }
+    timeBetweenFloats?: { min: number; step: number }
+    switchTime?: { min: number; step: number }
+    timeBetweenSwitches?: { min: number; step: number }
+    slideTime?: { min: number; step: number }
+    timeBetweenSlides?: { min: number; step: number }
   }
   defaultValues?: {
     getReadyTime?: number
@@ -47,9 +47,9 @@ export function getFeatureInputSettings(
 
 export const sharedDefaults = {
   inputSettings: {
-    getReadyTime: { min: 0, max: 60, step: 1 },
-    restTime: { min: 5, max: 90, step: 5 },
-    numSets: { min: 1, max: 10, step: 1 },
+    getReadyTime: { min: 0, step: 1 },
+    restTime: { min: 1, step: 5 },
+    numSets: { min: 1, step: 1 },
   },
   defaultValues: {
     getReadyTime: 5,
@@ -62,13 +62,13 @@ export const drillDJDefaults = {
   ...sharedDefaults,
   inputSettings: {
     ...sharedDefaults.inputSettings,
-    numReps: { min: 1, max: 10, step: 1 },
-    floatTime: { min: 1, max: 300, step: 1 },
-    timeBetweenFloats: { min: 0, max: 300, step: 1 },
-    switchTime: { min: 0, max: 300, step: 1 },
-    timeBetweenSwitches: { min: 0, max: 300, step: 1 },
-    slideTime: { min: 1, max: 300, step: 1 },
-    timeBetweenSlides: { min: 0, max: 300, step: 1 },
+    numReps: { min: 1, step: 1 },
+    floatTime: { min: 1, step: 1 },
+    timeBetweenFloats: { min: 0, step: 1 },
+    switchTime: { min: 0, step: 1 },
+    timeBetweenSwitches: { min: 0, step: 1 },
+    slideTime: { min: 1, step: 1 },
+    timeBetweenSlides: { min: 0, step: 1 },
   },
   defaultValues: {
     ...sharedDefaults.defaultValues,
@@ -83,9 +83,9 @@ export const drillDJDefaults = {
 } as const
 
 export const SHARED_FIELD_LIMITS = {
-  getReadyTime: { minLimit: 0, maxLimit: 60 },
-  numSets: { minLimit: 1, maxLimit: 20 },
-  restTime: { minLimit: 5, maxLimit: 400 },
+  getReadyTime: { minLimit: 0 },
+  numSets: { minLimit: 1 },
+  restTime: { minLimit: 1 },
 }
 
-export const DRILL_TIME_LIMITS = { minLimit: 0, maxLimit: 300 }
+export const DRILL_TIME_LIMITS = { minLimit: 0 }

@@ -336,7 +336,7 @@ export function EntryBuddyScreen() {
             }
             onIncrease={() =>
               setGetReadyTime((v) =>
-                Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+                v + inputSettings.getReadyTime.step
               )
             }
             disabled={inputsDisabled}
@@ -351,7 +351,7 @@ export function EntryBuddyScreen() {
             }
             onIncrease={() =>
               setNumEntries((v) =>
-                Math.min(inputSettings.entryCount.max, v + inputSettings.entryCount.step)
+                v + inputSettings.entryCount.step
               )
             }
             disabled={inputsDisabled}
@@ -366,7 +366,7 @@ export function EntryBuddyScreen() {
             }
             onIncrease={() =>
               setHoldTime((v) =>
-                Math.min(inputSettings.holdTime.max, v + inputSettings.holdTime.step)
+                v + inputSettings.holdTime.step
               )
             }
             disabled={inputsDisabled}
@@ -381,7 +381,7 @@ export function EntryBuddyScreen() {
             }
             onIncrease={() =>
               setTimeBetween((v) =>
-                Math.min(inputSettings.timeBetween.max, v + inputSettings.timeBetween.step)
+                v + inputSettings.timeBetween.step
               )
             }
             disabled={inputsDisabled}
@@ -396,7 +396,7 @@ export function EntryBuddyScreen() {
             }
             onIncrease={() =>
               setNumSets((v) =>
-                Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
+                v + inputSettings.numSets.step
               )
             }
             disabled={inputsDisabled}
@@ -412,7 +412,7 @@ export function EntryBuddyScreen() {
               }
               onIncrease={() =>
                 setRestTime((v) =>
-                  Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
+                  v + inputSettings.restTime.step
                 )
               }
               disabled={inputsDisabled}

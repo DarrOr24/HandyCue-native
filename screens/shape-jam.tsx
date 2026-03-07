@@ -338,7 +338,7 @@ export function ShapeJamScreen() {
             }
             onIncrease={() =>
               setGetReadyTime((v) =>
-                Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
+                v + inputSettings.getReadyTime.step
               )
             }
             disabled={inputsDisabled}
@@ -353,7 +353,7 @@ export function ShapeJamScreen() {
             }
             onIncrease={() =>
               setNumReps((v) =>
-                Math.min(inputSettings.numReps.max, v + inputSettings.numReps.step)
+                v + inputSettings.numReps.step
               )
             }
             disabled={inputsDisabled}
@@ -383,7 +383,7 @@ export function ShapeJamScreen() {
                   updateShape(
                     idx,
                     'holdTime',
-                    Math.min(inputSettings.holdTime.max, shapeObj.holdTime + inputSettings.holdTime.step)
+                    shapeObj.holdTime + inputSettings.holdTime.step
                   )
                 }
                 disabled={inputsDisabled}
@@ -396,12 +396,12 @@ export function ShapeJamScreen() {
             value={numSets}
             onDecrease={() =>
               setNumSets((v) =>
-                Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                Math.max(inputSettings.numSets.step, v - inputSettings.numSets.step)
               )
             }
             onIncrease={() =>
               setNumSets((v) =>
-                Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
+                v + inputSettings.numSets.step
               )
             }
             disabled={inputsDisabled}
@@ -417,7 +417,7 @@ export function ShapeJamScreen() {
               }
               onIncrease={() =>
                 setRestTime((v) =>
-                  Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
+                  v + inputSettings.restTime.step
                 )
               }
               disabled={inputsDisabled}

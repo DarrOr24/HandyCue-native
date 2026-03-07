@@ -3,35 +3,27 @@ import { NumberInput } from './number-input'
 
 export interface SettingGroupProps {
   title: string
-  range: [number, number]
-  onRangeChange: (range: [number, number]) => void
   step: number
   onStepChange: (step: number) => void
   startValue: number
   onStartValueChange: (value: number) => void
   minLimit: number
-  maxLimit: number
   startLabel?: string
 }
 
 /**
- * A settings group with range (min/max), step, and start value.
- * Mirrors the frontend SettingGroup structure.
+ * A settings group with increment (step) and default starting value.
+ * Min is enforced as floor; no max limit.
  */
 export function SettingGroup({
   title,
-  range,
-  onRangeChange,
   step,
   onStepChange,
   startValue,
   onStartValueChange,
   minLimit,
-  maxLimit,
-  startLabel = 'Start Value',
+  startLabel = 'Default',
 }: SettingGroupProps) {
-  const [min, max] = range
-
   return (
     <View style={styles.group}>
       <Text style={styles.groupTitle}>{title}</Text>
@@ -39,43 +31,18 @@ export function SettingGroup({
       <View style={styles.row}>
         <View style={styles.half}>
           <NumberInput
-            label="Min"
-            value={min}
-            onDecrease={() => onRangeChange([Math.max(minLimit, min - step), max])}
-            onIncrease={() => onRangeChange([Math.min(max - step, min + step), max])}
-          />
-        </View>
-        <View style={styles.half}>
-          <NumberInput
-            label="Max"
-            value={max}
-            onDecrease={() => onRangeChange([min, Math.max(min + step, max - step)])}
-            onIncrease={() => onRangeChange([min, Math.min(maxLimit, max + step)])}
-          />
-        </View>
-      </View>
-
-      <View style={[styles.row, styles.lastRow]}>
-        <View style={styles.half}>
-          <NumberInput
-            label="Step"
+            label="Increment"
             value={step}
             onDecrease={() => onStepChange(Math.max(1, step - 1))}
-            onIncrease={() => onStepChange(Math.min(max - min, step + 1))}
+            onIncrease={() => onStepChange(step + 1)}
           />
         </View>
         <View style={styles.half}>
           <NumberInput
             label={startLabel}
             value={startValue}
-            onDecrease={() => {
-              const next = Math.max(min, startValue - step)
-              onStartValueChange(Math.min(max, next))
-            }}
-            onIncrease={() => {
-              const next = Math.min(max, startValue + step)
-              onStartValueChange(Math.max(min, next))
-            }}
+            onDecrease={() => onStartValueChange(Math.max(minLimit, startValue - step))}
+            onIncrease={() => onStartValueChange(startValue + step)}
           />
         </View>
       </View>

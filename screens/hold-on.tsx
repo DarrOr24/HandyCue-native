@@ -387,9 +387,7 @@ export function HoldOnScreen() {
             )
           }
           onIncrease={() =>
-            setGetReadyTime((v) =>
-              Math.min(inputSettings.getReadyTime.max, v + inputSettings.getReadyTime.step)
-            )
+            setGetReadyTime((v) => v + inputSettings.getReadyTime.step)
           }
           disabled={inputsDisabled}
         />
@@ -397,10 +395,10 @@ export function HoldOnScreen() {
           label="Hold time"
           value={holdTime}
           onDecrease={() =>
-            setHoldTime((v) => Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step))
+            setHoldTime((v) => Math.max(inputSettings.holdTime.step, v - inputSettings.holdTime.step))
           }
           onIncrease={() =>
-            setHoldTime((v) => Math.min(inputSettings.holdTime.max, v + inputSettings.holdTime.step))
+            setHoldTime((v) => v + inputSettings.holdTime.step)
           }
           disabled={inputsDisabled}
         />
@@ -424,9 +422,7 @@ export function HoldOnScreen() {
             )
           }
           onIncrease={() =>
-            setNumSets((v) =>
-              Math.min(inputSettings.numSets.max, v + inputSettings.numSets.step)
-            )
+            setNumSets((v) => v + inputSettings.numSets.step)
           }
           disabled={inputsDisabled}
         />
@@ -440,9 +436,7 @@ export function HoldOnScreen() {
               )
             }
             onIncrease={() =>
-              setRestTime((v) =>
-                Math.min(inputSettings.restTime.max, v + inputSettings.restTime.step)
-              )
+              setRestTime((v) => v + inputSettings.restTime.step)
             }
             disabled={inputsDisabled}
           />
