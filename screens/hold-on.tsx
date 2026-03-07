@@ -6,6 +6,7 @@ import { useKeepAwake } from 'expo-keep-awake'
 import { TimerDisplay } from '../components/timer-display'
 import { Ionicons } from '@expo/vector-icons'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
+import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
@@ -377,7 +378,7 @@ export function HoldOnScreen() {
       inputsDisabled={inputsDisabled}
       footer={<Text style={styles.note}>* All time values are in seconds</Text>}
     >
-      <View style={styles.inputs}>
+      <FeatureInputsGrid>
         <NumberInput
           label="Get ready"
           value={getReadyTime}
@@ -403,7 +404,7 @@ export function HoldOnScreen() {
           disabled={inputsDisabled}
         />
         {holdTime >= 10 && (
-          <View style={styles.singleInputWrapper}>
+          <FeatureInputsGrid.SingleInput>
             <NumberInput
               label="Callout step"
               value={calloutStep}
@@ -413,7 +414,7 @@ export function HoldOnScreen() {
               }
               disabled={inputsDisabled}
             />
-          </View>
+          </FeatureInputsGrid.SingleInput>
         )}
         <NumberInput
           label="Sets"
@@ -429,7 +430,7 @@ export function HoldOnScreen() {
           disabled={inputsDisabled}
         />
         {numSets > 1 && (
-          <View style={styles.singleInputWrapper}>
+          <FeatureInputsGrid.SingleInput>
             <NumberInput
               label="Rest time"
               value={restTime}
@@ -443,9 +444,9 @@ export function HoldOnScreen() {
               }
               disabled={inputsDisabled}
             />
-          </View>
+          </FeatureInputsGrid.SingleInput>
         )}
-      </View>
+      </FeatureInputsGrid>
     </FeatureScreenLayout>
 
     <SaveFavoriteModal
@@ -475,17 +476,5 @@ export function HoldOnScreen() {
 }
 
 const styles = StyleSheet.create({
-  inputs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    width: '100%',
-    columnGap: 12,
-    rowGap: 24,
-  },
-  singleInputWrapper: {
-    alignSelf: 'flex-start',
-    width: '48%',
-  },
   note: { fontSize: 12, color: '#999', fontStyle: 'italic' },
 })

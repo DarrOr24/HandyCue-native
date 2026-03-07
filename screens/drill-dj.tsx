@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 import { TimerDisplay } from '../components/timer-display'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
+import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
@@ -426,7 +427,7 @@ export function DrillDJScreen() {
           inputsDisabled={inputsDisabled}
           footer={<Text style={styles.note}>* All time values are in seconds</Text>}
         >
-          <View style={styles.inputs}>
+          <FeatureInputsGrid>
             <View style={styles.toggleRow}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Say reps
@@ -611,7 +612,7 @@ export function DrillDJScreen() {
               disabled={inputsDisabled}
             />
             {numSets > 1 && (
-              <View style={styles.singleInputWrapper}>
+              <FeatureInputsGrid.SingleInput>
                 <NumberInput
                   label="Rest time"
                   value={restTime}
@@ -627,9 +628,9 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
-              </View>
+              </FeatureInputsGrid.SingleInput>
             )}
-          </View>
+          </FeatureInputsGrid>
         </FeatureScreenLayout>
       </View>
 
@@ -660,18 +661,6 @@ export function DrillDJScreen() {
 
 const styles = StyleSheet.create({
   screenWrapper: { flex: 1 },
-  inputs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    width: '100%',
-    columnGap: 12,
-    rowGap: 24,
-  },
-  singleInputWrapper: {
-    alignSelf: 'flex-start',
-    width: '48%',
-  },
   toggleRow: {
     flex: 1,
     minWidth: 140,

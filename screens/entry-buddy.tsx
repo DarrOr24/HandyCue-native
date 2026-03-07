@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 import { TimerDisplay } from '../components/timer-display'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
+import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { NumberInput } from '../components/number-input'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
@@ -325,7 +326,7 @@ export function EntryBuddyScreen() {
         inputsDisabled={inputsDisabled}
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
       >
-        <View style={styles.inputs}>
+        <FeatureInputsGrid>
           <NumberInput
             label="Get ready"
             value={getReadyTime}
@@ -402,7 +403,7 @@ export function EntryBuddyScreen() {
             disabled={inputsDisabled}
           />
           {numSets > 1 && (
-            <View style={styles.singleInputWrapper}>
+            <FeatureInputsGrid.SingleInput>
               <NumberInput
                 label="Rest time"
                 value={restTime}
@@ -418,9 +419,9 @@ export function EntryBuddyScreen() {
                 }
                 disabled={inputsDisabled}
               />
-            </View>
+            </FeatureInputsGrid.SingleInput>
           )}
-        </View>
+        </FeatureInputsGrid>
       </FeatureScreenLayout>
 
       <SaveFavoriteModal
@@ -449,17 +450,5 @@ export function EntryBuddyScreen() {
 }
 
 const styles = StyleSheet.create({
-  inputs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    width: '100%',
-    columnGap: 12,
-    rowGap: 24,
-  },
-  singleInputWrapper: {
-    alignSelf: 'flex-start',
-    width: '48%',
-  },
   note: { fontSize: 12, color: '#999', fontStyle: 'italic' },
 })
