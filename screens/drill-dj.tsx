@@ -36,7 +36,7 @@ import {
   type DrillDJInputs,
 } from '../services/drillDJ.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile } from '../services/profile.service'
+import { getProfile, upsertProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -100,20 +100,70 @@ export function DrillDJScreen() {
 
   const favorites = getFavoritesForFeature<DrillDJInputs>(profile, FEATURE_KEY)
 
+  async function saveCurrentInputsToProfile() {
+    if (!session?.user?.id) return
+    try {
+      const p = await getProfile(session.user.id)
+      const current = (p?.settings as Record<string, unknown>) ?? {}
+      const existing = (current.drillDJ as DrillDJUserSettings) ?? {}
+      await upsertProfile(session.user.id, {
+        settings: {
+          ...current,
+          drillDJ: {
+            ...existing,
+            defaultValues: {
+              ...(existing.defaultValues ?? {}),
+              getReadyTime,
+              numReps,
+              numSets,
+              restTime,
+              slideTime,
+              timeBetweenSlides,
+              floatTime,
+              timeBetweenFloats,
+              switchTime,
+              timeBetweenSwitches,
+            },
+          },
+        },
+      })
+    } catch {
+      // ignore
+    }
+  }
+
   const menuHandlersRef = useRef({
-    onInfo: () => navigation.navigate('DrillDJInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('DrillDJSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJSettings')
+    },
     session,
   })
   menuHandlersRef.current = {
-    onInfo: () => navigation.navigate('DrillDJInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('DrillDJSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJSettings')
+    },
     session,
   }
 

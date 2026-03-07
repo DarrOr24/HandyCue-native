@@ -32,7 +32,7 @@ import {
   saveFavoriteForFeature,
 } from '../services/cueCoach.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile } from '../services/profile.service'
+import { getProfile, upsertProfile } from '../services/profile.service'
 
 export type EntryBuddyInputs = {
   getReadyTime: number
@@ -63,20 +63,66 @@ export function EntryBuddyScreen() {
 
   const favorites = getFavoritesForFeature<EntryBuddyInputs>(profile, FEATURE_KEY)
 
+  async function saveCurrentInputsToProfile() {
+    if (!session?.user?.id) return
+    try {
+      const p = await getProfile(session.user.id)
+      const current = (p?.settings as Record<string, unknown>) ?? {}
+      const existing = (current.entryBuddy as EntryBuddyUserSettings) ?? {}
+      await upsertProfile(session.user.id, {
+        settings: {
+          ...current,
+          entryBuddy: {
+            ...existing,
+            defaultValues: {
+              ...(existing.defaultValues ?? {}),
+              getReadyTime,
+              entryCount: numEntries,
+              holdTime,
+              timeBetween,
+              numSets,
+              restTime,
+            },
+          },
+        },
+      })
+    } catch {
+      // ignore
+    }
+  }
+
   const menuHandlersRef = useRef({
-    onInfo: () => navigation.navigate('EntryBuddyInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('EntryBuddyInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('EntryBuddySettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('EntryBuddySettings')
+    },
     session,
   })
   menuHandlersRef.current = {
-    onInfo: () => navigation.navigate('EntryBuddyInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('EntryBuddyInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('EntryBuddySettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('EntryBuddySettings')
+    },
     session,
   }
 

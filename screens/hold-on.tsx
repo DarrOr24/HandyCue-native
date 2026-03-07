@@ -30,7 +30,7 @@ import {
   type HoldOnInputs,
 } from '../services/holdOn.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile } from '../services/profile.service'
+import { getProfile, upsertProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -60,20 +60,64 @@ export function HoldOnScreen() {
 
   const favorites = getFavoritesForFeature(profile, FEATURE_KEY)
 
+  async function saveCurrentInputsToProfile() {
+    if (!session?.user?.id) return
+    try {
+      const p = await getProfile(session.user.id)
+      const current = (p?.settings as Record<string, unknown>) ?? {}
+      const existing = (current.holdOn as HoldOnUserSettings) ?? {}
+      await upsertProfile(session.user.id, {
+        settings: {
+          ...current,
+          holdOn: {
+            ...existing,
+            defaultValues: {
+              ...(existing.defaultValues ?? {}),
+              holdTime,
+              getReadyTime,
+              numSets,
+              restTime,
+            },
+          },
+        },
+      })
+    } catch {
+      // ignore
+    }
+  }
+
   const menuHandlersRef = useRef({
-    onInfo: () => navigation.navigate('HoldOnInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('HoldOnInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('HoldOnSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('HoldOnSettings')
+    },
     session,
   })
   menuHandlersRef.current = {
-    onInfo: () => navigation.navigate('HoldOnInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('HoldOnInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('HoldOnSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('HoldOnSettings')
+    },
     session,
   }
 

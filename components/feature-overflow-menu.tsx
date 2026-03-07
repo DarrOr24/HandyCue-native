@@ -3,11 +3,11 @@ import { OverflowMenu } from './overflow-menu'
 import type { OverflowMenuItem } from './overflow-menu'
 
 export interface FeatureOverflowMenuHandlers {
-  onInfo: () => void
-  onSetVoice: () => void
+  onInfo: () => void | Promise<void>
+  onSetVoice: () => void | Promise<void>
   onFavorites: () => void
   onSave: () => void
-  onSettings: () => void
+  onSettings: () => void | Promise<void>
   session: { user?: { id?: string } } | null
 }
 
@@ -59,7 +59,7 @@ export function FeatureOverflowMenu({ handlersRef }: FeatureOverflowMenuProps) {
     {
       icon: 'settings-outline',
       label: 'Settings',
-      onPress: () => handlersRef.current.onSettings(),
+      onPress: () => void handlersRef.current.onSettings(),
     },
   ]
 

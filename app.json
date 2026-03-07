@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.darrmorgan.handycue"
+      "bundleIdentifier": "com.darrmorgan.handycue",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.darrmorgan.handycue",

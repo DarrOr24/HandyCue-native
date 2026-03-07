@@ -31,7 +31,7 @@ import {
   type ShapeJamInputs,
 } from '../services/shapeJam.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile } from '../services/profile.service'
+import { getProfile, upsertProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -92,20 +92,67 @@ export function ShapeJamScreen() {
     label: s[0].toUpperCase() + s.slice(1),
   }))
 
+  async function saveCurrentInputsToProfile() {
+    if (!session?.user?.id) return
+    try {
+      const p = await getProfile(session.user.id)
+      const current = (p?.settings as Record<string, unknown>) ?? {}
+      const existing = (current.shapeJam as ShapeJamUserSettings) ?? {}
+      const holdTimeVal = shapes[0]?.holdTime ?? shapeJamDefaults.defaultValues.holdTime
+      await upsertProfile(session.user.id, {
+        settings: {
+          ...current,
+          shapeJam: {
+            ...existing,
+            defaultValues: {
+              ...(existing.defaultValues ?? {}),
+              getReadyTime,
+              numReps,
+              numSets,
+              restTime,
+              holdTime: holdTimeVal,
+              shapes: shapes.map((s) => s.shape),
+            },
+          },
+        },
+      })
+    } catch {
+      // ignore
+    }
+  }
+
   const menuHandlersRef = useRef({
-    onInfo: () => navigation.navigate('ShapeJamInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ShapeJamInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('ShapeJamSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ShapeJamSettings')
+    },
     session,
   })
   menuHandlersRef.current = {
-    onInfo: () => navigation.navigate('ShapeJamInfo'),
-    onSetVoice: () => navigation.navigate('VoiceSet'),
+    onInfo: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ShapeJamInfo')
+    },
+    onSetVoice: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('VoiceSet')
+    },
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
-    onSettings: () => navigation.navigate('ShapeJamSettings'),
+    onSettings: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ShapeJamSettings')
+    },
     session,
   }
 
