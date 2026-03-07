@@ -407,21 +407,23 @@ export function ShapeJamScreen() {
             disabled={inputsDisabled}
           />
           {numSets > 1 && (
-            <NumberInput
-              label="Rest time"
-              value={restTime}
-              onDecrease={() =>
-                setRestTime((v) =>
-                  Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
-                )
-              }
-              onIncrease={() =>
-                setRestTime((v) =>
-                  v + inputSettings.restTime.step
-                )
-              }
-              disabled={inputsDisabled}
-            />
+            <View style={styles.singleInputWrapper}>
+              <NumberInput
+                label="Rest time"
+                value={restTime}
+                onDecrease={() =>
+                  setRestTime((v) =>
+                    Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                  )
+                }
+                onIncrease={() =>
+                  setRestTime((v) =>
+                    v + inputSettings.restTime.step
+                  )
+                }
+                disabled={inputsDisabled}
+              />
+            </View>
           )}
           </View>
         </FeatureScreenLayout>
@@ -477,6 +479,10 @@ const styles = StyleSheet.create({
     width: '100%',
     columnGap: 12,
     rowGap: 24,
+  },
+  singleInputWrapper: {
+    alignSelf: 'flex-start',
+    width: '48%',
   },
   shapeRow: {
     flexDirection: 'row',
