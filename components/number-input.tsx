@@ -37,9 +37,11 @@ const styles = StyleSheet.create({
   row: {
     width: '100%',
     minHeight: 72,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f5f7f6',
     borderRadius: 10,
     padding: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
   label: { fontSize: 15, color: '#666', marginBottom: 4, flexShrink: 1 },
   labelDisabled: { color: '#999' },

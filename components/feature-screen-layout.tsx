@@ -1,5 +1,6 @@
 import { Platform, StyleSheet, View, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
 
 interface FeatureScreenLayoutProps {
@@ -23,6 +24,10 @@ export function FeatureScreenLayout({
 }: FeatureScreenLayoutProps) {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <LinearGradient
+        colors={['#ffffff', '#e0f0eb']}
+        style={StyleSheet.absoluteFillObject}
+      />
       <View style={styles.content}>
         <View style={styles.timerSection}>{timerContent}</View>
 
@@ -44,7 +49,7 @@ export function FeatureScreenLayout({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, width: '100%', backgroundColor: '#fff' },
+  container: { flex: 1, width: '100%' },
   content: {
     flex: 1,
     width: '100%',

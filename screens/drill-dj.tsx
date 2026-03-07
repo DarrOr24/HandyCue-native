@@ -700,8 +700,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 12,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f5f7f6',
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
   toggleLabel: {
     flex: 1,
