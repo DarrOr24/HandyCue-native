@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
-import { useKeepAwake } from 'expo-keep-awake'
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
 import { TimerDisplay } from '../components/timer-display'
@@ -39,7 +39,6 @@ const FEATURE_KEY = 'shapeJam'
 const DEFAULT_HOLD_TIME = 1
 
 export function ShapeJamScreen() {
-  useKeepAwake()
   const navigation = useNavigation<any>()
   const { session } = useAuth()
 
@@ -63,6 +62,18 @@ export function ShapeJamScreen() {
 
   const [displayContent, setDisplayContent] = useState<string | null>(null)
   const [phase, setPhase] = useState<'idle' | 'getReady' | 'shapes' | 'rest' | 'done'>('idle')
+
+  const isRunning = phase !== 'idle' && phase !== 'done'
+  useEffect(() => {
+    if (isRunning) {
+      void activateKeepAwakeAsync()
+    } else {
+      void deactivateKeepAwake()
+    }
+    return () => {
+      void deactivateKeepAwake()
+    }
+  }, [isRunning])
 
   const resetSignalRef = useRef(createResetSignal())
   const voiceRef = useRef<{ identifier: string; name: string } | null>(null)

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert } from 'react-native'
-import { useKeepAwake } from 'expo-keep-awake'
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 
 import { TimerDisplay } from '../components/timer-display'
 import { Ionicons } from '@expo/vector-icons'
@@ -43,7 +43,6 @@ const DEFAULT_CALLOUT_STEP = 10
 const FEATURE_KEY = 'holdOn'
 
 export function HoldOnScreen() {
-  useKeepAwake()
   const navigation = useNavigation<any>()
   const { session } = useAuth()
 
@@ -130,6 +129,18 @@ export function HoldOnScreen() {
   const [phase, setPhase] = useState<'idle' | 'getReady' | 'hold' | 'rest' | 'done'>('idle')
   const [elapsed, setElapsed] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+
+  const isRunning = phase !== 'idle' && phase !== 'done'
+  useEffect(() => {
+    if (isRunning) {
+      void activateKeepAwakeAsync()
+    } else {
+      void deactivateKeepAwake()
+    }
+    return () => {
+      void deactivateKeepAwake()
+    }
+  }, [isRunning])
 
   const currentSetRef = useRef(1)
   const cleanupRef = useRef<(() => void) | null>(null)

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert } from 'react-native'
-import { useKeepAwake } from 'expo-keep-awake'
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
 import { TimerDisplay } from '../components/timer-display'
@@ -46,7 +46,6 @@ export type EntryBuddyInputs = {
 const FEATURE_KEY = 'entryBuddy'
 
 export function EntryBuddyScreen() {
-  useKeepAwake()
   const navigation = useNavigation<any>()
   const { session } = useAuth()
 
@@ -129,6 +128,18 @@ export function EntryBuddyScreen() {
 
   const [displayContent, setDisplayContent] = useState<string | null>(null)
   const [phase, setPhase] = useState<'idle' | 'getReady' | 'entries' | 'rest' | 'done'>('idle')
+
+  const isRunning = phase !== 'idle' && phase !== 'done'
+  useEffect(() => {
+    if (isRunning) {
+      void activateKeepAwakeAsync()
+    } else {
+      void deactivateKeepAwake()
+    }
+    return () => {
+      void deactivateKeepAwake()
+    }
+  }, [isRunning])
 
   const currentSetRef = useRef(1)
   const cleanupRef = useRef<(() => void) | null>(null)

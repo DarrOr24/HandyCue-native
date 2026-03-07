@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native'
-import { useKeepAwake } from 'expo-keep-awake'
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
 import { TimerDisplay } from '../components/timer-display'
@@ -82,6 +82,18 @@ export function DrillDJScreen() {
 
   const [displayContent, setDisplayContent] = useState<string | null>(null)
   const [phase, setPhase] = useState<'idle' | 'getReady' | 'drill' | 'rest' | 'done'>('idle')
+
+  const isRunning = phase !== 'idle' && phase !== 'done'
+  useEffect(() => {
+    if (isRunning) {
+      void activateKeepAwakeAsync()
+    } else {
+      void deactivateKeepAwake()
+    }
+    return () => {
+      void deactivateKeepAwake()
+    }
+  }, [isRunning])
 
   const resetSignalRef = useRef(createResetSignal())
   const voiceRef = useRef<{ identifier: string; name: string } | null>(null)
