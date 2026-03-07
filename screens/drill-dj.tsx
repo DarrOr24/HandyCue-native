@@ -60,7 +60,7 @@ export function DrillDJScreen() {
   const [restTime, setRestTime] = useState<number>(drillDJDefaults.defaultValues.restTime)
   const [drillType, setDrillType] = useState<DrillType>('slide')
   const [sayRepCount, setSayRepCount] = useState(true)
-  const [metronomeEnabled, setMetronomeEnabled] = useState(false)
+  const [metronomeEnabled, setMetronomeEnabled] = useState(true)
 
   // Slide
   const [slideTime, setSlideTime] = useState<number>(drillDJDefaults.defaultValues.slideTime)

@@ -4,7 +4,7 @@ import { InfoScreenLayout } from '../components/info-screen-layout'
 
 export function ShapeJamInfoScreen() {
   return (
-    <InfoScreenLayout title="ShapeJam Info">
+    <InfoScreenLayout title="ShapeJam">
       <Text style={styles.emphasis}>
         Your voice-guided shape flow builder
       </Text>

@@ -4,7 +4,7 @@ import { InfoScreenLayout } from '../components/info-screen-layout'
 
 export function DrillDJInfoScreen() {
   return (
-    <InfoScreenLayout title="DrillDJ Info">
+    <InfoScreenLayout title="DrillDJ">
       <Text style={styles.emphasis}>
         Your voice-guided, tempo-driven handstand drill companion
       </Text>
@@ -20,7 +20,7 @@ export function DrillDJInfoScreen() {
       </Text>
 
       <Text style={styles.paragraph}>
-        Enable Metronome for a ticking sound once per second during longer phases — keeping your rhythm consistent.
+        Enable Voice count to hear the count spoken aloud during longer phases — keeping your rhythm consistent.
       </Text>
 
       <View style={styles.iconSection}>
