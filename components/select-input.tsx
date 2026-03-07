@@ -57,7 +57,7 @@ export function SelectInput({
         <TouchableOpacity disabled={disabled} onPress={onDecrease}>
           <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
         </TouchableOpacity>
-        <Text style={[styles.value, disabled && styles.valueDisabled]} numberOfLines={1} adjustsFontSizeToFit>
+        <Text style={[styles.value, disabled && styles.valueDisabled]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65}>
           {displayLabel}
         </Text>
         <TouchableOpacity disabled={disabled} onPress={onIncrease}>
