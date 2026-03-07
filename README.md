@@ -57,6 +57,10 @@ eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your-anon-key" -
 
 Or add them in [expo.dev](https://expo.dev) → your project → Secrets.
 
+### App icon
+
+Replace `assets/app-icon.png` with a **1024×1024** PNG. See `assets/ICON_SPECS.md` for Android adaptive icon requirements (logo centered in safe zone to avoid stretching/cropping).
+
 ## Migration status
 
 See [MIGRATION_ROADMAP.md](../MIGRATION_ROADMAP.md) in the project root for the full migration plan.

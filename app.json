@@ -17,7 +17,7 @@
     "android": {
       "package": "com.darrmorgan.handycue",
       "adaptiveIcon": {
-        "backgroundColor": "#e0f0eb",
+        "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/app-icon.png"
       }
     },
