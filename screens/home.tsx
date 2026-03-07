@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, ScrollView, Alert, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -67,6 +68,22 @@ export function HomeScreen() {
         },
   ];
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <View style={headerStyles.titleRow}>
+          <Image
+            source={require("../assets/app-icon.png")}
+            style={headerStyles.titleIcon}
+            resizeMode="contain"
+          />
+          <Text style={headerStyles.title}>HandyCue</Text>
+        </View>
+      ),
+      headerRight: () => <ProfileMenu items={profileMenuItems} />,
+    });
+  }, [navigation, session]);
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <LinearGradient
@@ -77,18 +94,6 @@ export function HomeScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        <View style={styles.header}>
-          <View style={styles.titleRow}>
-            <Image
-              source={require("../assets/app-icon.png")}
-              style={styles.titleIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.title}>HandyCue</Text>
-          </View>
-          <ProfileMenu items={profileMenuItems} />
-        </View>
-
         {FEATURES.map((f) => (
           <FeatureCard
             key={f.id}
@@ -110,26 +115,21 @@ export function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  container: { flex: 1 },
-  content: { padding: 20, paddingBottom: 40 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 24,
-  },
+const headerStyles = StyleSheet.create({
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   titleIcon: {
-    width: 36,
-    height: 36,
-    marginRight: 10,
+    width: 32,
+    height: 32,
+    marginRight: 8,
   },
-  title: { fontSize: 28, fontWeight: "bold" },
-  subtitle: { fontSize: 16, color: "#666", marginTop: 4 },
-  sectionTitle: { fontSize: 16, fontWeight: "600", marginBottom: 12 },
+  title: { fontSize: 20, fontWeight: "bold" },
+});
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  container: { flex: 1 },
+  content: { padding: 20, paddingBottom: 40 },
 });
