@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import * as Linking from 'expo-linking'
 import { Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
+import { createSessionFromUrl } from '../lib/auth-deeplink'
+import { navigateWhenReady } from '../lib/navigation-ref'
 import { upsertProfile } from '../services/profile.service'
 
 interface AuthContextValue {
@@ -13,6 +16,18 @@ const AuthContext = createContext<AuthContextValue>({ session: null, isLoading: 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  // Handle magic link / password reset deep links
+  const url = Linking.useURL()
+  useEffect(() => {
+    if (url && url.includes('access_token=')) {
+      createSessionFromUrl(url).then((result) => {
+        if (result.success && result.type === 'recovery') {
+          navigateWhenReady('Account')
+        }
+      })
+    }
+  }, [url])
 
   useEffect(() => {
     supabase.auth

@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../lib/supabase'
+import { getAuthRedirectUrl } from '../lib/auth-deeplink'
 
 export function LoginScreen() {
   const navigation = useNavigation<any>()
@@ -58,7 +59,7 @@ export function LoginScreen() {
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
-        options: { emailRedirectTo: undefined },
+        options: { emailRedirectTo: getAuthRedirectUrl() },
       })
       if (error) throw error
       Alert.alert('Success', 'Check your email to confirm your account.')
@@ -77,7 +78,9 @@ export function LoginScreen() {
     }
     setLoading(true)
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email.trim())
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: getAuthRedirectUrl(),
+      })
       if (error) throw error
       Alert.alert(
         'Check your email',
@@ -100,7 +103,10 @@ export function LoginScreen() {
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
-        options: { shouldCreateUser: true },
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: getAuthRedirectUrl(),
+        },
       })
       if (error) throw error
       Alert.alert('Check your email', 'We sent you a sign-in link. Open it on this device to log in.')

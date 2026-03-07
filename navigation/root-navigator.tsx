@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
+import { navigationRef } from '../lib/navigation-ref'
 import { HomeScreen } from '../screens/home'
 import { HoldOnScreen } from '../screens/hold-on'
 import { HoldOnSettingsScreen } from '../screens/hold-on-settings'
@@ -21,7 +22,7 @@ const Stack = createNativeStackNavigator()
 
 export function RootNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'HandyCue' }} />
         <Stack.Screen

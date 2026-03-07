@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "handycue",
     "name": "HandyCue",
     "slug": "handycue",
     "version": "1.0.0",
@@ -12,14 +13,21 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.darrmorgan.handycue"
     },
     "android": {
       "package": "com.darrmorgan.handycue",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/app-icon.png"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ]
     },
     "web": {
       "favicon": "./assets/app-icon.png"

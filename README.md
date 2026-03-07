@@ -61,6 +61,14 @@ Or add them in [expo.dev](https://expo.dev) → your project → Secrets.
 
 Replace `assets/app-icon.png` with a **1024×1024** PNG. See `assets/ICON_SPECS.md` for Android adaptive icon requirements (logo centered in safe zone to avoid stretching/cropping).
 
+### Magic link & password reset (deep linking)
+
+For magic link and password reset emails to open the app instead of a localhost error:
+
+1. In **Supabase Dashboard** → Authentication → URL Configuration
+2. Add to **Redirect URLs**: `handycue://auth/callback`
+3. Rebuild the app (scheme is baked into the build)
+
 ## Migration status
 
 See [MIGRATION_ROADMAP.md](../MIGRATION_ROADMAP.md) in the project root for the full migration plan.
