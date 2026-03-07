@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
 import { ProfileMenu } from "../components/profile-menu";
@@ -68,6 +69,10 @@ export function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <LinearGradient
+        colors={["#ffffff", "#e0f0eb"]}
+        style={StyleSheet.absoluteFillObject}
+      />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
@@ -99,8 +104,8 @@ export function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#fff" },
-  container: { flex: 1, backgroundColor: "#fff" },
+  safeArea: { flex: 1 },
+  container: { flex: 1 },
   content: { padding: 20, paddingBottom: 40 },
   header: {
     flexDirection: "row",
