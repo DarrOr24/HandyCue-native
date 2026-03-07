@@ -15,6 +15,10 @@ export function DrillDJInfoScreen() {
       </Text>
 
       <Text style={styles.paragraph}>
+        Switch drill is good for one arm prep drills — you can time your hold on each hand accurately.
+      </Text>
+
+      <Text style={styles.paragraph}>
         The feature gives clear voice commands — helping you build control by responding to external cues.
         This strengthens your timing, sharpens transitions, and removes the mental delay between decision and action.
       </Text>
