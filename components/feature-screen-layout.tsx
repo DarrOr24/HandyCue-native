@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView } from 'react-native'
+import { Platform, StyleSheet, View, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ReactNode } from 'react'
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   timerSection: {
-    marginTop: 8,
+    marginTop: Platform.OS === 'ios' ? 0 : 8,
     marginBottom: 8,
   },
   actionsSection: {

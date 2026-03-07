@@ -56,7 +56,7 @@ export function SelectInput({
         <TouchableOpacity disabled={disabled} onPress={onDecrease}>
           <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
         </TouchableOpacity>
-        <Text style={[styles.value, disabled && styles.valueDisabled]} numberOfLines={1}>
+        <Text style={[styles.value, disabled && styles.valueDisabled]} numberOfLines={1} adjustsFontSizeToFit>
           {displayLabel}
         </Text>
         <TouchableOpacity disabled={disabled} onPress={onIncrease}>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   removeBtn: { fontSize: 14, color: '#dc2626', fontWeight: '600', paddingLeft: 8 },
   removeBtnDisabled: { color: '#999' },
   controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  value: { flex: 1, fontSize: 18, fontWeight: '600', minWidth: 36, textAlign: 'center', color: '#374151' },
+  value: { flex: 1, fontSize: 14, fontWeight: '600', minWidth: 36, textAlign: 'center', color: '#374151' },
   valueDisabled: { color: '#999' },
   btn: { fontSize: 26, fontWeight: '600', color: '#5B9A8B', paddingHorizontal: 12 },
   btnDisabled: { color: '#999' },

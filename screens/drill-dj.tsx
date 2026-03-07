@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import {
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -434,13 +435,16 @@ export function DrillDJScreen() {
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Say reps
               </Text>
-              <Switch
-                value={sayRepCount}
-                onValueChange={setSayRepCount}
-                disabled={inputsDisabled}
-                trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
-                thumbColor="#fff"
-              />
+              <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                <Switch
+                  value={sayRepCount}
+                  onValueChange={setSayRepCount}
+                  disabled={inputsDisabled}
+                  trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                  thumbColor="#fff"
+                  style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                />
+              </View>
             </View>
             </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
@@ -448,13 +452,16 @@ export function DrillDJScreen() {
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Voice count
               </Text>
-              <Switch
-                value={metronomeEnabled}
-                onValueChange={setMetronomeEnabled}
-                disabled={inputsDisabled}
-                trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
-                thumbColor="#fff"
-              />
+              <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                <Switch
+                  value={metronomeEnabled}
+                  onValueChange={setMetronomeEnabled}
+                  disabled={inputsDisabled}
+                  trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                  thumbColor="#fff"
+                  style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                />
+              </View>
             </View>
             </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
@@ -692,18 +699,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    padding: 12,
     backgroundColor: '#f8f9fa',
     borderRadius: 10,
   },
   toggleLabel: {
-    fontSize: 14,
+    flex: 1,
+    fontSize: 15,
     color: '#374151',
+    lineHeight: Platform.OS === 'ios' ? 31 : undefined,
   },
   toggleLabelDisabled: {
     color: '#999',
+  },
+  switchWrapperIOS: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  switchIOS: {
+    transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
   },
   note: { fontSize: 12, color: '#999', fontStyle: 'italic' },
 })
