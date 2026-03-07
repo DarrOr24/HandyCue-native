@@ -52,23 +52,17 @@ export function SettingGroup({
 
 const styles = StyleSheet.create({
   group: {
-    marginBottom: 24,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+    marginBottom: 28,
   },
   groupTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#374151',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   row: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 12,
   },
   lastRow: { marginBottom: 0 },
   half: { flex: 1, minWidth: 0 },

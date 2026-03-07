@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { inputContainerStyle } from '../theme/input-styles'
 
 const DEFAULT_SHAPES = ['tuck', 'straight', 'straddle', 'pike', 'diamond']
 
@@ -119,18 +120,13 @@ export function ShapeListSettings({ customShapes, setCustomShapes }: ShapeListSe
 
 const styles = StyleSheet.create({
   group: {
-    marginBottom: 24,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+    marginBottom: 28,
   },
   groupTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#374151',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   addRow: {
     flexDirection: 'row',
@@ -141,8 +137,9 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
+    borderColor: '#e5e7eb',
+    backgroundColor: '#f5f7f6',
+    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 14,
     fontSize: 16,
@@ -173,10 +170,8 @@ const styles = StyleSheet.create({
   chip: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#fff',
+    ...inputContainerStyle,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
   },
   chipSelected: {
     borderColor: '#5B9A8B',

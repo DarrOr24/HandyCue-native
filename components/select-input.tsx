@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { inputContainerStyle } from '../theme/input-styles'
 
 export interface SelectOption {
   value: string
@@ -71,11 +72,8 @@ const styles = StyleSheet.create({
   row: {
     width: '100%',
     minHeight: 72,
-    backgroundColor: '#f5f7f6',
-    borderRadius: 10,
     padding: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+    ...inputContainerStyle,
   },
   labelRow: {
     flexDirection: 'row',
