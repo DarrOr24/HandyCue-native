@@ -2,7 +2,7 @@
  * DrillDJ service - perform phases with optional voice count.
  */
 
-import { delay, speak, type StoredVoice } from './core.service'
+import { delay, formatTime, speak, type StoredVoice } from './core.service'
 import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
 
 export { runGetReadyCountdown, runRestCycle }
@@ -18,6 +18,7 @@ export async function performPhase(options: {
   enableMetronome: boolean
   onPhaseStart?: () => void
   onPhaseEnd?: () => void
+  onTick?: (elapsed: number, display: string) => void
   isCancelled: () => boolean
 }): Promise<void> {
   const {
@@ -29,6 +30,7 @@ export async function performPhase(options: {
     enableMetronome,
     onPhaseStart,
     onPhaseEnd,
+    onTick,
     isCancelled,
   } = options
 
@@ -48,9 +50,16 @@ export async function performPhase(options: {
   const COUNT_INTERVAL_MS = 1000
 
   for (let i = 0; i < duration; i++) {
+    const secondsLeft = duration - i
+    if (onTick) {
+      if (duration >= 25) {
+        onTick(i, secondsLeft <= 10 ? String(secondsLeft) : formatTime(i))
+      } else if (secondsLeft <= 10 && secondsLeft >= 1) {
+        onTick(i, String(secondsLeft))
+      }
+    }
     if (isCancelled()) break
 
-    const secondsLeft = duration - i
     let countWord: string | null = null
 
     if (duration >= 25) {

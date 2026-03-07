@@ -230,6 +230,7 @@ export function DrillDJScreen() {
         setDisplayStep: setDisplayContent,
         voice: voiceRef.current,
         enableMetronome: metronomeEnabled,
+        onTick: opts.duration >= 5 ? (_, display) => setDisplayContent(display) : undefined,
         isCancelled: () => resetSignalRef.current.isCancelled(),
       })
 
