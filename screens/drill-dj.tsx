@@ -428,6 +428,7 @@ export function DrillDJScreen() {
           footer={<Text style={styles.note}>* All time values are in seconds</Text>}
         >
           <FeatureInputsGrid>
+            <FeatureInputsGrid.GridItem>
             <View style={styles.toggleRow}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Say reps
@@ -440,6 +441,8 @@ export function DrillDJScreen() {
                 thumbColor="#fff"
               />
             </View>
+            </FeatureInputsGrid.GridItem>
+            <FeatureInputsGrid.GridItem>
             <View style={styles.toggleRow}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Voice count
@@ -452,6 +455,8 @@ export function DrillDJScreen() {
                 thumbColor="#fff"
               />
             </View>
+            </FeatureInputsGrid.GridItem>
+            <FeatureInputsGrid.GridItem>
             <NumberInput
                 label="Get ready"
               value={getReadyTime}
@@ -467,6 +472,8 @@ export function DrillDJScreen() {
               }
               disabled={inputsDisabled}
             />
+            </FeatureInputsGrid.GridItem>
+            <FeatureInputsGrid.GridItem>
             <NumberInput
               label="Reps"
               value={numReps}
@@ -482,7 +489,9 @@ export function DrillDJScreen() {
               }
               disabled={inputsDisabled}
             />
+            </FeatureInputsGrid.GridItem>
 
+            <FeatureInputsGrid.GridItem>
             <SelectInput
               label="Drill type"
               options={DRILL_OPTIONS}
@@ -490,9 +499,11 @@ export function DrillDJScreen() {
               onChange={(v) => setDrillType(v as DrillType)}
               disabled={inputsDisabled}
             />
+            </FeatureInputsGrid.GridItem>
 
             {drillType === 'slide' && (
               <>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Slide time"
                   value={slideTime}
@@ -508,6 +519,8 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Hold time"
                     value={timeBetweenSlides}
@@ -523,11 +536,13 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
               </>
             )}
 
             {drillType === 'float' && (
               <>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Float time"
                   value={floatTime}
@@ -543,6 +558,8 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Time between"
                   value={timeBetweenFloats}
@@ -558,11 +575,13 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
               </>
             )}
 
             {drillType === 'switch' && (
               <>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Time between"
                   value={timeBetweenSwitches}
@@ -578,6 +597,8 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
+                <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Switch time"
                     value={switchTime}
@@ -593,9 +614,11 @@ export function DrillDJScreen() {
                   }
                   disabled={inputsDisabled}
                 />
+                </FeatureInputsGrid.GridItem>
               </>
             )}
 
+            <FeatureInputsGrid.GridItem>
             <NumberInput
               label="Sets"
               value={numSets}
@@ -611,6 +634,7 @@ export function DrillDJScreen() {
               }
               disabled={inputsDisabled}
             />
+            </FeatureInputsGrid.GridItem>
             {numSets > 1 && (
               <FeatureInputsGrid.SingleInput>
                 <NumberInput
@@ -662,8 +686,8 @@ export function DrillDJScreen() {
 const styles = StyleSheet.create({
   screenWrapper: { flex: 1 },
   toggleRow: {
-    flex: 1,
-    minWidth: 140,
+    width: '100%',
+    minHeight: 72,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

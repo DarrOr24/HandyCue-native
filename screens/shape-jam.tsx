@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
 import { useKeepAwake } from 'expo-keep-awake'
@@ -329,6 +329,7 @@ export function ShapeJamScreen() {
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
         >
           <FeatureInputsGrid>
+            <FeatureInputsGrid.GridItem>
             <NumberInput
             label="Get ready"
             value={getReadyTime}
@@ -344,6 +345,8 @@ export function ShapeJamScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Reps"
             value={numReps}
@@ -359,54 +362,81 @@ export function ShapeJamScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
 
           {shapes.map((shapeObj, idx) => (
-            <View key={idx} style={styles.shapeRow}>
-              <SelectInput
-                label={`Shape ${idx + 1}`}
-                options={shapeOptions}
-                value={shapeObj.shape}
-                onChange={(v) => updateShape(idx, 'shape', v)}
-                disabled={inputsDisabled}
-                onRemove={shapes.length > 2 ? () => removeShape(idx) : undefined}
-              />
+            <React.Fragment key={idx}>
+              <FeatureInputsGrid.GridItem>
+                <SelectInput
+                  label={`Shape ${idx + 1}`}
+                  options={shapeOptions}
+                  value={shapeObj.shape}
+                  onChange={(v) => updateShape(idx, 'shape', v)}
+                  disabled={inputsDisabled}
+                  onRemove={shapes.length > 2 ? () => removeShape(idx) : undefined}
+                />
+              </FeatureInputsGrid.GridItem>
+              <FeatureInputsGrid.GridItem>
+                <NumberInput
+                  label={`Hold ${idx + 1}`}
+                  value={shapeObj.holdTime}
+                  onDecrease={() =>
+                    updateShape(
+                      idx,
+                      'holdTime',
+                      Math.max(inputSettings.holdTime.min, shapeObj.holdTime - inputSettings.holdTime.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    updateShape(
+                      idx,
+                      'holdTime',
+                      shapeObj.holdTime + inputSettings.holdTime.step
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+              </FeatureInputsGrid.GridItem>
+            </React.Fragment>
+          ))}
+
+          {numSets === 1 ? (
+            <FeatureInputsGrid.SingleInput>
               <NumberInput
-                label={`Hold ${idx + 1}`}
-                value={shapeObj.holdTime}
+                label="Sets"
+                value={numSets}
                 onDecrease={() =>
-                  updateShape(
-                    idx,
-                    'holdTime',
-                    Math.max(inputSettings.holdTime.min, shapeObj.holdTime - inputSettings.holdTime.step)
+                  setNumSets((v) =>
+                    Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
                   )
                 }
                 onIncrease={() =>
-                  updateShape(
-                    idx,
-                    'holdTime',
-                    shapeObj.holdTime + inputSettings.holdTime.step
+                  setNumSets((v) =>
+                    v + inputSettings.numSets.step
                   )
                 }
                 disabled={inputsDisabled}
               />
-            </View>
-          ))}
-
-          <NumberInput
-            label="Sets"
-            value={numSets}
-            onDecrease={() =>
-              setNumSets((v) =>
-                Math.max(inputSettings.numSets.step, v - inputSettings.numSets.step)
-              )
-            }
-            onIncrease={() =>
-              setNumSets((v) =>
-                v + inputSettings.numSets.step
-              )
-            }
-            disabled={inputsDisabled}
-          />
+            </FeatureInputsGrid.SingleInput>
+          ) : (
+            <FeatureInputsGrid.GridItem>
+              <NumberInput
+                label="Sets"
+                value={numSets}
+                onDecrease={() =>
+                  setNumSets((v) =>
+                    Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                  )
+                }
+                onIncrease={() =>
+                  setNumSets((v) =>
+                    v + inputSettings.numSets.step
+                  )
+                }
+                disabled={inputsDisabled}
+              />
+            </FeatureInputsGrid.GridItem>
+          )}
           {numSets > 1 && (
             <FeatureInputsGrid.SingleInput>
               <NumberInput
@@ -472,12 +502,6 @@ export function ShapeJamScreen() {
 const styles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
-  },
-  shapeRow: {
-    flexDirection: 'row',
-    flex: 1,
-    minWidth: '100%',
-    gap: 12,
   },
   addShapeAbsolute: {
     position: 'absolute',

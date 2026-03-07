@@ -1,31 +1,45 @@
 import { StyleSheet, View } from 'react-native'
 import { ReactNode } from 'react'
 
+const CELL_WIDTH = '48%'
+const GAP = 12
+
 /**
- * Shared inputs grid layout for feature screens (HoldOn, DrillDJ, EntryBuddy, ShapeJam).
- * Use SingleInput to wrap inputs that may be alone in the last row so they stay left-aligned.
+ * Grid layout for feature screens. All cells are the same size (48% width).
+ * Wrap each input in GridItem. Use SingleInput for a single cell in the last row (left-aligned).
  */
 export function FeatureInputsGrid({ children }: { children: ReactNode }) {
   return <View style={styles.grid}>{children}</View>
 }
 
-function SingleInput({ children }: { children: ReactNode }) {
-  return <View style={styles.singleInputWrapper}>{children}</View>
+function GridItem({ children }: { children: ReactNode }) {
+  return <View style={styles.cell}>{children}</View>
 }
 
+function SingleInput({ children }: { children: ReactNode }) {
+  return <View style={[styles.cell, styles.singleCell]}>{children}</View>
+}
+
+FeatureInputsGrid.GridItem = GridItem
 FeatureInputsGrid.SingleInput = SingleInput
 
 const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     width: '100%',
-    columnGap: 12,
+    columnGap: GAP,
     rowGap: 24,
   },
-  singleInputWrapper: {
+  cell: {
+    width: CELL_WIDTH,
+    minWidth: CELL_WIDTH,
+    maxWidth: CELL_WIDTH,
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  singleCell: {
     alignSelf: 'flex-start',
-    width: '48%',
   },
 })

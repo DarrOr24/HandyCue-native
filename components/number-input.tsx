@@ -35,8 +35,8 @@ export function NumberInput({
 
 const styles = StyleSheet.create({
   row: {
-    flex: 1,
-    minWidth: 140,
+    width: '100%',
+    minHeight: 72,
     backgroundColor: '#f8f9fa',
     borderRadius: 10,
     padding: 12,

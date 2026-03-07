@@ -379,6 +379,7 @@ export function HoldOnScreen() {
       footer={<Text style={styles.note}>* All time values are in seconds</Text>}
     >
       <FeatureInputsGrid>
+        <FeatureInputsGrid.GridItem>
         <NumberInput
           label="Get ready"
           value={getReadyTime}
@@ -392,6 +393,8 @@ export function HoldOnScreen() {
           }
           disabled={inputsDisabled}
         />
+        </FeatureInputsGrid.GridItem>
+        <FeatureInputsGrid.GridItem>
         <NumberInput
           label="Hold time"
           value={holdTime}
@@ -403,6 +406,7 @@ export function HoldOnScreen() {
           }
           disabled={inputsDisabled}
         />
+        </FeatureInputsGrid.GridItem>
         {holdTime >= 10 && (
           <FeatureInputsGrid.SingleInput>
             <NumberInput
@@ -416,6 +420,7 @@ export function HoldOnScreen() {
             />
           </FeatureInputsGrid.SingleInput>
         )}
+        <FeatureInputsGrid.GridItem>
         <NumberInput
           label="Sets"
           value={numSets}
@@ -429,8 +434,9 @@ export function HoldOnScreen() {
           }
           disabled={inputsDisabled}
         />
+        </FeatureInputsGrid.GridItem>
         {numSets > 1 && (
-          <FeatureInputsGrid.SingleInput>
+            <FeatureInputsGrid.SingleInput>
             <NumberInput
               label="Rest time"
               value={restTime}

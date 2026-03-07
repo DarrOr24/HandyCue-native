@@ -327,6 +327,7 @@ export function EntryBuddyScreen() {
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
       >
         <FeatureInputsGrid>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Get ready"
             value={getReadyTime}
@@ -342,6 +343,8 @@ export function EntryBuddyScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Entries"
             value={numEntries}
@@ -357,6 +360,8 @@ export function EntryBuddyScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Hold time"
             value={holdTime}
@@ -372,6 +377,8 @@ export function EntryBuddyScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Time between"
             value={timeBetween}
@@ -387,6 +394,8 @@ export function EntryBuddyScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
+          <FeatureInputsGrid.GridItem>
           <NumberInput
             label="Sets"
             value={numSets}
@@ -402,6 +411,7 @@ export function EntryBuddyScreen() {
             }
             disabled={inputsDisabled}
           />
+          </FeatureInputsGrid.GridItem>
           {numSets > 1 && (
             <FeatureInputsGrid.SingleInput>
               <NumberInput
