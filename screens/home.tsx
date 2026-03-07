@@ -23,7 +23,7 @@ const FEATURES = [
   {
     id: "shapeJam",
     label: "ShapeJam",
-    subtitle: "Your dynamic guide for handstand shape switches",
+    subtitle: "Your dynamic guide for handstand shape transitions",
     img: require("../assets/imgs/diamond-handstand.png"),
   },
   {
