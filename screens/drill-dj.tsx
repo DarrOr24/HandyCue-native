@@ -243,7 +243,7 @@ export function DrillDJScreen() {
       for (let i = 1; i <= numReps; i++) {
         if (resetSignalRef.current.isCancelled()) return
         await runPhase({
-          label: `Slide down ${i}`,
+          label: 'Slide down',
           displayLabel: `Down ${i}`,
           duration: slideTime,
         })
@@ -264,7 +264,7 @@ export function DrillDJScreen() {
       for (let i = 1; i <= numReps; i++) {
         if (resetSignalRef.current.isCancelled()) return
         await runPhase({
-          label: `Float ${i}`,
+          label: 'Float',
           displayLabel: `Float ${i}`,
           duration: floatTime,
         })
@@ -284,7 +284,7 @@ export function DrillDJScreen() {
         })
         if (resetSignalRef.current.isCancelled()) return
         await runPhase({
-          label: `Switch ${i}`,
+          label: 'Switch',
           displayLabel: `Switch ${i}`,
           duration: switchTime,
         })

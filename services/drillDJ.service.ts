@@ -35,7 +35,7 @@ export async function performPhase(options: {
   if (label === 'Hold' && duration === 0) return
 
   setDisplayStep(displayLabel)
-  const announceLabel = duration > 10 ? `${label} for ${duration} seconds` : label
+  const announceLabel = duration >= 10 ? `${label} for ${duration}` : label
   await speak(announceLabel, voice)
   if (isCancelled()) return
 
@@ -46,26 +46,29 @@ export async function performPhase(options: {
 
   onPhaseStart?.()
   const COUNT_INTERVAL_MS = 1000
-  const ordinals: Record<number, string> = {
-    1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-    6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
-  }
-
-  const halfwayPoint = duration >= 30 ? Math.floor(duration / 2) : -1
 
   for (let i = 0; i < duration; i++) {
     if (isCancelled()) break
 
+    const secondsLeft = duration - i
     let countWord: string | null = null
-    if (duration <= 10) {
-      const countValue = duration - i
-      countWord = ordinals[countValue] ?? String(countValue)
-    } else {
-      const secondsLeft = duration - i
-      if (i === halfwayPoint) {
-        countWord = 'halfway'
+
+    if (duration >= 25) {
+      // HoldOn-style: say elapsed every 10s when remaining > 10, then countdown from 10
+      if (secondsLeft > 10 && i > 0 && i % 10 === 0) {
+        countWord = String(i)
       } else if (secondsLeft <= 10 && secondsLeft >= 1) {
-        countWord = ordinals[secondsLeft] ?? String(secondsLeft)
+        countWord = String(secondsLeft)
+      }
+    } else if (duration >= 12) {
+      // 12–24 seconds: countdown from 10 only
+      if (secondsLeft <= 10 && secondsLeft >= 1) {
+        countWord = String(secondsLeft)
+      }
+    } else {
+      // 5–11 seconds: countdown when remaining <= 10 (or from duration if smaller)
+      if (secondsLeft <= 10 && secondsLeft >= 1) {
+        countWord = String(secondsLeft)
       }
     }
 
