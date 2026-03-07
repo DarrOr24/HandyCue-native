@@ -71,13 +71,13 @@ export function HomeScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <View style={headerStyles.titleRow}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image
             source={require("../assets/app-icon.png")}
-            style={headerStyles.titleIcon}
+            style={{ width: 32, height: 32, marginRight: 8 }}
             resizeMode="contain"
           />
-          <Text style={headerStyles.title}>HandyCue</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>HandyCue</Text>
         </View>
       ),
       headerRight: () => <ProfileMenu items={profileMenuItems} />,
@@ -114,19 +114,6 @@ export function HomeScreen() {
     </SafeAreaView>
   );
 }
-
-const headerStyles = StyleSheet.create({
-  titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  titleIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 8,
-  },
-  title: { fontSize: 20, fontWeight: "bold" },
-});
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },

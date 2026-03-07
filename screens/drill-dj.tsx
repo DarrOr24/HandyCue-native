@@ -51,7 +51,6 @@ const DRILL_OPTIONS: SelectOption[] = [
 ]
 
 export function DrillDJScreen() {
-  useKeepAwake()
   const navigation = useNavigation<any>()
   const { session } = useAuth()
 

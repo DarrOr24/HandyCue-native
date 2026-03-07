@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexShrink: 0,
-    paddingTop: 24,
-    paddingBottom: 12,
+    paddingTop: 4,
+    paddingBottom: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
