@@ -159,6 +159,12 @@ export function ShapeJamScreen() {
       getVoice(session?.user?.id).then((v) => {
         voiceRef.current = v
       })
+      return () => {
+        resetSignalRef.current.signal()
+        stopSpeech()
+        setPhase('idle')
+        setDisplayContent(null)
+      }
     }, [session?.user?.id])
   )
 

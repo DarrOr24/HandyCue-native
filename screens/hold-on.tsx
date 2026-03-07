@@ -144,6 +144,16 @@ export function HoldOnScreen() {
       getVoice(session?.user?.id).then((v) => {
         voiceRef.current = v
       })
+      return () => {
+        resetSignalRef.current.signal()
+        clearIntervalRef()
+        stopSpeech()
+        setPhase('idle')
+        setDisplayContent(null)
+        setElapsed(0)
+        setIsPaused(false)
+        currentSetRef.current = 1
+      }
     }, [session?.user?.id])
   )
 

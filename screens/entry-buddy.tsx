@@ -140,6 +140,14 @@ export function EntryBuddyScreen() {
       getVoice(session?.user?.id).then((v) => {
         voiceRef.current = v
       })
+      return () => {
+        resetSignalRef.current.signal()
+        clearCleanup()
+        stopSpeech()
+        setPhase('idle')
+        setDisplayContent(null)
+        currentSetRef.current = 1
+      }
     }, [session?.user?.id])
   )
 
