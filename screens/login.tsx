@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../lib/supabase'
 import { getAuthRedirectUrl } from '../lib/auth-deeplink'
+import { validatePassword } from '../lib/password-validation'
 
 export function LoginScreen() {
   const navigation = useNavigation<any>()
@@ -50,8 +51,9 @@ export function LoginScreen() {
       Alert.alert('Error', 'Please enter email and password')
       return
     }
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters')
+    const pwCheck = validatePassword(password)
+    if (!pwCheck.valid) {
+      Alert.alert('Error', pwCheck.message)
       return
     }
     setLoading(true)

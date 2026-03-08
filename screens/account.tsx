@@ -16,6 +16,7 @@ import { ProfileAvatar } from '../components/avatar/profile-avatar'
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile, type Profile } from '../services/profile.service'
 import { supabase } from '../lib/supabase'
+import { validatePassword } from '../lib/password-validation'
 
 export function AccountScreen() {
   const navigation = useNavigation<any>()
@@ -95,8 +96,9 @@ export function AccountScreen() {
       Alert.alert('Error', 'Please enter and confirm your new password')
       return
     }
-    if (newPassword.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters')
+    const pwCheck = validatePassword(newPassword)
+    if (!pwCheck.valid) {
+      Alert.alert('Error', pwCheck.message)
       return
     }
     if (newPassword !== confirmPassword) {
