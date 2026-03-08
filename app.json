@@ -23,7 +23,7 @@
       "package": "com.darrmorgan.handycue",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
-        "foregroundImage": "./assets/app-icon.png"
+        "foregroundImage": "./assets/app-icon-android.png"
       },
       "permissions": [
         "android.permission.RECORD_AUDIO",
