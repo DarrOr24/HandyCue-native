@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import App from './app';
 import { AuthProvider } from './contexts/AuthContext';
+import { AvatarRefreshProvider } from './contexts/AvatarRefreshContext';
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
@@ -10,7 +11,9 @@ import { AuthProvider } from './contexts/AuthContext';
 registerRootComponent(() => (
   <SafeAreaProvider>
     <AuthProvider>
-      <App />
+      <AvatarRefreshProvider>
+        <App />
+      </AvatarRefreshProvider>
     </AuthProvider>
   </SafeAreaProvider>
 ));

@@ -6,6 +6,7 @@ import { Image, Alert } from 'react-native'
 import type { AvatarSize } from './avatar'
 import { Avatar } from './avatar'
 import { useAuth } from '../../contexts/AuthContext'
+import { useAvatarRefresh } from '../../contexts/AvatarRefreshContext'
 import { uploadProfileAvatar } from '../../services/avatar.service'
 import { getProfile, upsertProfile } from '../../services/profile.service'
 
@@ -14,11 +15,32 @@ type ProfileAvatarProps = {
   size?: AvatarSize
 }
 
+function fetchAvatarUrl(userId: string, setUri: (u: string | null) => void, setLoadedUri: (u: string | null) => void) {
+  getProfile(userId)
+    .then((p) => {
+      const url = p?.img_url ?? null
+      setUri(url)
+      if (url) {
+        const urlWithCacheBuster = `${url}${url.includes('?') ? '&' : '?'}v=${Date.now()}`
+        Image.prefetch(urlWithCacheBuster)
+          .then(() => setLoadedUri(urlWithCacheBuster))
+          .catch(() => setLoadedUri(urlWithCacheBuster))
+      } else {
+        setLoadedUri(null)
+      }
+    })
+    .catch(() => {
+      setUri(null)
+      setLoadedUri(null)
+    })
+}
+
 export function ProfileAvatar({
   isUpdatable = false,
   size = 'md',
 }: ProfileAvatarProps) {
   const { session } = useAuth()
+  const { refreshTrigger, refreshAvatar } = useAvatarRefresh()
   const [uri, setUri] = useState<string | null>(null)
   const [loadedUri, setLoadedUri] = useState<string | null>(null)
 
@@ -28,26 +50,8 @@ export function ProfileAvatar({
       setLoadedUri(null)
       return
     }
-
-    getProfile(session.user.id)
-      .then((p) => {
-        const url = p?.img_url ?? null
-        setUri(url)
-        if (url) {
-          // Add cache buster so we don't get a cached old image (same URL, replaced file)
-          const urlWithCacheBuster = `${url}${url.includes('?') ? '&' : '?'}v=${Date.now()}`
-          Image.prefetch(urlWithCacheBuster)
-            .then(() => setLoadedUri(urlWithCacheBuster))
-            .catch(() => setLoadedUri(urlWithCacheBuster))
-        } else {
-          setLoadedUri(null)
-        }
-      })
-      .catch(() => {
-        setUri(null)
-        setLoadedUri(null)
-      })
-  }, [session?.user?.id])
+    fetchAvatarUrl(session.user.id, setUri, setLoadedUri)
+  }, [session?.user?.id, refreshTrigger])
 
   const handlePress = async () => {
     if (!isUpdatable || !session?.user?.id) return
@@ -74,6 +78,7 @@ export function ProfileAvatar({
       const urlWithCacheBuster = `${publicUrl}${publicUrl.includes('?') ? '&' : '?'}v=${Date.now()}`
       setUri(urlWithCacheBuster)
       setLoadedUri(urlWithCacheBuster)
+      refreshAvatar()
     } catch (err: any) {
       console.error('[ProfileAvatar] upload failed:', err)
       setLoadedUri(previousUri)
