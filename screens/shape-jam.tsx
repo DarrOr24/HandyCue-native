@@ -542,7 +542,7 @@ export function ShapeJamScreen() {
         visible={isSaveModalOpen}
         onSave={saveFavorite}
         onCancel={() => setIsSaveModalOpen(false)}
-        placeholder="e.g. Tuck – Straddle – Straight"
+        placeholder="e.g. Tuck - straddle"
       />
 
       <FavoritesModal

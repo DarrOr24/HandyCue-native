@@ -25,7 +25,7 @@ export function SaveFavoriteModal({
   visible,
   onSave,
   onCancel,
-  placeholder = 'e.g. Chest to wall handstand...',
+  placeholder = 'e.g. Chest to wall endurance hold',
 }: SaveFavoriteModalProps) {
   const [favoriteName, setFavoriteName] = useState('')
 

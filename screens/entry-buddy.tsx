@@ -503,7 +503,7 @@ export function EntryBuddyScreen() {
         visible={isSaveModalOpen}
         onSave={saveFavorite}
         onCancel={() => setIsSaveModalOpen(false)}
-        placeholder="e.g. Tuck entries"
+        placeholder="e.g. Kneeling tuck entries"
       />
 
       <FavoritesModal
