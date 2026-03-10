@@ -16,6 +16,7 @@ import { DrillDJInfoScreen } from '../screens/drill-dj-info'
 import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
+import { BillingScreen } from '../screens/billing'
 import { LoginScreen } from '../screens/login'
 
 const Stack = createNativeStackNavigator()
@@ -28,6 +29,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="Account"
           component={AccountScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Billing"
+          component={BillingScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

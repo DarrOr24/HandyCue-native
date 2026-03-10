@@ -250,6 +250,17 @@ export function AccountScreen() {
           )}
         </TouchableOpacity>
 
+        <Text style={styles.sectionTitle}>Billing</Text>
+        <TouchableOpacity
+          style={styles.billingRow}
+          onPress={() => navigation.navigate('Billing')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card-outline" size={22} color="#5B9A8B" />
+          <Text style={styles.billingRowText}>Plan</Text>
+          <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+        </TouchableOpacity>
+
         <Text style={styles.sectionTitle}>Danger Zone</Text>
         <TouchableOpacity
           style={styles.deleteBtn}
@@ -283,7 +294,7 @@ const styles = StyleSheet.create({
   placeholder: { fontSize: 16, color: '#666' },
   avatarSection: { alignItems: 'center', marginBottom: 32 },
   avatarHint: { fontSize: 12, color: '#9ca3af', marginTop: 8 },
-  field: { marginBottom: 20 },
+  field: { marginBottom: 16 },
   label: { fontSize: 14, fontWeight: '500', color: '#374151', marginBottom: 8 },
   input: {
     borderWidth: 1,
@@ -297,7 +308,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
-    marginTop: 24,
+    marginTop: 4,
     marginBottom: 12,
   },
   passwordWrap: {
@@ -320,9 +331,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 8,
+    marginBottom: 16,
   },
   changePasswordBtnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
   btnDisabled: { opacity: 0.7 },
+  billingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9fafb',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 10,
+    padding: 16,
+    gap: 12,
+    marginBottom: 16,
+  },
+  billingRowText: { flex: 1, fontSize: 16, color: '#374151', fontWeight: '500' },
   deleteBtn: {
     borderWidth: 1,
     borderColor: '#dc2626',
