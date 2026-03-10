@@ -22,7 +22,7 @@
     "android": {
       "package": "com.darrmorgan.handycue",
       "adaptiveIcon": {
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#E0F0EB",
         "foregroundImage": "./assets/app-icon-android.png"
       },
       "permissions": [

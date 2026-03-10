@@ -11,25 +11,25 @@ Works well with centered logos. Standard 1024×1024 is used as-is.
 
 ## Android Adaptive Icon (Important)
 
-Android masks the icon into a **squircle**. If your logo looks small on Android (but good on iPhone), the logo is too small within the canvas.
+Android masks the icon into a **squircle**. The visible area is the center ~66% (~675×675 px of a 1024 canvas). The logo must fit this zone.
 
-### The Fix: Logo Must FILL the Safe Zone
+### If the icon looks spread out or doesn't fit on Android
 
-The visible area is the center **66%** (~675×675 px of a 1024 canvas). Your logo should **fill** that area:
+**Option A – Add a circular background:** Put the logo on a solid circular background (~700–800 px diameter, centered). Use a color that matches your app (e.g. #E0F0EB). The circle keeps the icon contained when the squircle mask is applied.
 
-1. **Scale up your logo** so it occupies ~85–95% of the center 675×675 px
-2. **Center it** in the canvas
+**Option B – Add a border:** Add a circular or rounded border around the logo to define the edges.
+
+**Option C – Scale down:** Scale the logo to ~500×550 px, centered, with transparent padding. Use a transparent background so `backgroundColor` in app.json shows through.
+
+### If the icon looks too small on Android
+
+**Fix:** Scale up the logo so it occupies ~85–95% of the center 675×675 px area. Center it.
+
+### General rules for app-icon-android.png
+
+1. **Center** the logo in the 1024×1024 canvas
+2. **Size** so the logo fits within ~600×675 px (not touching edges)
 3. Use **transparent background** or match `backgroundColor` in app.json
-
-### Why It Looks Small on Android
-
-- iOS uses the full icon; Android crops to a squircle
-- If the logo is 400×400 px in the center, it looks tiny in the squircle
-- The PWA icon likely uses different proportions that display better
-
-### Android-Specific Icon (app-icon-android.png)
-
-The app uses `app-icon-android.png` for Android's adaptive icon. A copy of `app-icon.png` is provided as a starting point. **To fix the small logo on Android:** open `app-icon-android.png` in an image editor and scale up the logo layer so it fills ~85–95% of the center 675×675 px area. Keep the canvas at 1024×1024.
 
 ## Visual Guide
 
