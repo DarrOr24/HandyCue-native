@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "start:8082": "REACT_NATIVE_PACKAGER_PORT=8082 expo start",
+    "start:8082": "expo start --port 8082",
     "start:clear": "expo start --clear",
     "android": "expo run:android",
     "android:clear": "expo start --clear",
