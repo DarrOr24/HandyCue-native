@@ -64,7 +64,7 @@ export function LoginScreen() {
         options: { emailRedirectTo: getAuthRedirectUrl() },
       })
       if (error) throw error
-      Alert.alert('Success', 'Check your email to confirm your account.')
+      Alert.alert('Success', "Account created! You're signed in.")
       navigation.goBack()
     } catch (err: any) {
       Alert.alert('Error', err.message ?? 'Failed to sign up')

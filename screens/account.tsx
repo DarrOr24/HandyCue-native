@@ -174,6 +174,11 @@ export function AccountScreen() {
         </View>
 
         <View style={styles.field}>
+          <Text style={styles.label}>Email</Text>
+          <Text style={styles.emailReadOnly}>{session.user.email ?? '—'}</Text>
+        </View>
+
+        <View style={styles.field}>
           <Text style={styles.label}>Full name</Text>
           <TextInput
             style={styles.input}
@@ -303,6 +308,15 @@ const styles = StyleSheet.create({
     padding: 14,
     fontSize: 16,
     backgroundColor: '#f9fafb',
+  },
+  emailReadOnly: {
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 16,
+    backgroundColor: '#f3f4f6',
+    color: '#6b7280',
   },
   sectionTitle: {
     fontSize: 16,
