@@ -1,4 +1,14 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { useState } from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+  Pressable,
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { inputContainerStyle } from '../theme/input-styles'
 
 export interface SelectOption {
@@ -23,18 +33,14 @@ export function SelectInput({
   disabled = false,
   onRemove,
 }: SelectInputProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const idx = options.findIndex((o) => o.value === value)
   const currentIdx = idx >= 0 ? idx : 0
   const displayLabel = options[currentIdx]?.label ?? value
 
-  function onDecrease() {
-    const nextIdx = currentIdx <= 0 ? options.length - 1 : currentIdx - 1
-    onChange(options[nextIdx].value)
-  }
-
-  function onIncrease() {
-    const nextIdx = currentIdx >= options.length - 1 ? 0 : currentIdx + 1
-    onChange(options[nextIdx].value)
+  function handleSelect(opt: SelectOption) {
+    onChange(opt.value)
+    setDropdownOpen(false)
   }
 
   return (
@@ -53,17 +59,78 @@ export function SelectInput({
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.controls}>
-        <TouchableOpacity disabled={disabled} onPress={onDecrease}>
-          <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
-        </TouchableOpacity>
-        <Text style={[styles.value, disabled && styles.valueDisabled]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65}>
+      <TouchableOpacity
+        style={[styles.dropdownTrigger, disabled && styles.dropdownTriggerDisabled]}
+        onPress={() => !disabled && setDropdownOpen(true)}
+        disabled={disabled}
+        activeOpacity={0.7}
+      >
+        <Text
+          style={[styles.value, disabled && styles.valueDisabled]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.65}
+        >
           {displayLabel}
         </Text>
-        <TouchableOpacity disabled={disabled} onPress={onIncrease}>
-          <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
-        </TouchableOpacity>
-      </View>
+        <Ionicons
+          name="chevron-down"
+          size={20}
+          color={disabled ? '#999' : '#5B9A8B'}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        visible={dropdownOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setDropdownOpen(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setDropdownOpen(false)}
+          />
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Choose {label}</Text>
+            <ScrollView
+              style={styles.optionsList}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={true}
+            >
+              {options.map((opt) => (
+                <TouchableOpacity
+                  key={opt.value}
+                  style={[
+                    styles.optionRow,
+                    opt.value === value && styles.optionRowSelected,
+                  ]}
+                  onPress={() => handleSelect(opt)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.optionLabel,
+                      opt.value === value && styles.optionLabelSelected,
+                    ]}
+                  >
+                    {opt.label}
+                  </Text>
+                  {opt.value === value && (
+                    <Ionicons name="checkmark" size={22} color="#5B9A8B" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              style={styles.cancelBtn}
+              onPress={() => setDropdownOpen(false)}
+            >
+              <Text style={styles.cancelBtnText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -85,9 +152,61 @@ const styles = StyleSheet.create({
   labelDisabled: { color: '#999' },
   removeBtn: { fontSize: 14, color: '#dc2626', fontWeight: '600', paddingLeft: 8 },
   removeBtnDisabled: { color: '#999' },
-  controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  value: { flex: 1, fontSize: 14, fontWeight: '600', minWidth: 36, textAlign: 'center', color: '#374151' },
+  dropdownTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: '#f9fafb',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+  },
+  dropdownTriggerDisabled: { backgroundColor: '#f3f4f6', opacity: 0.7 },
+  value: { flex: 1, fontSize: 14, fontWeight: '600', color: '#374151' },
   valueDisabled: { color: '#999' },
-  btn: { fontSize: 26, fontWeight: '600', color: '#5B9A8B', paddingHorizontal: 12 },
-  btnDisabled: { color: '#999' },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  } as const,
+  modalContent: {
+    width: '100%',
+    maxWidth: 320,
+    maxHeight: '70%',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 12,
+  },
+  optionsList: {
+    maxHeight: 280,
+  },
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  optionRowSelected: {
+    backgroundColor: '#ecfdf5',
+  },
+  optionLabel: { fontSize: 16, color: '#374151' },
+  optionLabelSelected: { fontWeight: '600', color: '#5B9A8B' },
+  cancelBtn: {
+    marginTop: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  cancelBtnText: { fontSize: 16, color: '#6b7280' },
 })
