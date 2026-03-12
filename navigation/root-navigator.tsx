@@ -14,7 +14,7 @@ import { ShapeJamSettingsScreen } from '../screens/shape-jam-settings'
 import { DrillDJScreen } from '../screens/drill-dj'
 import { DrillDJInfoScreen } from '../screens/drill-dj-info'
 import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
-import { DrillDJExampleVideosScreen } from '../screens/drill-dj-example-videos'
+import { ExampleVideosScreen } from '../screens/example-videos'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { BillingScreen } from '../screens/billing'
@@ -103,8 +103,8 @@ export function RootNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="DrillDJExampleVideos"
-          component={DrillDJExampleVideosScreen}
+          name="ExampleVideos"
+          component={ExampleVideosScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

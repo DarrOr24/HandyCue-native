@@ -149,7 +149,7 @@ export function DrillDJScreen() {
     },
     onExampleVideos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('DrillDJExampleVideos')
+      navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
     },
     session,
   })
@@ -170,7 +170,7 @@ export function DrillDJScreen() {
     },
     onExampleVideos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('DrillDJExampleVideos')
+      navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
     },
     session,
   }
