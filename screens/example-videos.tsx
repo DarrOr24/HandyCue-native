@@ -69,18 +69,16 @@ export function ExampleVideosScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {config.sections.map((group) => (
-          <View key={group.section} style={styles.section}>
-            <Text style={styles.sectionTitle}>{group.section}</Text>
-            {group.videos.map((video) => (
-              <ExampleVideoCard
-                key={video.title}
-                video={video}
-                onPress={() => handleVideoPress(video)}
-              />
-            ))}
-          </View>
-        ))}
+        <View style={styles.videoGrid}>
+          {config.videos.map((video) => (
+            <ExampleVideoCard
+              key={video.title}
+              video={video}
+              onPress={() => handleVideoPress(video)}
+              thumbnailBaseUrl={SUPABASE_STORAGE_BASE}
+            />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
@@ -103,11 +101,10 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   content: { padding: 16, paddingBottom: 32 },
   section: { marginBottom: 24 },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 12,
+  videoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   empty: {
     flex: 1,
