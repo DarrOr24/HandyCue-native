@@ -2,6 +2,7 @@ import { registerRootComponent } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import App from './app';
+import { AudioModeProvider } from './contexts/AudioModeProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { AvatarRefreshProvider } from './contexts/AvatarRefreshContext';
 
@@ -10,10 +11,12 @@ import { AvatarRefreshProvider } from './contexts/AvatarRefreshContext';
 // the environment is set up appropriately
 registerRootComponent(() => (
   <SafeAreaProvider>
-    <AuthProvider>
-      <AvatarRefreshProvider>
-        <App />
-      </AvatarRefreshProvider>
-    </AuthProvider>
+    <AudioModeProvider>
+      <AuthProvider>
+        <AvatarRefreshProvider>
+          <App />
+        </AvatarRefreshProvider>
+      </AuthProvider>
+    </AudioModeProvider>
   </SafeAreaProvider>
 ));
