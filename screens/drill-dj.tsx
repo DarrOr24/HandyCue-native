@@ -147,6 +147,10 @@ export function DrillDJScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('DrillDJSettings')
     },
+    onExampleVideos: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJExampleVideos')
+    },
     session,
   })
   menuHandlersRef.current = {
@@ -163,6 +167,10 @@ export function DrillDJScreen() {
     onSettings: async () => {
       await saveCurrentInputsToProfile()
       navigation.navigate('DrillDJSettings')
+    },
+    onExampleVideos: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillDJExampleVideos')
     },
     session,
   }
