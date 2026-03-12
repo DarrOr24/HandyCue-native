@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
+import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -520,22 +521,25 @@ export function ShapeJamScreen() {
               />
             </FeatureInputsGrid.SingleInput>
           )}
+          <FeatureInputsGrid.SingleInput>
+            <TouchableOpacity
+              style={[styles.addShapeBtn, inputsDisabled && styles.addShapeBtnDisabled]}
+              onPress={addShape}
+              disabled={inputsDisabled}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={inputsDisabled ? '#999' : '#5B9A8B'}
+              />
+              <Text style={[styles.addShapeText, inputsDisabled && styles.addShapeTextDisabled]}>
+                Add Shape
+              </Text>
+            </TouchableOpacity>
+          </FeatureInputsGrid.SingleInput>
           </FeatureInputsGrid>
         </FeatureScreenLayout>
-        <TouchableOpacity
-          style={[styles.addShapeAbsolute, inputsDisabled && styles.addShapeAbsoluteDisabled]}
-          onPress={addShape}
-          disabled={inputsDisabled}
-        >
-          <Ionicons
-            name="add-circle-outline"
-            size={24}
-            color={inputsDisabled ? '#999' : '#5B9A8B'}
-          />
-          <Text style={[styles.addShapeText, inputsDisabled && styles.addShapeTextDisabled]}>
-            Add Shape
-          </Text>
-        </TouchableOpacity>
       </View>
 
       <SaveFavoriteModal
@@ -567,16 +571,17 @@ const styles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
   },
-  addShapeAbsolute: {
-    position: 'absolute',
-    top: 8,
-    left: 16,
+  addShapeBtn: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
-    zIndex: 10,
+    height: INPUT_HEIGHT,
+    padding: 12,
+    width: '100%',
+    ...inputContainerStyle,
   },
-  addShapeAbsoluteDisabled: {
+  addShapeBtnDisabled: {
     opacity: 0.6,
   },
   addShapeText: {

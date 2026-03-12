@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { inputContainerStyle } from '../theme/input-styles'
+import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
 
 interface NumberInputProps {
   label: string
@@ -37,11 +37,12 @@ export function NumberInput({
 const styles = StyleSheet.create({
   row: {
     width: '100%',
-    minHeight: 72,
+    height: INPUT_HEIGHT,
     padding: 12,
+    justifyContent: 'space-between',
     ...inputContainerStyle,
   },
-  label: { fontSize: 15, color: '#666', marginBottom: 4, flexShrink: 1 },
+  label: { fontSize: 15, lineHeight: 20, color: '#666', marginBottom: 4, flexShrink: 1 },
   labelDisabled: { color: '#999' },
   controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   value: { flex: 1, fontSize: 20, fontWeight: '600', minWidth: 36, textAlign: 'center', color: '#374151' },

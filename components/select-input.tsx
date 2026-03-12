@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { inputContainerStyle } from '../theme/input-styles'
+import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
 
 export interface SelectOption {
   value: string
@@ -138,17 +138,18 @@ export function SelectInput({
 const styles = StyleSheet.create({
   row: {
     width: '100%',
-    minHeight: 72,
+    height: INPUT_HEIGHT,
     padding: 12,
+    justifyContent: 'space-between',
     ...inputContainerStyle,
   },
   labelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 2,
   },
-  label: { fontSize: 15, color: '#666', flexShrink: 1 },
+  label: { fontSize: 15, lineHeight: 20, color: '#666', flexShrink: 1 },
   labelDisabled: { color: '#999' },
   removeBtn: { fontSize: 14, color: '#dc2626', fontWeight: '600', paddingLeft: 8 },
   removeBtnDisabled: { color: '#999' },
@@ -156,8 +157,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     backgroundColor: '#f9fafb',
     borderWidth: 1,
     borderColor: '#e5e7eb',
