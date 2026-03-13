@@ -23,7 +23,7 @@ export function FeatureScreenLayout({
   footer,
 }: FeatureScreenLayoutProps) {
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <LinearGradient
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 16,
-    paddingTop: 0,
+    paddingTop: 12,
     paddingBottom: 16,
   },
   timerSection: {

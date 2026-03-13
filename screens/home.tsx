@@ -86,7 +86,7 @@ export function HomeScreen() {
   }, [navigation, session]);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <LinearGradient
         colors={["#ffffff", "#e0f0eb"]}
         style={StyleSheet.absoluteFillObject}
@@ -121,5 +121,5 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
-  content: { padding: 20, paddingBottom: 40 },
+  content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
 });
