@@ -662,16 +662,16 @@ export function DrillDJScreen() {
               <>
                 <FeatureInputsGrid.GridItem>
                 <NumberInput
-                  label="Slide up"
-                  value={slideUpTime}
+                  label="Slide down"
+                  value={slideDownTime}
                   onDecrease={() =>
-                    setSlideUpTime((v) =>
-                      Math.max(inputSettings.slideUpTime.min, v - inputSettings.slideUpTime.step)
+                    setSlideDownTime((v) =>
+                      Math.max(inputSettings.slideDownTime.min, v - inputSettings.slideDownTime.step)
                     )
                   }
                   onIncrease={() =>
-                    setSlideUpTime((v) =>
-                      v + inputSettings.slideUpTime.step
+                    setSlideDownTime((v) =>
+                      v + inputSettings.slideDownTime.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -696,16 +696,16 @@ export function DrillDJScreen() {
                 </FeatureInputsGrid.GridItem>
                 <FeatureInputsGrid.GridItem>
                 <NumberInput
-                  label="Slide down"
-                  value={slideDownTime}
+                  label="Slide up"
+                  value={slideUpTime}
                   onDecrease={() =>
-                    setSlideDownTime((v) =>
-                      Math.max(inputSettings.slideDownTime.min, v - inputSettings.slideDownTime.step)
+                    setSlideUpTime((v) =>
+                      Math.max(inputSettings.slideUpTime.min, v - inputSettings.slideUpTime.step)
                     )
                   }
                   onIncrease={() =>
-                    setSlideDownTime((v) =>
-                      v + inputSettings.slideDownTime.step
+                    setSlideUpTime((v) =>
+                      v + inputSettings.slideUpTime.step
                     )
                   }
                   disabled={inputsDisabled}
