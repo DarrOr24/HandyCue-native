@@ -716,7 +716,6 @@ export function DrillDJScreen() {
                   onChange={setSlideCallout}
                   disabled={inputsDisabled}
                   numRepsMin={inputSettings.numReps.min}
-                  numRepsMax={numReps}
                   numRepsStep={inputSettings.numReps.step}
                   asGridItems
                   GridItem={FeatureInputsGrid.GridItem}
@@ -765,7 +764,6 @@ export function DrillDJScreen() {
                   onChange={setFloatCallout}
                   disabled={inputsDisabled}
                   numRepsMin={inputSettings.numReps.min}
-                  numRepsMax={numReps}
                   numRepsStep={inputSettings.numReps.step}
                   asGridItems
                   GridItem={FeatureInputsGrid.GridItem}

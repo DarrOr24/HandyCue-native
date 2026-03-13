@@ -24,7 +24,6 @@ interface CalloutBlockProps {
   onChange: (callout: CalloutConfig) => void
   disabled?: boolean
   numRepsMin?: number
-  numRepsMax?: number
   numRepsStep?: number
   asGridItems?: boolean
   GridItem?: (props: { children: ReactNode }) => ReactNode
@@ -35,7 +34,6 @@ export function CalloutBlock({
   onChange,
   disabled = false,
   numRepsMin = 1,
-  numRepsMax = 10,
   numRepsStep = 1,
   asGridItems = false,
   GridItem: GridItemComp,
@@ -88,7 +86,7 @@ export function CalloutBlock({
             onIncrease={() =>
               onChange({
                 ...callout,
-                afterReps: Math.min(numRepsMax, afterReps + numRepsStep),
+                afterReps: afterReps + numRepsStep,
               })
             }
             disabled={disabled}
@@ -126,10 +124,7 @@ export function CalloutBlock({
                 ...callout,
                 nested: {
                   ...nested,
-                  afterReps: Math.min(
-                    numRepsMax,
-                    (nested?.afterReps ?? afterReps) + numRepsStep
-                  ),
+                  afterReps: (nested?.afterReps ?? afterReps) + numRepsStep,
                 },
               })
             }
