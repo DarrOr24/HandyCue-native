@@ -51,9 +51,9 @@ export function DrillExamplesCard() {
           />
         </View>
         <View style={styles.text}>
-          <Text style={styles.label}>Drill examples</Text>
+          <Text style={styles.label}>Example Videos</Text>
           <Text style={styles.subtitle}>
-            Watch example videos for HoldOn, EntryBuddy, ShapeJam & DrillDJ
+            Watch demos for HoldOn, EntryBuddy, ShapeJam & DrillDJ
           </Text>
         </View>
       </TouchableOpacity>
