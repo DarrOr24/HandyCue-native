@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Linking, Alert } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 
-import { ExampleVideoCard, type ExampleVideo } from '../components/example-video-card'
+import { ExampleVideoGrid } from '../components/example-video-grid'
+import type { ExampleVideo } from '../components/example-video-card'
 import { EXAMPLE_VIDEOS } from '../data/example-videos'
 
 const SUPABASE_STORAGE_BASE =
@@ -18,7 +19,7 @@ export function ExampleVideosScreen() {
   function handleVideoPress(video: ExampleVideo) {
     if (video.available) {
       const fullUrl = SUPABASE_STORAGE_BASE + encodeURIComponent(video.url)
-      Linking.openURL(fullUrl).catch(() => {})
+      navigation.navigate('ExampleVideoPlayer', { videoUrl: fullUrl, title: video.title })
     } else {
       Alert.alert(
         'Coming soon',
@@ -69,16 +70,11 @@ export function ExampleVideosScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.videoGrid}>
-          {config.videos.map((video) => (
-            <ExampleVideoCard
-              key={video.title}
-              video={video}
-              onPress={() => handleVideoPress(video)}
-              thumbnailBaseUrl={SUPABASE_STORAGE_BASE}
-            />
-          ))}
-        </View>
+        <ExampleVideoGrid
+          videos={config.videos}
+          thumbnailBaseUrl={SUPABASE_STORAGE_BASE}
+          onVideoPress={handleVideoPress}
+        />
       </ScrollView>
     </SafeAreaView>
   )
@@ -101,11 +97,6 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   content: { padding: 16, paddingBottom: 32 },
   section: { marginBottom: 24 },
-  videoGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
   empty: {
     flex: 1,
     justifyContent: 'center',

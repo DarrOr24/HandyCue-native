@@ -15,6 +15,7 @@ import { DrillDJScreen } from '../screens/drill-dj'
 import { DrillDJInfoScreen } from '../screens/drill-dj-info'
 import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
 import { ExampleVideosScreen } from '../screens/example-videos'
+import { ExampleVideoPlayerScreen } from '../screens/example-video-player'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { BillingScreen } from '../screens/billing'
@@ -105,6 +106,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="ExampleVideos"
           component={ExampleVideosScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ExampleVideoPlayer"
+          component={ExampleVideoPlayerScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

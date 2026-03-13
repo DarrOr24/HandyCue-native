@@ -42,7 +42,8 @@
     },
     "owner": "darrmorgan",
     "plugins": [
-      "expo-audio"
+      "expo-audio",
+      "expo-video"
     ]
   }
 }
