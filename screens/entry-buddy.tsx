@@ -279,7 +279,7 @@ export function EntryBuddyScreen() {
 
       if (!isFinal) {
         setPhase('rest')
-        setDisplayContent(`Rest ${restTime}`)
+        setDisplayContent('Rest')
         await speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
         if (resetSignalRef.current.isCancelled()) return
 

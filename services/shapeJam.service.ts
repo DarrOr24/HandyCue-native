@@ -57,7 +57,7 @@ export async function runShapeSets(options: {
     if (isCancelled()) return
 
     if (!isFinal) {
-      onDisplay(`Rest ${restTime}`)
+      onDisplay('Rest')
       await speak(`Set finished. Rest for ${restTime} seconds`, storedVoice)
       if (isCancelled()) return
       await new Promise<void>((resolve) => {
@@ -83,12 +83,14 @@ async function runShapes(options: {
 }): Promise<void> {
   const { numReps, shapes, storedVoice, onDisplay, isCancelled } = options
 
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
   for (let rep = 1; rep <= numReps; rep++) {
     for (let i = 0; i < shapes.length; i++) {
       if (isCancelled()) return
       const { shape, holdTime } = shapes[i]
-      onDisplay(shape)
-      await speak(shape, storedVoice)
+      const displayShape = capitalize(shape)
+      onDisplay(displayShape)
+      await speak(displayShape, storedVoice)
       if (isCancelled()) return
       await delay(holdTime * 1000)
     }

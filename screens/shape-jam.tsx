@@ -286,10 +286,9 @@ export function ShapeJamScreen() {
     })
       .then(async () => {
         if (resetSignalRef.current.isCancelled()) return
-        await speak('Session over. Good job!', voiceRef.current)
-        if (resetSignalRef.current.isCancelled()) return
         setPhase('done')
         setDisplayContent('')
+        await speak('Session over. Good job!', voiceRef.current)
       })
       .catch(() => {})
   }

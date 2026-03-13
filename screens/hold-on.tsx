@@ -314,12 +314,13 @@ export function HoldOnScreen() {
     })
   }
 
-  function startRestCycle() {
+  async function startRestCycle() {
     if (resetSignalRef.current.isCancelled()) return
 
     setPhase('rest')
-    setDisplayContent(`Rest ${restTime}`)
-    speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
+    setDisplayContent('Rest')
+    await speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
+    if (resetSignalRef.current.isCancelled()) return
 
     cleanupRef.current = runRestCycle({
       restTime,
@@ -336,7 +337,7 @@ export function HoldOnScreen() {
         setDisplayContent('0:00')
 
         const msg = isFinal
-          ? `Final round: Hold for ${holdTime} seconds`
+          ? `Final Round: Hold for ${holdTime} seconds`
           : `Round ${nextSet}: Hold for ${holdTime} seconds`
 
         speak(msg, voiceRef.current)

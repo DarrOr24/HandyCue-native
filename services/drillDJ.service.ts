@@ -7,8 +7,6 @@ import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
 
 export { runGetReadyCountdown, runRestCycle }
 
-const COUNT_VOICE_OPTIONS = { rate: 1.3 }
-
 export async function performPhase(options: {
   label: string
   displayLabel: string
@@ -82,7 +80,7 @@ export async function performPhase(options: {
     }
 
     if (countWord) {
-      speak(countWord, voice, COUNT_VOICE_OPTIONS)
+      speak(countWord, voice)
     }
     if (isCancelled()) break
     if (i < duration - 1) {

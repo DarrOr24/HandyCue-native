@@ -37,13 +37,13 @@ export async function runEntries(options: {
 
   if (numSets === 1) {
     onDisplay(`${numEntries}!`)
-    await speak(`${numEntries} entries`, storedVoice)
+    await speak(`${numEntries} ${numEntries === 1 ? 'entry' : 'entries'}`, storedVoice)
   } else {
     const ordinals = ['st', 'nd', 'rd']
     const suffix = ordinals[setNum - 1] ?? 'th'
     const label = isFinal ? 'Final Set' : `${setNum}${suffix} Set`
     onDisplay(label)
-    await speak(`${label}: ${numEntries} entries`, storedVoice)
+    await speak(`${label}: ${numEntries} ${numEntries === 1 ? 'entry' : 'entries'}`, storedVoice)
   }
   if (isCancelled()) return
 

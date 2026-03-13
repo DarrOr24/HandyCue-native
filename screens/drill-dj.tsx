@@ -312,7 +312,7 @@ export function DrillDJScreen() {
       if (resetSignalRef.current.isCancelled()) return
 
       if (!isFinal) {
-        setDisplayContent(`Rest ${restTime}`)
+        setDisplayContent('Rest')
         await speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
         if (resetSignalRef.current.isCancelled()) return
         await new Promise<void>((resolve) => {
@@ -329,10 +329,9 @@ export function DrillDJScreen() {
     }
 
     if (resetSignalRef.current.isCancelled()) return
-    await speak('Session over. Good job!', voiceRef.current)
-    if (resetSignalRef.current.isCancelled()) return
     setPhase('done')
     setDisplayContent('')
+    await speak('Session over. Good job!', voiceRef.current)
   }
 
   async function runDrill() {

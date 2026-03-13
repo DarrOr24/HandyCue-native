@@ -68,7 +68,8 @@ export function runHoldInterval(options: {
     if (holdTime >= 30 && elapsed === Math.floor(holdTime / 2)) {
       speak('Halfway', storedVoice)
     }
-    if (remaining <= 10 && remaining > 0) {
+    const countdownStart = holdTime <= 10 ? 5 : 10
+    if (remaining <= countdownStart && remaining > 0) {
       speak(String(remaining), storedVoice)
     }
   }, 100)
@@ -109,7 +110,8 @@ export function runRestCycle(options: {
     onTick(elapsed, formatTime(elapsed))
 
     const remaining = restTime - elapsed
-    if (remaining <= 10 && remaining > 0) {
+    const countdownStart = restTime <= 10 ? 5 : 10
+    if (remaining <= countdownStart && remaining > 0) {
       speak(String(remaining), storedVoice)
     }
   }, 100)
