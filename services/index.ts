@@ -26,3 +26,9 @@ export {
   SHARED_FIELD_LIMITS,
   HOLD_TIME_LIMITS,
 } from './holdOn.settings.service'
+
+export {
+  EXAMPLE_VIDEOS_STORAGE_BASE,
+  getExampleVideoUrl,
+  getExampleThumbnailUrl,
+} from './example-videos.service'

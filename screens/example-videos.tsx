@@ -6,9 +6,10 @@ import { Ionicons } from '@expo/vector-icons'
 import { ExampleVideoGrid } from '../components/example-video-grid'
 import type { ExampleVideo } from '../components/example-video-card'
 import { EXAMPLE_VIDEOS } from '../data/example-videos'
-
-const SUPABASE_STORAGE_BASE =
-  (process.env.EXPO_PUBLIC_SUPABASE_URL ?? '') + '/storage/v1/object/public/example-videos/'
+import {
+  EXAMPLE_VIDEOS_STORAGE_BASE,
+  getExampleVideoUrl,
+} from '../services/example-videos.service'
 
 export function ExampleVideosScreen() {
   const navigation = useNavigation<any>()
@@ -18,7 +19,7 @@ export function ExampleVideosScreen() {
 
   function handleVideoPress(video: ExampleVideo) {
     if (video.available) {
-      const fullUrl = SUPABASE_STORAGE_BASE + encodeURIComponent(video.url)
+      const fullUrl = getExampleVideoUrl(video.url)
       navigation.navigate('ExampleVideoPlayer', { videoUrl: fullUrl, title: video.title })
     } else {
       Alert.alert(
@@ -72,7 +73,7 @@ export function ExampleVideosScreen() {
       >
         <ExampleVideoGrid
           videos={config.videos}
-          thumbnailBaseUrl={SUPABASE_STORAGE_BASE}
+          thumbnailBaseUrl={EXAMPLE_VIDEOS_STORAGE_BASE}
           onVideoPress={handleVideoPress}
         />
       </ScrollView>

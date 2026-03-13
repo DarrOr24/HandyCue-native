@@ -10,10 +10,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-
-const EXAMPLE_VIDEOS_STORAGE_BASE =
-  (process.env.EXPO_PUBLIC_SUPABASE_URL ?? '') +
-  '/storage/v1/object/public/example-videos/'
+import { getExampleThumbnailUrl } from '../services/example-videos.service'
 
 const HEEL_PULLS_THUMBNAIL = 'Float drill - heel pulls.jpeg'
 
@@ -32,7 +29,7 @@ export function DrillExamplesCard() {
   const navigation = useNavigation<any>()
   const [menuVisible, setMenuVisible] = useState(false)
 
-  const thumbnailUri = EXAMPLE_VIDEOS_STORAGE_BASE + encodeURIComponent(HEEL_PULLS_THUMBNAIL)
+  const thumbnailUri = getExampleThumbnailUrl(HEEL_PULLS_THUMBNAIL)
 
   function handleFeatureSelect(featureKey: string) {
     setMenuVisible(false)
