@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
+import { ExampleVideosLink } from '../components/example-videos-link'
 
 export function HoldOnInfoScreen() {
   return (
@@ -19,9 +20,7 @@ export function HoldOnInfoScreen() {
         Also great for plank holds, passive hangs, or any other endurance-based position!
       </Text>
 
-      <Text style={styles.paragraph}>
-        Check out the example videos to see this feature in action.
-      </Text>
+      <ExampleVideosLink featureKey="holdOn" />
 
     </InfoScreenLayout>
   )

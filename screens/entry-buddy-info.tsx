@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
+import { ExampleVideosLink } from '../components/example-videos-link'
 
 export function EntryBuddyInfoScreen() {
   return (
@@ -25,9 +26,7 @@ export function EntryBuddyInfoScreen() {
         Get creative with slow press entries, kneeling entries, and more.
       </Text>
 
-      <Text style={styles.paragraph}>
-        Check out the example videos to see this feature in action.
-      </Text>
+      <ExampleVideosLink featureKey="entryBuddy" />
 
     </InfoScreenLayout>
   )

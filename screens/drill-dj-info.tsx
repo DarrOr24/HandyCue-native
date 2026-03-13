@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
+import { ExampleVideosLink } from '../components/example-videos-link'
 
 export function DrillDJInfoScreen() {
   return (
@@ -38,9 +39,7 @@ export function DrillDJInfoScreen() {
         Enable Voice count to hear the count spoken aloud during longer phases — keeping your rhythm consistent.
       </Text>
 
-      <Text style={styles.paragraph}>
-        Check out the example videos to see this feature in action.
-      </Text>
+      <ExampleVideosLink featureKey="drillDJ" />
 
     </InfoScreenLayout>
   )

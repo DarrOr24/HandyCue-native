@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
+import { ExampleVideosLink } from '../components/example-videos-link'
 
 export function ShapeJamInfoScreen() {
   return (
@@ -23,9 +24,7 @@ export function ShapeJamInfoScreen() {
         Focus on precision, rhythm, and flow — whether you're training symmetry, creativity, or advanced transitions.
       </Text>
 
-      <Text style={styles.paragraph}>
-        Check out the example videos to see this feature in action.
-      </Text>
+      <ExampleVideosLink featureKey="shapeJam" />
 
     </InfoScreenLayout>
   )
