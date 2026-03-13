@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
 
 export function ShapeJamInfoScreen() {
@@ -12,6 +11,7 @@ export function ShapeJamInfoScreen() {
       <Text style={styles.paragraph}>
         ShapeJam guides you through dynamic handstand shape transitions using voice prompts and timed holds.
         Select your shapes (like tuck, straddle, pike), assign hold times, and build your own sequence.
+        You can add your own shape names through settings to customize the flow to your practice.
       </Text>
 
       <Text style={styles.paragraph}>
@@ -23,32 +23,13 @@ export function ShapeJamInfoScreen() {
         Focus on precision, rhythm, and flow — whether you're training symmetry, creativity, or advanced transitions.
       </Text>
 
-      <View style={styles.iconSection}>
-        <Text style={styles.sectionTitle}>Header icons explained</Text>
-        <IconRow icon="information-circle-outline" text="View feature info" />
-        <IconRow icon="mic-outline" text="Set voice for audio callouts" />
-        <IconRow icon="bookmark-outline" text="Save current input as a favorite" />
-        <IconRow icon="heart-outline" text="Load your saved favorites" />
-        <IconRow icon="settings-outline" text="Adjust default settings" />
-      </View>
+      <Text style={styles.paragraph}>
+        Check out the example videos to see this feature in action.
+      </Text>
+
     </InfoScreenLayout>
   )
 }
-
-function IconRow({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: string }) {
-  return (
-    <View style={iconRowStyles.row}>
-      <Ionicons name={icon} size={16} color="#666" style={iconRowStyles.icon} />
-      <Text style={iconRowStyles.text}>{text}</Text>
-    </View>
-  )
-}
-
-const iconRowStyles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  icon: { marginRight: 8 },
-  text: { fontSize: 14, color: '#374151', flex: 1 },
-})
 
 const styles = StyleSheet.create({
   emphasis: {
@@ -61,16 +42,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#374151',
     lineHeight: 22,
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  iconSection: {
-    marginTop: 8,
     marginBottom: 16,
   },
 })

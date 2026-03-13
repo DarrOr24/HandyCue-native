@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { StyleSheet, Text } from 'react-native'
 import { InfoScreenLayout } from '../components/info-screen-layout'
 
 export function DrillDJInfoScreen() {
@@ -11,11 +10,23 @@ export function DrillDJInfoScreen() {
 
       <Text style={styles.paragraph}>
         DrillDJ guides you through handstand drills with audio prompts and timed cues.
-        Choose your drill type (Slide, Float, or Switch), set rep counts and durations.
+        There are three kinds of drills, each with its own rhythm and focus.
       </Text>
 
+      <Text style={styles.sectionTitle}>The three drills</Text>
       <Text style={styles.paragraph}>
-        Switch drill is good for one arm prep drills — you can time your hold on each hand accurately.
+        <Text style={styles.bold}>Slide</Text> — Slide down (timed), hold, then slide up. You control slide-down time, hold time, and slide-up time separately. Great for controlled wall slides and L-shapes.
+      </Text>
+      <Text style={styles.paragraph}>
+        <Text style={styles.bold}>Float</Text> — Float for a set duration, then return. The voice says "Return" and you have time between floats to reset. Builds float control and consistency.
+      </Text>
+      <Text style={styles.paragraph}>
+        <Text style={styles.bold}>Switch</Text> — Hold, then switch. Ideal for one-arm prep: time your hold on each hand accurately. Adjust time between switches and switch duration to match your practice.
+      </Text>
+
+      <Text style={styles.sectionTitle}>More callouts</Text>
+      <Text style={styles.paragraph}>
+        For Slide and Float, you can add extra callouts after the main reps. Choose "Switch legs" to do additional reps on one leg at a time, or "Both legs" for reps on both legs. You can chain them — e.g. switch legs for a few reps, then both legs for a few more. This helps balance training and adds variety without changing your main drill.
       </Text>
 
       <Text style={styles.paragraph}>
@@ -27,32 +38,13 @@ export function DrillDJInfoScreen() {
         Enable Voice count to hear the count spoken aloud during longer phases — keeping your rhythm consistent.
       </Text>
 
-      <View style={styles.iconSection}>
-        <Text style={styles.sectionTitle}>Header icons explained</Text>
-        <IconRow icon="information-circle-outline" text="View feature info" />
-        <IconRow icon="mic-outline" text="Set voice for audio callouts" />
-        <IconRow icon="bookmark-outline" text="Save current input as a favorite" />
-        <IconRow icon="heart-outline" text="Load your saved favorites" />
-        <IconRow icon="settings-outline" text="Adjust default settings" />
-      </View>
+      <Text style={styles.paragraph}>
+        Check out the example videos to see this feature in action.
+      </Text>
+
     </InfoScreenLayout>
   )
 }
-
-function IconRow({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: string }) {
-  return (
-    <View style={iconRowStyles.row}>
-      <Ionicons name={icon} size={16} color="#666" style={iconRowStyles.icon} />
-      <Text style={iconRowStyles.text}>{text}</Text>
-    </View>
-  )
-}
-
-const iconRowStyles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  icon: { marginRight: 8 },
-  text: { fontSize: 14, color: '#374151', flex: 1 },
-})
 
 const styles = StyleSheet.create({
   emphasis: {
@@ -73,8 +65,7 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 8,
   },
-  iconSection: {
-    marginTop: 8,
-    marginBottom: 16,
+  bold: {
+    fontWeight: '600',
   },
 })
