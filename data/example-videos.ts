@@ -17,4 +17,24 @@ export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
       { title: 'Switch - Twinkle toes', url: 'Switch drill - twinkle toes.mp4', available: false },
     ],
   },
+  entryBuddy: {
+    title: 'EntryBuddy',
+    videos: [
+      { title: 'Mixed standing entries', url: 'EntryBuddy - mixed standing entries.mp4', available: false },
+      { title: 'Straddle press entries', url: 'EntryBuddy - straddle press entries.mp4', available: false },
+      { title: 'Pike kneeling entries', url: 'EntryBuddy - pike kneeling entries.mp4', available: false },
+    ],
+  },
+  shapeJam: {
+    title: 'ShapeJam',
+    videos: [
+      { title: 'Tuck-Straddle-Straight', url: 'ShapeJam - tuck straddle straight.mp4', available: false },
+    ],
+  },
+  holdOn: {
+    title: 'HoldOn',
+    videos: [
+      { title: 'Chest to wall hold', url: 'HoldOn - chest to wall hold.mp4', available: false },
+    ],
+  },
 }

@@ -101,6 +101,10 @@ export function HoldOnScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('HoldOnSettings')
     },
+    onExampleVideos: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ExampleVideos', { featureKey: 'holdOn' })
+    },
     session,
   })
   menuHandlersRef.current = {
@@ -117,6 +121,10 @@ export function HoldOnScreen() {
     onSettings: async () => {
       await saveCurrentInputsToProfile()
       navigation.navigate('HoldOnSettings')
+    },
+    onExampleVideos: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('ExampleVideos', { featureKey: 'holdOn' })
     },
     session,
   }
