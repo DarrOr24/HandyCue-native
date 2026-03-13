@@ -57,6 +57,9 @@ export async function runShapeSets(options: {
     if (isCancelled()) return
 
     if (!isFinal) {
+      onDisplay(`Rest ${restTime}`)
+      await speak(`Set finished. Rest for ${restTime} seconds`, storedVoice)
+      if (isCancelled()) return
       await new Promise<void>((resolve) => {
         runRestCycle({
           restTime,

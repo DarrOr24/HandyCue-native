@@ -23,7 +23,13 @@ import { SelectInput, type SelectOption } from '../components/select-input'
 
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
-import { runGetReadyCountdown, runRestCycle, performPhase } from '../services/drillDJ.service'
+import {
+  runGetReadyCountdown,
+  runRestCycle,
+  performPhase,
+  runCallout,
+  type CalloutConfig,
+} from '../services/drillDJ.service'
 import {
   drillDJDefaults,
   getFeatureInputSettings,
@@ -39,6 +45,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { CalloutBlock } from '../components/callout-block'
 
 const FEATURE_KEY = 'drillDJ'
 
@@ -63,11 +70,22 @@ export function DrillDJScreen() {
   const [metronomeEnabled, setMetronomeEnabled] = useState(true)
 
   // Slide
-  const [slideTime, setSlideTime] = useState<number>(drillDJDefaults.defaultValues.slideTime)
-  const [timeBetweenSlides, setTimeBetweenSlides] = useState<number>(drillDJDefaults.defaultValues.timeBetweenSlides)
+  const [slideDownTime, setSlideDownTime] = useState<number>(drillDJDefaults.defaultValues.slideDownTime)
+  const [slideUpTime, setSlideUpTime] = useState<number>(drillDJDefaults.defaultValues.slideUpTime)
+  const [holdTime, setHoldTime] = useState<number>(drillDJDefaults.defaultValues.holdTime)
+  const [slideCallout, setSlideCallout] = useState<CalloutConfig>({
+    type: 'none',
+    afterReps: 3,
+    nested: { type: 'none', afterReps: 3 },
+  })
   // Float
   const [floatTime, setFloatTime] = useState<number>(drillDJDefaults.defaultValues.floatTime)
   const [timeBetweenFloats, setTimeBetweenFloats] = useState<number>(drillDJDefaults.defaultValues.timeBetweenFloats)
+  const [floatCallout, setFloatCallout] = useState<CalloutConfig>({
+    type: 'none',
+    afterReps: 3,
+    nested: { type: 'none', afterReps: 3 },
+  })
   // Switch
   const [switchTime, setSwitchTime] = useState<number>(drillDJDefaults.defaultValues.switchTime)
   const [timeBetweenSwitches, setTimeBetweenSwitches] = useState<number>(drillDJDefaults.defaultValues.timeBetweenSwitches)
@@ -117,12 +135,15 @@ export function DrillDJScreen() {
               numReps,
               numSets,
               restTime,
-              slideTime,
-              timeBetweenSlides,
+              slideDownTime,
+              slideUpTime,
+              holdTime,
               floatTime,
               timeBetweenFloats,
               switchTime,
               timeBetweenSwitches,
+              slideCallout,
+              floatCallout,
             },
           },
         },
@@ -204,17 +225,33 @@ export function DrillDJScreen() {
             userSettings,
             drillDJDefaults
           )
-          const merged = { ...drillDJDefaults.inputSettings, ...is } as typeof drillDJDefaults.inputSettings
-          setInputSettings(merged)
+          const merged = { ...drillDJDefaults.inputSettings, ...is } as Record<string, { min: number; step: number }>
+          if (merged.slideTime && !merged.slideDownTime) {
+            merged.slideDownTime = merged.slideTime
+            merged.slideUpTime = merged.slideTime
+          }
+          if (merged.timeBetweenSlides && !merged.holdTime) {
+            merged.holdTime = merged.timeBetweenSlides
+          }
+          setInputSettings(merged as typeof drillDJDefaults.inputSettings)
           const dv = defaultValues as Record<string, number>
           setGetReadyTime((dv.getReadyTime as number) ?? drillDJDefaults.defaultValues.getReadyTime)
           setNumReps((dv.numReps as number) ?? drillDJDefaults.defaultValues.numReps)
           setNumSets((dv.numSets as number) ?? drillDJDefaults.defaultValues.numSets)
           setRestTime((dv.restTime as number) ?? drillDJDefaults.defaultValues.restTime)
-          setSlideTime((dv.slideTime as number) ?? drillDJDefaults.defaultValues.slideTime)
-          setTimeBetweenSlides((dv.timeBetweenSlides as number) ?? drillDJDefaults.defaultValues.timeBetweenSlides)
+          setSlideDownTime(
+            (dv.slideDownTime as number) ?? (dv.slideTime as number) ?? drillDJDefaults.defaultValues.slideDownTime
+          )
+          setSlideUpTime(
+            (dv.slideUpTime as number) ?? (dv.slideTime as number) ?? drillDJDefaults.defaultValues.slideUpTime
+          )
+          setHoldTime(
+            (dv.holdTime as number) ?? (dv.timeBetweenSlides as number) ?? drillDJDefaults.defaultValues.holdTime
+          )
+          if (dv.slideCallout) setSlideCallout(dv.slideCallout as CalloutConfig)
           setFloatTime((dv.floatTime as number) ?? drillDJDefaults.defaultValues.floatTime)
           setTimeBetweenFloats((dv.timeBetweenFloats as number) ?? drillDJDefaults.defaultValues.timeBetweenFloats)
+          if (dv.floatCallout) setFloatCallout(dv.floatCallout as CalloutConfig)
           setSwitchTime((dv.switchTime as number) ?? drillDJDefaults.defaultValues.switchTime)
           setTimeBetweenSwitches((dv.timeBetweenSwitches as number) ?? drillDJDefaults.defaultValues.timeBetweenSwitches)
         })
@@ -275,6 +312,9 @@ export function DrillDJScreen() {
       if (resetSignalRef.current.isCancelled()) return
 
       if (!isFinal) {
+        setDisplayContent(`Rest ${restTime}`)
+        await speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
+        if (resetSignalRef.current.isCancelled()) return
         await new Promise<void>((resolve) => {
           runRestCycle({
             restTime,
@@ -317,39 +357,65 @@ export function DrillDJScreen() {
     }
 
     if (drillType === 'slide') {
-      for (let i = 1; i <= numReps; i++) {
-        if (resetSignalRef.current.isCancelled()) return
-        await runPhase({
-          label: 'Slide down',
-          displayLabel: `Down ${i}`,
-          duration: slideTime,
-        })
-        if (resetSignalRef.current.isCancelled()) return
-        await runPhase({
-          label: 'Hold',
-          displayLabel: `Hold ${i}`,
-          duration: timeBetweenSlides,
-        })
-        if (resetSignalRef.current.isCancelled()) return
-        await runPhase({
-          label: 'Slide up',
-          displayLabel: `Up ${i}`,
-          duration: slideTime,
-        })
+      const runSlideReps = async (repCount: number) => {
+        for (let i = 1; i <= repCount; i++) {
+          if (resetSignalRef.current.isCancelled()) return
+          await runPhase({
+            label: 'Slide down',
+            displayLabel: `Down ${i}`,
+            duration: slideDownTime,
+          })
+          if (resetSignalRef.current.isCancelled()) return
+          await runPhase({
+            label: 'Hold',
+            displayLabel: `Hold ${i}`,
+            duration: holdTime,
+          })
+          if (resetSignalRef.current.isCancelled()) return
+          await runPhase({
+            label: 'Slide up',
+            displayLabel: `Up ${i}`,
+            duration: slideUpTime,
+          })
+        }
+      }
+      await runSlideReps(numReps)
+      if (resetSignalRef.current.isCancelled()) return
+      if (slideCallout.type !== 'none') {
+        await runCallout(
+          slideCallout,
+          runSlideReps,
+          setDisplayContent,
+          voiceRef.current,
+          () => resetSignalRef.current.isCancelled()
+        )
       }
     } else if (drillType === 'float') {
-      for (let i = 1; i <= numReps; i++) {
-        if (resetSignalRef.current.isCancelled()) return
-        await runPhase({
-          label: 'Float',
-          displayLabel: `Float ${i}`,
-          duration: floatTime,
-        })
-        if (resetSignalRef.current.isCancelled()) return
-        setDisplayContent('Return')
-        await speak('Return', voiceRef.current)
-        if (resetSignalRef.current.isCancelled()) return
-        await new Promise((r) => setTimeout(r, timeBetweenFloats * 1000))
+      const runFloatReps = async (repCount: number) => {
+        for (let i = 1; i <= repCount; i++) {
+          if (resetSignalRef.current.isCancelled()) return
+          await runPhase({
+            label: 'Float',
+            displayLabel: `Float ${i}`,
+            duration: floatTime,
+          })
+          if (resetSignalRef.current.isCancelled()) return
+          setDisplayContent('Return')
+          await speak('Return', voiceRef.current)
+          if (resetSignalRef.current.isCancelled()) return
+          await new Promise((r) => setTimeout(r, timeBetweenFloats * 1000))
+        }
+      }
+      await runFloatReps(numReps)
+      if (resetSignalRef.current.isCancelled()) return
+      if (floatCallout.type !== 'none') {
+        await runCallout(
+          floatCallout,
+          runFloatReps,
+          setDisplayContent,
+          voiceRef.current,
+          () => resetSignalRef.current.isCancelled()
+        )
       }
     } else {
       for (let i = 1; i <= numReps; i++) {
@@ -412,10 +478,13 @@ export function DrillDJScreen() {
       numSets,
       restTime,
       drillType,
-      slideTime,
-      timeBetweenSlides,
+      slideDownTime,
+      slideUpTime,
+      holdTime,
+      slideCallout,
       floatTime,
       timeBetweenFloats,
+      floatCallout,
       switchTime,
       timeBetweenSwitches,
       sayRepCount,
@@ -467,10 +536,16 @@ export function DrillDJScreen() {
     setNumSets(inp.numSets)
     setRestTime(inp.restTime)
     setDrillType(inp.drillType ?? 'slide')
-    if (inp.slideTime != null) setSlideTime(inp.slideTime)
-    if (inp.timeBetweenSlides != null) setTimeBetweenSlides(inp.timeBetweenSlides)
+    if (inp.slideDownTime != null) setSlideDownTime(inp.slideDownTime)
+    else if (inp.slideTime != null) setSlideDownTime(inp.slideTime)
+    if (inp.slideUpTime != null) setSlideUpTime(inp.slideUpTime)
+    else if (inp.slideTime != null) setSlideUpTime(inp.slideTime)
+    if (inp.holdTime != null) setHoldTime(inp.holdTime)
+    else if (inp.timeBetweenSlides != null) setHoldTime(inp.timeBetweenSlides)
+    if (inp.slideCallout) setSlideCallout(inp.slideCallout)
     if (inp.floatTime != null) setFloatTime(inp.floatTime)
     if (inp.timeBetweenFloats != null) setTimeBetweenFloats(inp.timeBetweenFloats)
+    if (inp.floatCallout) setFloatCallout(inp.floatCallout)
     if (inp.switchTime != null) setSwitchTime(inp.switchTime)
     if (inp.timeBetweenSwitches != null) setTimeBetweenSwitches(inp.timeBetweenSwitches)
     if (inp.sayRepCount != null) setSayRepCount(inp.sayRepCount)
@@ -588,16 +663,16 @@ export function DrillDJScreen() {
               <>
                 <FeatureInputsGrid.GridItem>
                 <NumberInput
-                  label="Slide time"
-                  value={slideTime}
+                  label="Slide down"
+                  value={slideDownTime}
                   onDecrease={() =>
-                    setSlideTime((v) =>
-                      Math.max(inputSettings.slideTime.min, v - inputSettings.slideTime.step)
+                    setSlideDownTime((v) =>
+                      Math.max(inputSettings.slideDownTime.min, v - inputSettings.slideDownTime.step)
                     )
                   }
                   onIncrease={() =>
-                    setSlideTime((v) =>
-                      v + inputSettings.slideTime.step
+                    setSlideDownTime((v) =>
+                      v + inputSettings.slideDownTime.step
                     )
                   }
                   disabled={inputsDisabled}
@@ -606,20 +681,47 @@ export function DrillDJScreen() {
                 <FeatureInputsGrid.GridItem>
                 <NumberInput
                   label="Hold time"
-                    value={timeBetweenSlides}
+                  value={holdTime}
                   onDecrease={() =>
-                    setTimeBetweenSlides((v) =>
-                      Math.max(inputSettings.timeBetweenSlides.min, v - inputSettings.timeBetweenSlides.step)
+                    setHoldTime((v) =>
+                      Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step)
                     )
                   }
                   onIncrease={() =>
-                    setTimeBetweenSlides((v) =>
-                      v + inputSettings.timeBetweenSlides.step
+                    setHoldTime((v) =>
+                      v + inputSettings.holdTime.step
                     )
                   }
                   disabled={inputsDisabled}
                 />
                 </FeatureInputsGrid.GridItem>
+                <FeatureInputsGrid.GridItem>
+                <NumberInput
+                  label="Slide up"
+                  value={slideUpTime}
+                  onDecrease={() =>
+                    setSlideUpTime((v) =>
+                      Math.max(inputSettings.slideUpTime.min, v - inputSettings.slideUpTime.step)
+                    )
+                  }
+                  onIncrease={() =>
+                    setSlideUpTime((v) =>
+                      v + inputSettings.slideUpTime.step
+                    )
+                  }
+                  disabled={inputsDisabled}
+                />
+                </FeatureInputsGrid.GridItem>
+                <CalloutBlock
+                  callout={slideCallout}
+                  onChange={setSlideCallout}
+                  disabled={inputsDisabled}
+                  numRepsMin={inputSettings.numReps.min}
+                  numRepsMax={numReps}
+                  numRepsStep={inputSettings.numReps.step}
+                  asGridItems
+                  GridItem={FeatureInputsGrid.GridItem}
+                />
               </>
             )}
 
@@ -659,6 +761,16 @@ export function DrillDJScreen() {
                   disabled={inputsDisabled}
                 />
                 </FeatureInputsGrid.GridItem>
+                <CalloutBlock
+                  callout={floatCallout}
+                  onChange={setFloatCallout}
+                  disabled={inputsDisabled}
+                  numRepsMin={inputSettings.numReps.min}
+                  numRepsMax={numReps}
+                  numRepsStep={inputSettings.numReps.step}
+                  asGridItems
+                  GridItem={FeatureInputsGrid.GridItem}
+                />
               </>
             )}
 

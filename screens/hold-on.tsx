@@ -319,7 +319,7 @@ export function HoldOnScreen() {
 
     setPhase('rest')
     setDisplayContent(`Rest ${restTime}`)
-    speak(`Rest for ${restTime} seconds`, voiceRef.current)
+    speak(`Set finished. Rest for ${restTime} seconds`, voiceRef.current)
 
     cleanupRef.current = runRestCycle({
       restTime,

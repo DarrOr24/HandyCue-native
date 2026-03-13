@@ -91,3 +91,51 @@ export async function performPhase(options: {
   }
   onPhaseEnd?.()
 }
+
+export type CalloutConfig = {
+  type: 'none' | 'switch' | 'both'
+  afterReps?: number
+  nested?: {
+    type: 'none' | 'switch' | 'both'
+    afterReps?: number
+  }
+}
+
+export async function runCallout(
+  callout: CalloutConfig,
+  runRepsFn: (repCount: number) => Promise<void>,
+  setDisplayStep: (s: string) => void,
+  voice: StoredVoice | null,
+  isCancelled: () => boolean
+): Promise<void> {
+  const { type, afterReps = 0, nested = {} } = callout
+  if (type === 'none') return
+
+  if (type === 'switch') {
+    setDisplayStep('Switch')
+    await speak('Switch legs', voice)
+    if (isCancelled()) return
+    await runRepsFn(afterReps)
+    if (isCancelled()) return
+    if (nested.type === 'both') {
+      setDisplayStep('Both')
+      await speak('Both legs', voice)
+      if (isCancelled()) return
+      await runRepsFn(nested.afterReps ?? 0)
+    }
+  }
+
+  if (type === 'both') {
+    setDisplayStep('Both')
+    await speak('Both legs', voice)
+    if (isCancelled()) return
+    await runRepsFn(afterReps)
+    if (isCancelled()) return
+    if (nested.type === 'switch') {
+      setDisplayStep('Switch')
+      await speak('Switch legs', voice)
+      if (isCancelled()) return
+      await runRepsFn(nested.afterReps ?? 0)
+    }
+  }
+}

@@ -12,6 +12,9 @@ export type DrillDJUserSettings = {
     timeBetweenFloats?: { min: number; step: number }
     switchTime?: { min: number; step: number }
     timeBetweenSwitches?: { min: number; step: number }
+    slideDownTime?: { min: number; step: number }
+    slideUpTime?: { min: number; step: number }
+    holdTime?: { min: number; step: number }
     slideTime?: { min: number; step: number }
     timeBetweenSlides?: { min: number; step: number }
   }
@@ -24,6 +27,9 @@ export type DrillDJUserSettings = {
     timeBetweenFloats?: number
     switchTime?: number
     timeBetweenSwitches?: number
+    slideDownTime?: number
+    slideUpTime?: number
+    holdTime?: number
     slideTime?: number
     timeBetweenSlides?: number
   }
@@ -67,8 +73,9 @@ export const drillDJDefaults = {
     timeBetweenFloats: { min: 0, step: 1 },
     switchTime: { min: 0, step: 1 },
     timeBetweenSwitches: { min: 0, step: 1 },
-    slideTime: { min: 1, step: 1 },
-    timeBetweenSlides: { min: 0, step: 1 },
+    slideDownTime: { min: 1, step: 1 },
+    slideUpTime: { min: 1, step: 1 },
+    holdTime: { min: 0, step: 1 },
   },
   defaultValues: {
     ...sharedDefaults.defaultValues,
@@ -77,8 +84,9 @@ export const drillDJDefaults = {
     timeBetweenFloats: 2,
     switchTime: 2,
     timeBetweenSwitches: 0,
-    slideTime: 4,
-    timeBetweenSlides: 0,
+    slideDownTime: 4,
+    slideUpTime: 4,
+    holdTime: 0,
   },
 } as const
 
