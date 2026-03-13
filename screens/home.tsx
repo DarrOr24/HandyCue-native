@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
+import { DrillExamplesCard } from "../components/drill-examples-card";
 import { ProfileMenu } from "../components/profile-menu";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -108,6 +109,8 @@ export function HomeScreen() {
             }}
           />
         ))}
+
+        <DrillExamplesCard />
 
         <StatusBar style="auto" />
       </ScrollView>
