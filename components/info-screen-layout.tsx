@@ -41,6 +41,23 @@ export function InfoScreenLayout({ title, children }: InfoScreenLayoutProps) {
   )
 }
 
+/** Styled text components for info page content. Use these so styling stays consistent. */
+export function InfoEmphasis({ children }: { children: ReactNode }) {
+  return <Text style={contentStyles.emphasis}>{children}</Text>
+}
+
+export function InfoParagraph({ children }: { children: ReactNode }) {
+  return <Text style={contentStyles.paragraph}>{children}</Text>
+}
+
+export function InfoSectionTitle({ children }: { children: ReactNode }) {
+  return <Text style={contentStyles.sectionTitle}>{children}</Text>
+}
+
+export function InfoBold({ children }: { children: ReactNode }) {
+  return <Text style={contentStyles.bold}>{children}</Text>
+}
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   header: {
@@ -57,4 +74,28 @@ const styles = StyleSheet.create({
   headerSpacer: { width: 32 },
   scroll: { flex: 1 },
   content: { padding: 16, paddingBottom: 32 },
+})
+
+const contentStyles = StyleSheet.create({
+  emphasis: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#374151',
+    marginBottom: 16,
+  },
+  paragraph: {
+    fontSize: 15,
+    color: '#374151',
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
+  },
+  bold: {
+    fontWeight: '600',
+  },
 })
