@@ -350,7 +350,6 @@ export function DrillDJScreen() {
       })
 
     if (sayRepCount) {
-      setDisplayContent(`${numReps}!`)
       await speak(`${numReps} ${numReps === 1 ? 'rep' : 'reps'}`, voiceRef.current)
       if (resetSignalRef.current.isCancelled()) return
     }
@@ -386,7 +385,8 @@ export function DrillDJScreen() {
           runSlideReps,
           setDisplayContent,
           voiceRef.current,
-          () => resetSignalRef.current.isCancelled()
+          () => resetSignalRef.current.isCancelled(),
+          sayRepCount
         )
       }
     } else if (drillType === 'float') {
@@ -413,7 +413,8 @@ export function DrillDJScreen() {
           runFloatReps,
           setDisplayContent,
           voiceRef.current,
-          () => resetSignalRef.current.isCancelled()
+          () => resetSignalRef.current.isCancelled(),
+          sayRepCount
         )
       }
     } else {

@@ -104,21 +104,35 @@ export async function runCallout(
   runRepsFn: (repCount: number) => Promise<void>,
   setDisplayStep: (s: string) => void,
   voice: StoredVoice | null,
-  isCancelled: () => boolean
+  isCancelled: () => boolean,
+  sayRepCount: boolean
 ): Promise<void> {
   const { type, afterReps = 0, nested = {} } = callout
   if (type === 'none') return
+
+  const sayReps = (count: number) =>
+    sayRepCount && count > 0
+      ? speak(`${count} ${count === 1 ? 'rep' : 'reps'}`, voice)
+      : Promise.resolve()
 
   if (type === 'switch') {
     setDisplayStep('Switch')
     await speak('Switch legs', voice)
     if (isCancelled()) return
+    if (sayRepCount) {
+      await sayReps(afterReps)
+      if (isCancelled()) return
+    }
     await runRepsFn(afterReps)
     if (isCancelled()) return
     if (nested.type === 'both') {
       setDisplayStep('Both')
       await speak('Both legs', voice)
       if (isCancelled()) return
+      if (sayRepCount) {
+        await sayReps(nested.afterReps ?? 0)
+        if (isCancelled()) return
+      }
       await runRepsFn(nested.afterReps ?? 0)
     }
   }
@@ -127,12 +141,20 @@ export async function runCallout(
     setDisplayStep('Both')
     await speak('Both legs', voice)
     if (isCancelled()) return
+    if (sayRepCount) {
+      await sayReps(afterReps)
+      if (isCancelled()) return
+    }
     await runRepsFn(afterReps)
     if (isCancelled()) return
     if (nested.type === 'switch') {
       setDisplayStep('Switch')
       await speak('Switch legs', voice)
       if (isCancelled()) return
+      if (sayRepCount) {
+        await sayReps(nested.afterReps ?? 0)
+        if (isCancelled()) return
+      }
       await runRepsFn(nested.afterReps ?? 0)
     }
   }
