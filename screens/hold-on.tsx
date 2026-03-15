@@ -299,13 +299,14 @@ export function HoldOnScreen() {
         setElapsed(e)
         setDisplayContent(display)
       },
-      onHoldComplete: () => {
+      onHoldComplete: async () => {
         if (resetSignalRef.current.isCancelled()) return
         const isFinal = currentSetRef.current >= numSetsRef.current
         if (isFinal) {
           setPhase('done')
           setDisplayContent('Done!')
-          speak('Session over. Good job!', voiceRef.current)
+          await speak('Session over. Good job!', voiceRef.current)
+          handleReset()
         } else {
           startRestCycle()
         }

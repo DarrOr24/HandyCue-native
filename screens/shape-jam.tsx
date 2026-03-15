@@ -289,6 +289,7 @@ export function ShapeJamScreen() {
         setPhase('done')
         setDisplayContent('')
         await speak('Session over. Good job!', voiceRef.current)
+        handleReset()
       })
       .catch(() => {})
   }

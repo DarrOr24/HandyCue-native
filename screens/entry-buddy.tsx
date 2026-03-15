@@ -304,6 +304,7 @@ export function EntryBuddyScreen() {
     setPhase('done')
     setDisplayContent('Done!')
     await speak('Session over. Good job!', voiceRef.current)
+    handleReset()
   }
 
   const isActive = phase === 'getReady' || phase === 'entries' || phase === 'rest'
