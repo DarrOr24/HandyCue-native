@@ -21,7 +21,12 @@ import { FavoritesModal } from '../components/Modals/FavoritesModal'
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
 import { runCueSequence } from '../services/cueCraft.service'
-import { getDefaultSteps } from '../services/cueCraft.settings.service'
+import {
+  getDefaultSteps,
+  cueCraftDefaults,
+  getFeatureInputSettings,
+} from '../services/cueCraft.settings.service'
+import type { CueCraftUserSettings } from '../services/cueCraft.settings.service'
 import {
   getFavoritesForFeature,
   checkIsDuplicateName,
@@ -82,11 +87,21 @@ export function CueCraftScreen() {
     useCallback(() => {
       if (!session?.user?.id) {
         setProfile(null)
+        setSteps(getDefaultSteps())
         return
       }
       getProfile(session.user.id)
-        .then((p) => setProfile(p))
-        .catch(() => setProfile(null))
+        .then((p) => {
+          setProfile(p)
+          const cueCraft = (p?.settings as Record<string, unknown>)?.cueCraft as
+            | CueCraftUserSettings
+            | undefined
+          setSteps(getDefaultSteps(cueCraft))
+        })
+        .catch(() => {
+          setProfile(null)
+          setSteps(getDefaultSteps())
+        })
     }, [session?.user?.id])
   )
 
@@ -290,6 +305,17 @@ export function CueCraftScreen() {
                         onMoveUp={() => moveStep(index, 'up')}
                         onMoveDown={() => moveStep(index, 'down')}
                         disabled={inputsDisabled}
+                        inputSettings={
+                          (() => {
+                            const cueCraft = (profile?.settings as Record<string, unknown>)
+                              ?.cueCraft as CueCraftUserSettings | undefined
+                            const { inputSettings } = getFeatureInputSettings(
+                              cueCraft,
+                              cueCraftDefaults
+                            )
+                            return inputSettings as typeof cueCraftDefaults.inputSettings
+                          })()
+                        }
                       />
                     </View>
                   </View>
@@ -314,6 +340,11 @@ export function CueCraftScreen() {
         visible={isAddStepModalOpen}
         onAdd={addStep}
         onCancel={() => setIsAddStepModalOpen(false)}
+        defaultValues={
+          (profile?.settings as Record<string, unknown>)?.cueCraft as
+            | { defaultValues?: Record<string, number> }
+            | undefined
+        }
       />
 
       <SaveFavoriteModal

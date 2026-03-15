@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, Modal, Pressable, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import type { CueStep, CueStepType } from '../../services/cueCraft.types'
-import { genId } from '../../services/cueCraft.settings.service'
+import { genId, cueCraftDefaults } from '../../services/cueCraft.settings.service'
 
 interface AddStepModalProps {
   visible: boolean
   onAdd: (step: CueStep) => void
   onCancel: () => void
+  defaultValues?: { defaultValues?: Record<string, number> }
 }
 
 const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
@@ -18,28 +19,35 @@ const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionic
   { type: 'customText', label: 'Custom text', icon: 'chatbubble-outline' },
 ]
 
-export function AddStepModal({ visible, onAdd, onCancel }: AddStepModalProps) {
+export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddStepModalProps) {
   if (!visible) return null
+
+  const dv = defaultValues?.defaultValues ?? cueCraftDefaults.defaultValues
 
   function createStep(type: CueStepType) {
     const id = genId()
     switch (type) {
       case 'getReady':
-        return { id, type: 'getReady' as const, duration: 5 }
+        return { id, type: 'getReady' as const, duration: dv.getReadyTime ?? 5 }
       case 'timer':
         return {
           id,
           type: 'timer' as const,
-          duration: 30,
-          calloutInterval: 15,
+          duration: dv.timerDuration ?? 30,
+          calloutInterval: Math.floor((dv.timerDuration ?? 30) / 2),
           countdownFrom: 10,
         }
       case 'rest':
-        return { id, type: 'rest' as const, duration: 20 }
+        return { id, type: 'rest' as const, duration: dv.restDuration ?? 20 }
       case 'reps':
-        return { id, type: 'reps' as const, count: 5, announceReps: false }
+        return { id, type: 'reps' as const, count: dv.repsCount ?? 5, announceReps: false }
       case 'sets':
-        return { id, type: 'sets' as const, count: 1, restBetween: 20 }
+        return {
+          id,
+          type: 'sets' as const,
+          count: dv.setsCount ?? 1,
+          restBetween: dv.setsRestBetween ?? 20,
+        }
       case 'customText':
         return { id, type: 'customText' as const, text: '' }
       default:

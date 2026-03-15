@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Platform }
 import { Ionicons } from '@expo/vector-icons'
 import { inputContainerStyle } from '../theme/input-styles'
 import type { CueStep } from '../services/cueCraft.types'
+import { cueCraftDefaults } from '../services/cueCraft.settings.service'
 
 interface CueStepRowProps {
   step: CueStep
@@ -12,6 +13,8 @@ interface CueStepRowProps {
   onMoveUp: () => void
   onMoveDown: () => void
   disabled?: boolean
+  /** Step increments from CueCraft settings. Uses defaults when not provided. */
+  inputSettings?: typeof cueCraftDefaults.inputSettings
 }
 
 const STEP_LABELS: Record<string, string> = {
@@ -37,6 +40,7 @@ export function CueStepRow({
   onMoveUp,
   onMoveDown,
   disabled = false,
+  inputSettings: is = cueCraftDefaults.inputSettings,
 }: CueStepRowProps) {
   const label = STEP_LABELS[step.type] ?? step.type
   const hint = STEP_HINTS[step.type]
@@ -87,7 +91,10 @@ export function CueStepRow({
               onPress={() =>
                 onUpdate({
                   ...step,
-                  duration: Math.max(1, step.duration - (step.type === 'getReady' ? 1 : 5)),
+                  duration: Math.max(
+                    step.type === 'getReady' ? is.getReadyTime.min : is.restDuration.min,
+                    step.duration - (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step)
+                  ),
                 } as CueStep)
               }
             >
@@ -99,7 +106,7 @@ export function CueStepRow({
               onPress={() =>
                 onUpdate({
                   ...step,
-                  duration: step.duration + (step.type === 'getReady' ? 1 : 5),
+                  duration: step.duration + (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step),
                 } as CueStep)
               }
             >
@@ -117,7 +124,7 @@ export function CueStepRow({
               <TouchableOpacity
                 disabled={disabled}
                 onPress={() => {
-                  const newDuration = Math.max(1, step.duration - 5)
+                  const newDuration = Math.max(is.timerDuration.min, step.duration - is.timerDuration.step)
                   const currentCountdown = step.countdownFrom ?? 10
                   onUpdate({
                     ...step,
@@ -133,7 +140,7 @@ export function CueStepRow({
               <TouchableOpacity
                 disabled={disabled}
                 onPress={() => {
-                  const newDuration = step.duration + 5
+                  const newDuration = step.duration + is.timerDuration.step
                   onUpdate({
                     ...step,
                     duration: newDuration,
@@ -153,7 +160,10 @@ export function CueStepRow({
                 onPress={() =>
                   onUpdate({
                     ...step,
-                    calloutInterval: Math.max(0, (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) - 5),
+                    calloutInterval: Math.max(
+                      0,
+                      (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) - is.timerDuration.step
+                    ),
                   })
                 }
               >
@@ -169,7 +179,7 @@ export function CueStepRow({
                     ...step,
                     calloutInterval: Math.min(
                       step.duration,
-                      (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) + 5
+                      (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) + is.timerDuration.step
                     ),
                   })
                 }
@@ -221,14 +231,16 @@ export function CueStepRow({
             <View style={styles.durationControls}>
               <TouchableOpacity
                 disabled={disabled}
-                onPress={() => onUpdate({ ...step, count: Math.max(1, step.count - 1) })}
+                onPress={() =>
+                  onUpdate({ ...step, count: Math.max(is.repsCount.min, step.count - is.repsCount.step) })
+                }
               >
                 <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
               </TouchableOpacity>
               <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.count}</Text>
               <TouchableOpacity
                 disabled={disabled}
-                onPress={() => onUpdate({ ...step, count: step.count + 1 })}
+                onPress={() => onUpdate({ ...step, count: step.count + is.repsCount.step })}
               >
                 <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
               </TouchableOpacity>
@@ -257,14 +269,16 @@ export function CueStepRow({
             <View style={styles.durationControls}>
               <TouchableOpacity
                 disabled={disabled}
-                onPress={() => onUpdate({ ...step, count: Math.max(1, step.count - 1) })}
+                onPress={() =>
+                  onUpdate({ ...step, count: Math.max(is.setsCount.min, step.count - is.setsCount.step) })
+                }
               >
                 <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
               </TouchableOpacity>
               <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.count}</Text>
               <TouchableOpacity
                 disabled={disabled}
-                onPress={() => onUpdate({ ...step, count: step.count + 1 })}
+                onPress={() => onUpdate({ ...step, count: step.count + is.setsCount.step })}
               >
                 <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
               </TouchableOpacity>
@@ -277,7 +291,10 @@ export function CueStepRow({
                 <TouchableOpacity
                   disabled={disabled}
                   onPress={() =>
-                    onUpdate({ ...step, restBetween: Math.max(0, step.restBetween - 5) })
+                    onUpdate({
+                      ...step,
+                      restBetween: Math.max(is.setsRestBetween.min, step.restBetween - is.setsRestBetween.step),
+                    })
                   }
                 >
                   <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
@@ -285,7 +302,9 @@ export function CueStepRow({
                 <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.restBetween}</Text>
                 <TouchableOpacity
                   disabled={disabled}
-                  onPress={() => onUpdate({ ...step, restBetween: step.restBetween + 5 })}
+                  onPress={() =>
+                    onUpdate({ ...step, restBetween: step.restBetween + is.setsRestBetween.step })
+                  }
                 >
                   <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
                 </TouchableOpacity>
