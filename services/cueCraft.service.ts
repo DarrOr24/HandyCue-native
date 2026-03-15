@@ -85,7 +85,9 @@ async function runSteps(
         const countdownFrom = Math.min(step.countdownFrom ?? 10, step.duration)
         const calloutInterval = step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))
         const useCallouts = step.duration > countdownFrom
-        onDisplay('0:00')
+        const initialDisplay =
+          step.duration <= countdownFrom ? String(step.duration) : '0:00'
+        onDisplay(initialDisplay)
         if (isCancelled()) return
         await new Promise<void>((resolve) => {
           const startTime = Date.now()
@@ -99,8 +101,12 @@ async function runSteps(
             const elapsed = Math.floor((Date.now() - startTime) / 1000)
             if (elapsed === lastElapsed) return
             lastElapsed = elapsed
-            onDisplay(formatTime(elapsed))
             const remaining = step.duration - elapsed
+            const display =
+              remaining <= countdownFrom && remaining > 0
+                ? String(remaining)
+                : formatTime(elapsed)
+            onDisplay(display)
             if (remaining <= countdownFrom && remaining > 0) {
               speak(String(remaining), storedVoice)
             } else if (
