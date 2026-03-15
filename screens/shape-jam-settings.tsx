@@ -131,6 +131,11 @@ export function ShapeJamSettingsScreen() {
       onSave={handleSave}
       onReset={handleReset}
     >
+      <ShapeListSettings
+        customShapes={customShapes}
+        setCustomShapes={setCustomShapes}
+      />
+
       <SettingGroup
         title="Hold Time (per shape)"
         step={holdTimeStep}
@@ -165,11 +170,6 @@ export function ShapeJamSettingsScreen() {
         startValue={restTimeDefault ?? shapeJamDefaults.defaultValues.restTime}
         onStartValueChange={setRestTimeDefault}
         minLimit={SHARED_FIELD_LIMITS.restTime.minLimit}
-      />
-
-      <ShapeListSettings
-        customShapes={customShapes}
-        setCustomShapes={setCustomShapes}
       />
     </SettingsScreenLayout>
   )
