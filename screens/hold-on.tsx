@@ -18,6 +18,7 @@ import {
   runHoldInterval,
   runRestCycle,
 } from '../services/holdOn.service'
+import { decrementFloor } from '../theme/input-styles'
 import {
   holdOnDefaults,
   getFeatureInputSettings,
@@ -444,7 +445,7 @@ export function HoldOnScreen() {
           value={getReadyTime}
           onDecrease={() =>
             setGetReadyTime((v) =>
-              Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+              Math.max(decrementFloor(inputSettings.getReadyTime.min, inputSettings.getReadyTime.step), v - inputSettings.getReadyTime.step)
             )
           }
           onIncrease={() =>
@@ -458,7 +459,7 @@ export function HoldOnScreen() {
           label="Hold time"
           value={holdTime}
           onDecrease={() =>
-            setHoldTime((v) => Math.max(inputSettings.holdTime.step, v - inputSettings.holdTime.step))
+            setHoldTime((v) => Math.max(decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step), v - inputSettings.holdTime.step))
           }
           onIncrease={() =>
             setHoldTime((v) => v + inputSettings.holdTime.step)
@@ -485,7 +486,7 @@ export function HoldOnScreen() {
           value={numSets}
           onDecrease={() =>
             setNumSets((v) =>
-              Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+              Math.max(decrementFloor(inputSettings.numSets.min, inputSettings.numSets.step), v - inputSettings.numSets.step)
             )
           }
           onIncrease={() =>
@@ -501,7 +502,7 @@ export function HoldOnScreen() {
               value={restTime}
               onDecrease={() =>
                 setRestTime((v) =>
-                  Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                  Math.max(decrementFloor(inputSettings.restTime.min, inputSettings.restTime.step), v - inputSettings.restTime.step)
                 )
               }
               onIncrease={() =>

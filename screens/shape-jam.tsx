@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
-import { inputContainerStyle } from '../theme/input-styles'
+import { inputContainerStyle, decrementFloor } from '../theme/input-styles'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -426,7 +426,7 @@ export function ShapeJamScreen() {
             value={getReadyTime}
             onDecrease={() =>
               setGetReadyTime((v) =>
-                Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+                Math.max(decrementFloor(inputSettings.getReadyTime.min, inputSettings.getReadyTime.step), v - inputSettings.getReadyTime.step)
               )
             }
             onIncrease={() =>
@@ -443,7 +443,7 @@ export function ShapeJamScreen() {
             value={numReps}
             onDecrease={() =>
               setNumReps((v) =>
-                Math.max(inputSettings.numReps.min, v - inputSettings.numReps.step)
+                Math.max(decrementFloor(inputSettings.numReps.min, inputSettings.numReps.step), v - inputSettings.numReps.step)
               )
             }
             onIncrease={() =>
@@ -475,7 +475,7 @@ export function ShapeJamScreen() {
                     updateShape(
                       idx,
                       'holdTime',
-                      Math.max(inputSettings.holdTime.min, shapeObj.holdTime - inputSettings.holdTime.step)
+                      Math.max(decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step), shapeObj.holdTime - inputSettings.holdTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -498,7 +498,7 @@ export function ShapeJamScreen() {
                 value={numSets}
                 onDecrease={() =>
                   setNumSets((v) =>
-                    Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                    Math.max(decrementFloor(inputSettings.numSets.min, inputSettings.numSets.step), v - inputSettings.numSets.step)
                   )
                 }
                 onIncrease={() =>
@@ -516,7 +516,7 @@ export function ShapeJamScreen() {
                 value={numSets}
                 onDecrease={() =>
                   setNumSets((v) =>
-                    Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                    Math.max(decrementFloor(inputSettings.numSets.min, inputSettings.numSets.step), v - inputSettings.numSets.step)
                   )
                 }
                 onIncrease={() =>
@@ -535,7 +535,7 @@ export function ShapeJamScreen() {
                 value={restTime}
                 onDecrease={() =>
                   setRestTime((v) =>
-                    Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                    Math.max(decrementFloor(inputSettings.restTime.min, inputSettings.restTime.step), v - inputSettings.restTime.step)
                   )
                 }
                 onIncrease={() =>

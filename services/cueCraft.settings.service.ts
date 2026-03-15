@@ -42,8 +42,8 @@ export function getFeatureInputSettings(
 export const cueCraftDefaults = {
   inputSettings: {
     getReadyTime: { min: 0, step: 1 },
-    timerDuration: { min: 1, step: 5 },
-    restDuration: { min: 1, step: 5 },
+    timerDuration: { min: 5, step: 5 },
+    restDuration: { min: 5, step: 5 },
     repsCount: { min: 1, step: 1 },
     setsCount: { min: 1, step: 1 },
     setsRestBetween: { min: 0, step: 5 },

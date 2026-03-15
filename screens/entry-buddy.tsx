@@ -21,6 +21,7 @@ import {
   runEntries,
   runRestCycle,
 } from '../services/entryBuddy.service'
+import { decrementFloor } from '../theme/input-styles'
 import {
   entryBuddyDefaults,
   getFeatureInputSettings,
@@ -391,7 +392,7 @@ export function EntryBuddyScreen() {
             value={getReadyTime}
             onDecrease={() =>
               setGetReadyTime((v) =>
-                Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+                Math.max(decrementFloor(inputSettings.getReadyTime.min, inputSettings.getReadyTime.step), v - inputSettings.getReadyTime.step)
               )
             }
             onIncrease={() =>
@@ -408,7 +409,7 @@ export function EntryBuddyScreen() {
             value={numEntries}
             onDecrease={() =>
               setNumEntries((v) =>
-                Math.max(inputSettings.entryCount.min, v - inputSettings.entryCount.step)
+                Math.max(decrementFloor(inputSettings.entryCount.min, inputSettings.entryCount.step), v - inputSettings.entryCount.step)
               )
             }
             onIncrease={() =>
@@ -425,7 +426,7 @@ export function EntryBuddyScreen() {
             value={holdTime}
             onDecrease={() =>
               setHoldTime((v) =>
-                Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step)
+                Math.max(decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step), v - inputSettings.holdTime.step)
               )
             }
             onIncrease={() =>
@@ -442,7 +443,7 @@ export function EntryBuddyScreen() {
             value={timeBetween}
             onDecrease={() =>
               setTimeBetween((v) =>
-                Math.max(inputSettings.timeBetween.min, v - inputSettings.timeBetween.step)
+                Math.max(decrementFloor(inputSettings.timeBetween.min, inputSettings.timeBetween.step), v - inputSettings.timeBetween.step)
               )
             }
             onIncrease={() =>
@@ -459,7 +460,7 @@ export function EntryBuddyScreen() {
             value={numSets}
             onDecrease={() =>
               setNumSets((v) =>
-                Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                Math.max(decrementFloor(inputSettings.numSets.min, inputSettings.numSets.step), v - inputSettings.numSets.step)
               )
             }
             onIncrease={() =>
@@ -477,7 +478,7 @@ export function EntryBuddyScreen() {
                 value={restTime}
                 onDecrease={() =>
                   setRestTime((v) =>
-                    Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                    Math.max(decrementFloor(inputSettings.restTime.min, inputSettings.restTime.step), v - inputSettings.restTime.step)
                   )
                 }
                 onIncrease={() =>

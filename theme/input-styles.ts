@@ -10,6 +10,12 @@ export const INPUT_BORDER_RADIUS = 10
 /** Fixed height for all feature inputs so NumberInput, SelectInput, etc. stay aligned. */
 export const INPUT_HEIGHT = 88
 
+/** Floor for decrement: when min > 0 (0 not allowed), floor = step. When min is 0, allow 0. */
+export function decrementFloor(min: number, step: number): number {
+  if (min === 0) return 0
+  return step
+}
+
 export const inputContainerStyle = {
   backgroundColor: INPUT_BACKGROUND,
   borderWidth: INPUT_BORDER_WIDTH,

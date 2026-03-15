@@ -30,6 +30,7 @@ import {
   runCallout,
   type CalloutConfig,
 } from '../services/drillDJ.service'
+import { decrementFloor } from '../theme/input-styles'
 import {
   drillDJDefaults,
   getFeatureInputSettings,
@@ -605,7 +606,7 @@ export function DrillDJScreen() {
               value={getReadyTime}
               onDecrease={() =>
                 setGetReadyTime((v) =>
-                  Math.max(inputSettings.getReadyTime.min, v - inputSettings.getReadyTime.step)
+                  Math.max(decrementFloor(inputSettings.getReadyTime.min, inputSettings.getReadyTime.step), v - inputSettings.getReadyTime.step)
                 )
               }
               onIncrease={() =>
@@ -622,7 +623,7 @@ export function DrillDJScreen() {
               value={numReps}
               onDecrease={() =>
                 setNumReps((v) =>
-                  Math.max(inputSettings.numReps.min, v - inputSettings.numReps.step)
+                  Math.max(decrementFloor(inputSettings.numReps.min, inputSettings.numReps.step), v - inputSettings.numReps.step)
                 )
               }
               onIncrease={() =>
@@ -652,7 +653,7 @@ export function DrillDJScreen() {
                   value={slideDownTime}
                   onDecrease={() =>
                     setSlideDownTime((v) =>
-                      Math.max(inputSettings.slideDownTime.min, v - inputSettings.slideDownTime.step)
+                      Math.max(decrementFloor(inputSettings.slideDownTime.min, inputSettings.slideDownTime.step), v - inputSettings.slideDownTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -669,7 +670,7 @@ export function DrillDJScreen() {
                   value={holdTime}
                   onDecrease={() =>
                     setHoldTime((v) =>
-                      Math.max(inputSettings.holdTime.min, v - inputSettings.holdTime.step)
+                      Math.max(decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step), v - inputSettings.holdTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -686,7 +687,7 @@ export function DrillDJScreen() {
                   value={slideUpTime}
                   onDecrease={() =>
                     setSlideUpTime((v) =>
-                      Math.max(inputSettings.slideUpTime.min, v - inputSettings.slideUpTime.step)
+                      Math.max(decrementFloor(inputSettings.slideUpTime.min, inputSettings.slideUpTime.step), v - inputSettings.slideUpTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -717,7 +718,7 @@ export function DrillDJScreen() {
                   value={floatTime}
                   onDecrease={() =>
                     setFloatTime((v) =>
-                      Math.max(inputSettings.floatTime.min, v - inputSettings.floatTime.step)
+                      Math.max(decrementFloor(inputSettings.floatTime.min, inputSettings.floatTime.step), v - inputSettings.floatTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -732,11 +733,11 @@ export function DrillDJScreen() {
                 <NumberInput
                   label="Time between"
                   value={timeBetweenFloats}
-                  onDecrease={() =>
-                    setTimeBetweenFloats((v) =>
-                      Math.max(inputSettings.timeBetweenFloats.min, v - inputSettings.timeBetweenFloats.step)
-                    )
-                  }
+                    onDecrease={() =>
+                      setTimeBetweenFloats((v) =>
+                        Math.max(decrementFloor(inputSettings.timeBetweenFloats.min, inputSettings.timeBetweenFloats.step), v - inputSettings.timeBetweenFloats.step)
+                      )
+                    }
                   onIncrease={() =>
                     setTimeBetweenFloats((v) =>
                       v + inputSettings.timeBetweenFloats.step
@@ -763,11 +764,11 @@ export function DrillDJScreen() {
                 <NumberInput
                   label="Time between"
                   value={timeBetweenSwitches}
-                  onDecrease={() =>
-                    setTimeBetweenSwitches((v) =>
-                      Math.max(inputSettings.timeBetweenSwitches.min, v - inputSettings.timeBetweenSwitches.step)
-                    )
-                  }
+                    onDecrease={() =>
+                      setTimeBetweenSwitches((v) =>
+                        Math.max(decrementFloor(inputSettings.timeBetweenSwitches.min, inputSettings.timeBetweenSwitches.step), v - inputSettings.timeBetweenSwitches.step)
+                      )
+                    }
                   onIncrease={() =>
                     setTimeBetweenSwitches((v) =>
                       v + inputSettings.timeBetweenSwitches.step
@@ -782,7 +783,7 @@ export function DrillDJScreen() {
                     value={switchTime}
                   onDecrease={() =>
                     setSwitchTime((v) =>
-                      Math.max(inputSettings.switchTime.min, v - inputSettings.switchTime.step)
+                      Math.max(decrementFloor(inputSettings.switchTime.min, inputSettings.switchTime.step), v - inputSettings.switchTime.step)
                     )
                   }
                   onIncrease={() =>
@@ -802,7 +803,7 @@ export function DrillDJScreen() {
               value={numSets}
               onDecrease={() =>
                 setNumSets((v) =>
-                  Math.max(inputSettings.numSets.min, v - inputSettings.numSets.step)
+                  Math.max(decrementFloor(inputSettings.numSets.min, inputSettings.numSets.step), v - inputSettings.numSets.step)
                 )
               }
               onIncrease={() =>
@@ -820,7 +821,7 @@ export function DrillDJScreen() {
                   value={restTime}
                   onDecrease={() =>
                     setRestTime((v) =>
-                      Math.max(inputSettings.restTime.min, v - inputSettings.restTime.step)
+                      Math.max(decrementFloor(inputSettings.restTime.min, inputSettings.restTime.step), v - inputSettings.restTime.step)
                     )
                   }
                   onIncrease={() =>

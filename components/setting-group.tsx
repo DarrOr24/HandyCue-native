@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { NumberInput } from './number-input'
+import { decrementFloor } from '../theme/input-styles'
 
 export interface SettingGroupProps {
   title: string
@@ -41,7 +42,7 @@ export function SettingGroup({
           <NumberInput
             label={startLabel}
             value={startValue}
-            onDecrease={() => onStartValueChange(Math.max(minLimit, startValue - step))}
+            onDecrease={() => onStartValueChange(Math.max(decrementFloor(minLimit, step), startValue - step))}
             onIncrease={() => onStartValueChange(startValue + step)}
           />
         </View>
