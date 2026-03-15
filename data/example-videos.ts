@@ -13,7 +13,7 @@ export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
       { title: 'Float - Toe pulls', url: 'Float drill - toe pulls.mp4', available: true, thumbnailUrl: 'Float drill - toe pulls.jpeg' },
       { title: 'Float - L shape', url: 'Float drill - L shape.mp4', available: true, thumbnailUrl: 'Float drill - L shape.jpeg' },
       { title: 'Slide - L shape', url: 'Slide drill - L shape.mp4', available: true, thumbnailUrl: 'Slide drill - L shape.jpeg' },
-      { title: 'Slide - Tuck to straight', url: 'Slide drill - tuck to straight.mp4', available: false },
+      { title: 'Slide - Tuck slide', url: 'Slide drill - Tuck slide.mp4', available: true, thumbnailUrl: 'Slide drill - Tuck slide.jpeg' },
       { title: 'Switch - Twinkle toes', url: 'Switch drill - twinkle toes.mp4', available: false },
     ],
   },
