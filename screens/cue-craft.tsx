@@ -59,7 +59,6 @@ export function CueCraftScreen() {
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
     onSettings: () => navigation.navigate('CueCraftSettings'),
-    onExampleVideos: () => navigation.navigate('ExampleVideos', { featureKey: 'cueCraft' }),
     session,
   })
   menuHandlersRef.current = {
@@ -68,7 +67,6 @@ export function CueCraftScreen() {
     onFavorites: () => setIsFavoritesModalOpen(true),
     onSave: () => setIsSaveModalOpen(true),
     onSettings: () => navigation.navigate('CueCraftSettings'),
-    onExampleVideos: () => navigation.navigate('ExampleVideos', { featureKey: 'cueCraft' }),
     session,
   }
 

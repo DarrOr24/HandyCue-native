@@ -5,7 +5,6 @@ import {
   InfoSectionTitle,
   InfoBold,
 } from '../components/info-screen-layout'
-import { ExampleVideosLink } from '../components/example-videos-link'
 
 export function CueCraftInfoScreen() {
   return (
@@ -67,8 +66,6 @@ export function CueCraftInfoScreen() {
         Long-press the grip icon (≡) on the left of each step, then drag to reorder. You can
         also use the up/down arrows to move steps one at a time.
       </InfoParagraph>
-
-      <ExampleVideosLink featureKey="cueCraft" />
     </InfoScreenLayout>
   )
 }
