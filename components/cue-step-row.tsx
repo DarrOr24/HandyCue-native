@@ -31,6 +31,16 @@ const STEP_HINTS: Record<string, string> = {
   sets: 'Repeats the whole sequence',
 }
 
+/** Default callout: no callout for holds ≤24 sec, else 10 sec. */
+function defaultCalloutInterval(duration: number): number {
+  return duration <= 24 ? 0 : 10
+}
+
+function effectiveCalloutInterval(step: { duration: number; calloutInterval?: number }): number {
+  return step.calloutInterval ?? defaultCalloutInterval(step.duration)
+}
+
+
 export function CueStepRow({
   step,
   index,
@@ -83,40 +93,59 @@ export function CueStepRow({
       </View>
 
       {(step.type === 'getReady' || step.type === 'rest') && (
-        <View style={styles.durationRow}>
-          <Text style={styles.durationLabel}>Duration (sec)</Text>
-          <View style={styles.durationControls}>
-            <TouchableOpacity
-              disabled={disabled}
-              onPress={() =>
-                onUpdate({
-                  ...step,
-                  duration: Math.max(
-                    step.type === 'getReady' ? is.getReadyTime.min : is.restDuration.min,
-                    step.duration - (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step)
-                  ),
-                } as CueStep)
-              }
-            >
-              <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
-            </TouchableOpacity>
-            <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.duration}</Text>
-            <TouchableOpacity
-              disabled={disabled}
-              onPress={() =>
-                onUpdate({
-                  ...step,
-                  duration: step.duration + (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step),
-                } as CueStep)
-              }
-            >
-              <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
-            </TouchableOpacity>
+        <View style={step.type === 'rest' ? styles.repsRow : undefined}>
+          <View style={styles.durationRow}>
+            <Text style={styles.durationLabel}>Duration (sec)</Text>
+            <View style={styles.durationControls}>
+              <TouchableOpacity
+                disabled={disabled}
+                onPress={() =>
+                  onUpdate({
+                    ...step,
+                    duration: Math.max(
+                      step.type === 'getReady' ? is.getReadyTime.min : is.restDuration.min,
+                      step.duration - (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step)
+                    ),
+                  } as CueStep)
+                }
+              >
+                <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
+              </TouchableOpacity>
+              <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.duration}</Text>
+              <TouchableOpacity
+                disabled={disabled}
+                onPress={() =>
+                  onUpdate({
+                    ...step,
+                    duration: step.duration + (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step),
+                  } as CueStep)
+                }
+              >
+                <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+          {step.type === 'rest' && (
+            <View style={styles.switchRow}>
+              <Text style={styles.switchLabel}>Say countdown</Text>
+              <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                <Switch
+                  value={step.announceCountdown ?? true}
+                  onValueChange={(v) => onUpdate({ ...step, announceCountdown: v })}
+                  disabled={disabled}
+                  trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                  thumbColor="#fff"
+                  style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                />
+              </View>
+            </View>
+          )}
         </View>
       )}
 
-      {step.type === 'timer' && (
+      {step.type === 'timer' && (() => {
+        const callout = effectiveCalloutInterval(step)
+        return (
         <View style={styles.timerRow}>
           <View style={styles.durationRow}>
             <Text style={styles.durationLabel}>Duration (sec)</Text>
@@ -129,7 +158,7 @@ export function CueStepRow({
                   onUpdate({
                     ...step,
                     duration: newDuration,
-                    calloutInterval: Math.max(1, Math.floor(newDuration / 2)),
+                    calloutInterval: defaultCalloutInterval(newDuration),
                     countdownFrom: Math.min(currentCountdown, newDuration),
                   })
                 }}
@@ -144,7 +173,7 @@ export function CueStepRow({
                   onUpdate({
                     ...step,
                     duration: newDuration,
-                    calloutInterval: Math.max(1, Math.floor(newDuration / 2)),
+                    calloutInterval: defaultCalloutInterval(newDuration),
                   })
                 }}
               >
@@ -162,7 +191,7 @@ export function CueStepRow({
                     ...step,
                     calloutInterval: Math.max(
                       0,
-                      (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) - is.timerDuration.step
+                      (step.calloutInterval ?? defaultCalloutInterval(step.duration)) - is.timerDuration.step
                     ),
                   })
                 }
@@ -170,7 +199,7 @@ export function CueStepRow({
                 <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
               </TouchableOpacity>
               <Text style={[styles.value, disabled && styles.valueDisabled]}>
-                {step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))}
+                {callout === 0 ? 'No' : callout}
               </Text>
               <TouchableOpacity
                 disabled={disabled}
@@ -179,7 +208,7 @@ export function CueStepRow({
                     ...step,
                     calloutInterval: Math.min(
                       step.duration,
-                      (step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))) + is.timerDuration.step
+                      (step.calloutInterval ?? defaultCalloutInterval(step.duration)) + is.timerDuration.step
                     ),
                   })
                 }
@@ -222,7 +251,8 @@ export function CueStepRow({
             </View>
           </View>
         </View>
-      )}
+        )
+      })()}
 
       {step.type === 'reps' && (
         <View style={styles.repsRow}>
@@ -285,31 +315,46 @@ export function CueStepRow({
             </View>
           </View>
           {step.count >= 2 && (
-            <View style={styles.durationRow}>
-              <Text style={styles.durationLabel}>Rest between (sec)</Text>
-              <View style={styles.durationControls}>
-                <TouchableOpacity
-                  disabled={disabled}
-                  onPress={() =>
-                    onUpdate({
-                      ...step,
-                      restBetween: Math.max(is.setsRestBetween.min, step.restBetween - is.setsRestBetween.step),
-                    })
-                  }
-                >
-                  <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
-                </TouchableOpacity>
-                <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.restBetween}</Text>
-                <TouchableOpacity
-                  disabled={disabled}
-                  onPress={() =>
-                    onUpdate({ ...step, restBetween: step.restBetween + is.setsRestBetween.step })
-                  }
-                >
-                  <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
-                </TouchableOpacity>
+            <>
+              <View style={styles.durationRow}>
+                <Text style={styles.durationLabel}>Rest between (sec)</Text>
+                <View style={styles.durationControls}>
+                  <TouchableOpacity
+                    disabled={disabled}
+                    onPress={() =>
+                      onUpdate({
+                        ...step,
+                        restBetween: Math.max(is.setsRestBetween.min, step.restBetween - is.setsRestBetween.step),
+                      })
+                    }
+                  >
+                    <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
+                  </TouchableOpacity>
+                  <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.restBetween}</Text>
+                  <TouchableOpacity
+                    disabled={disabled}
+                    onPress={() =>
+                      onUpdate({ ...step, restBetween: step.restBetween + is.setsRestBetween.step })
+                    }
+                  >
+                    <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+              <View style={styles.switchRow}>
+                <Text style={styles.switchLabel}>Say countdown</Text>
+                <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                  <Switch
+                    value={step.announceRestCountdown ?? true}
+                    onValueChange={(v) => onUpdate({ ...step, announceRestCountdown: v })}
+                    disabled={disabled}
+                    trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                    thumbColor="#fff"
+                    style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                  />
+                </View>
+              </View>
+            </>
           )}
         </View>
       )}

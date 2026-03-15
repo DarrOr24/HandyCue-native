@@ -85,8 +85,10 @@ export function runRestCycle(options: {
   onRestComplete: () => void
   isCancelled: () => boolean
   onCancelled?: () => void
+  /** If true, voice says countdown in last 10 sec. If false, display only. Default true. */
+  announceCountdown?: boolean
 }): () => void {
-  const { restTime, storedVoice, onTick, onRestComplete, isCancelled, onCancelled } = options
+  const { restTime, storedVoice, onTick, onRestComplete, isCancelled, onCancelled, announceCountdown = true } = options
   const startTime = Date.now()
   let lastElapsed = -1
 
@@ -115,7 +117,7 @@ export function runRestCycle(options: {
         : formatTime(elapsed)
     onTick(elapsed, display)
 
-    if (remaining <= countdownStart && remaining > 0) {
+    if (announceCountdown && remaining <= countdownStart && remaining > 0) {
       speak(String(remaining), storedVoice)
     }
   }, 100)

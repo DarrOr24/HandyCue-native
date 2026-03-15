@@ -29,16 +29,18 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
     switch (type) {
       case 'getReady':
         return { id, type: 'getReady' as const, duration: dv.getReadyTime ?? 5 }
-      case 'timer':
+      case 'timer': {
+        const duration = dv.timerDuration ?? 30
         return {
           id,
           type: 'timer' as const,
-          duration: dv.timerDuration ?? 30,
-          calloutInterval: Math.floor((dv.timerDuration ?? 30) / 2),
+          duration,
+          calloutInterval: duration <= 24 ? 0 : 10,
           countdownFrom: 10,
         }
+      }
       case 'rest':
-        return { id, type: 'rest' as const, duration: dv.restDuration ?? 20 }
+        return { id, type: 'rest' as const, duration: dv.restDuration ?? 20, announceCountdown: true }
       case 'reps':
         return { id, type: 'reps' as const, count: dv.repsCount ?? 5, announceReps: false }
       case 'sets':
@@ -47,6 +49,7 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
           type: 'sets' as const,
           count: dv.setsCount ?? 1,
           restBetween: dv.setsRestBetween ?? 20,
+          announceRestCountdown: true,
         }
       case 'customText':
         return { id, type: 'customText' as const, text: '' }

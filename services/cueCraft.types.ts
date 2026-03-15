@@ -27,6 +27,8 @@ export interface TimerStep extends CueStepBase {
 export interface RestStep extends CueStepBase {
   type: 'rest'
   duration: number
+  /** If true, voice says countdown in last 10 sec. If false, display only. Off for short rests. */
+  announceCountdown?: boolean
 }
 
 /** Reps: repeat the following steps N times (no rest between). */
@@ -42,6 +44,8 @@ export interface SetsStep extends CueStepBase {
   type: 'sets'
   count: number
   restBetween: number
+  /** If true, voice says countdown during rest between sets. If false, display only. */
+  announceRestCountdown?: boolean
 }
 
 export interface CustomTextStep extends CueStepBase {

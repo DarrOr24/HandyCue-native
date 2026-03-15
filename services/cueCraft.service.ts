@@ -63,6 +63,7 @@ async function runSteps(
               onRestComplete: resolve,
               isCancelled,
               onCancelled: resolve,
+              announceCountdown: step.announceRestCountdown ?? true,
             })
           })
         }
@@ -83,7 +84,7 @@ async function runSteps(
 
       case 'timer': {
         const countdownFrom = Math.min(step.countdownFrom ?? 10, step.duration)
-        const calloutInterval = step.calloutInterval ?? Math.max(1, Math.floor(step.duration / 2))
+        const calloutInterval = step.calloutInterval ?? (step.duration <= 24 ? 0 : 10)
         const useCallouts = step.duration > countdownFrom
         const initialDisplay =
           step.duration <= countdownFrom ? String(step.duration) : '0:00'
@@ -139,6 +140,7 @@ async function runSteps(
             onRestComplete: resolve,
             isCancelled,
             onCancelled: resolve,
+            announceCountdown: step.announceCountdown ?? true,
           })
         })
         break

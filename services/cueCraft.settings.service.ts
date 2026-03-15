@@ -74,18 +74,15 @@ function genId() {
 export function getDefaultSteps(settings?: CueCraftUserSettings | null): CueStep[] {
   const dv = settings?.defaultValues
   const getReady = dv?.getReadyTime ?? cueCraftDefaults.defaultValues.getReadyTime
-  const timer = dv?.timerDuration ?? cueCraftDefaults.defaultValues.timerDuration
-  const rest = dv?.restDuration ?? cueCraftDefaults.defaultValues.restDuration
-  const reps = dv?.repsCount ?? cueCraftDefaults.defaultValues.repsCount
-  const sets = dv?.setsCount ?? cueCraftDefaults.defaultValues.setsCount
-  const restBetween = dv?.setsRestBetween ?? cueCraftDefaults.defaultValues.setsRestBetween
 
   return [
     { id: genId(), type: 'getReady', duration: getReady },
-    { id: genId(), type: 'sets', count: sets, restBetween },
-    { id: genId(), type: 'reps', count: reps },
-    { id: genId(), type: 'customText', text: 'Handstand up!' },
-    { id: genId(), type: 'timer', duration: timer },
+    { id: genId(), type: 'sets', count: 2, restBetween: 60, announceRestCountdown: true },
+    { id: genId(), type: 'reps', count: 5 },
+    { id: genId(), type: 'customText', text: 'L sit' },
+    { id: genId(), type: 'timer', duration: 15, calloutInterval: 0 },
+    { id: genId(), type: 'customText', text: 'down' },
+    { id: genId(), type: 'rest', duration: 10, announceCountdown: false },
   ]
 }
 
