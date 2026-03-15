@@ -107,7 +107,7 @@ export function HomeScreen() {
             label={f.label}
             subtitle={f.subtitle}
             img={f.img}
-            imageZoom={f.id === "cueCraft" ? 1.35 : undefined}
+            imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
             onPress={() => {
               if (f.id === "holdOn") navigation.navigate("HoldOn")
               else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
