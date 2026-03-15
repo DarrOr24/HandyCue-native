@@ -36,10 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session)
         setIsLoading(false)
       })
-      .catch((err) => {
+      .catch(async (err) => {
         if (__DEV__) console.warn('[Auth] getSession failed:', err?.message)
         setSession(null)
         setIsLoading(false)
+        // Clear invalid refresh token from storage (e.g. expired or from another device)
+        if (err?.message?.includes('Refresh Token') || err?.message?.includes('refresh_token')) {
+          await supabase.auth.signOut()
+        }
       })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {

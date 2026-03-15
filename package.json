@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "postinstall": "patch-package",
     "start": "expo start",
     "start:8082": "expo start --port 8082",
     "start:clear": "expo start --clear",
     "android": "expo run:android",
+    "android:clean": "rm -rf android .expo && npx expo prebuild --clean --platform android && npx expo run:android",
     "android:clear": "expo start --clear",
     "android:tunnel": "expo start --clear --tunnel",
     "ios": "expo run:ios",
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-native": "^0.72.8",
+    "patch-package": "^8.0.1",
     "typescript": "^5.9.3"
   }
 }
