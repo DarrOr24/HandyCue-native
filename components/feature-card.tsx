@@ -5,13 +5,22 @@ interface FeatureCardProps {
   subtitle: string
   img: ImageSourcePropType
   onPress?: () => void
+  /** Values > 1 zoom out (show more of image, subject smaller). Default 1. */
+  imageZoom?: number
 }
 
-export function FeatureCard({ label, subtitle, img, onPress }: FeatureCardProps) {
+export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1 }: FeatureCardProps) {
+  const zoom = imageZoom > 1 ? imageZoom : 1
+  const imgSize = zoom > 1 ? 120 / zoom : 120
+
   return (
     <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={onPress}>
       <View style={styles.imageWrap}>
-        <Image source={img} style={styles.image} resizeMode="cover" />
+        <Image
+          source={img}
+          style={[styles.image, { width: imgSize, height: imgSize }]}
+          resizeMode="cover"
+        />
       </View>
       <View style={styles.text}>
         <Text style={styles.label}>{label}</Text>
@@ -36,6 +45,9 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     backgroundColor: '#eef0ef',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   image: {
     width: 120,

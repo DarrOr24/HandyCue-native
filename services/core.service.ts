@@ -58,7 +58,18 @@ export async function getStoredVoice(): Promise<StoredVoice | null> {
 
 export { VOICE_STORAGE_KEY }
 
-/** iOS uses identifier, Android uses name for voice matching. */
+/**
+ * Check if a voice identifier is likely from another platform (e.g. Android voice on iOS).
+ * Such voices will fail on the current device, so we skip them and use default.
+ */
+function isVoiceLikelyUnavailable(voiceOpt: string, platform: string): boolean {
+  if (platform === 'ios') {
+    return /en-in-x-|network|google/i.test(voiceOpt)
+  }
+  return false
+}
+
+/** iOS uses identifier, Android uses name for voice matching. Always falls back to default voice if the stored one fails. */
 export function speak(
   text: string,
   storedVoice?: StoredVoice | null,
@@ -67,11 +78,15 @@ export function speak(
   if (!text) return Promise.resolve()
   return new Promise((resolve) => {
     const baseOptions = { rate: opts?.rate, onDone: resolve }
-    const voiceValue = storedVoice
+    let voiceValue: string | undefined = storedVoice
       ? Platform.OS === 'ios'
         ? storedVoice.identifier
         : storedVoice.name
       : undefined
+    if (voiceValue != null && isVoiceLikelyUnavailable(voiceValue, Platform.OS)) {
+      if (__DEV__) console.warn('[Speech] Voice may be unavailable on this device, using default:', voiceValue)
+      voiceValue = undefined
+    }
 
     const doSpeak = (voiceOpt: string | undefined) => {
       const options = { ...baseOptions } as { onDone: () => void; voice?: string; rate?: number; onError?: (e: Error) => void }
@@ -84,7 +99,16 @@ export function speak(
           resolve()
         }
       }
-      Speech.speak(text, options)
+      try {
+        Speech.speak(text, options)
+      } catch (e) {
+        if (voiceOpt != null) {
+          if (__DEV__) console.warn('[Speech] Voice failed, retrying with default:', (e as Error)?.message)
+          doSpeak(undefined)
+        } else {
+          resolve()
+        }
+      }
     }
     doSpeak(voiceValue)
   })

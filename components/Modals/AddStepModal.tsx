@@ -1,0 +1,122 @@
+import { StyleSheet, Text, View, Modal, Pressable, TouchableOpacity } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import type { CueStep, CueStepType } from '../../services/cueCraft.types'
+import { genId } from '../../services/cueCraft.settings.service'
+
+interface AddStepModalProps {
+  visible: boolean
+  onAdd: (step: CueStep) => void
+  onCancel: () => void
+}
+
+const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { type: 'getReady', label: 'Get ready', icon: 'timer-outline' },
+  { type: 'timer', label: 'Timer', icon: 'stopwatch-outline' },
+  { type: 'rest', label: 'Rest', icon: 'pause-outline' },
+  { type: 'reps', label: 'Reps (repeat following steps)', icon: 'repeat-outline' },
+  { type: 'sets', label: 'Sets (repeat whole sequence)', icon: 'layers-outline' },
+  { type: 'customText', label: 'Custom text', icon: 'chatbubble-outline' },
+]
+
+export function AddStepModal({ visible, onAdd, onCancel }: AddStepModalProps) {
+  if (!visible) return null
+
+  function createStep(type: CueStepType) {
+    const id = genId()
+    switch (type) {
+      case 'getReady':
+        return { id, type: 'getReady' as const, duration: 5 }
+      case 'timer':
+        return {
+          id,
+          type: 'timer' as const,
+          duration: 30,
+          calloutInterval: 15,
+          countdownFrom: 10,
+        }
+      case 'rest':
+        return { id, type: 'rest' as const, duration: 20 }
+      case 'reps':
+        return { id, type: 'reps' as const, count: 5, announceReps: false }
+      case 'sets':
+        return { id, type: 'sets' as const, count: 1, restBetween: 20 }
+      case 'customText':
+        return { id, type: 'customText' as const, text: '' }
+      default:
+        return { id, type: 'customText' as const, text: '' }
+    }
+  }
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+      <Pressable style={styles.backdrop} onPress={onCancel}>
+        <View style={styles.modal} onStartShouldSetResponder={() => true}>
+          <Text style={styles.title}>Add step</Text>
+          {STEP_OPTIONS.map((opt) => (
+            <TouchableOpacity
+              key={opt.type}
+              style={styles.option}
+              onPress={() => {
+                onAdd(createStep(opt.type))
+                onCancel()
+              }}
+            >
+              <Ionicons name={opt.icon} size={24} color="#5B9A8B" />
+              <Text style={styles.optionLabel}>{opt.label}</Text>
+              <Ionicons name="chevron-forward" size={20} color="#999" />
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Pressable>
+    </Modal>
+  )
+}
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modal: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    width: '100%',
+    maxWidth: 320,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+    color: '#374151',
+  },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+    gap: 12,
+  },
+  optionLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: '#374151',
+  },
+  cancelBtn: {
+    marginTop: 16,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  cancelText: {
+    fontSize: 16,
+    color: '#6b7280',
+  },
+})

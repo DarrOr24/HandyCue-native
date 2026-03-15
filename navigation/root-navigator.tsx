@@ -14,6 +14,9 @@ import { ShapeJamSettingsScreen } from '../screens/shape-jam-settings'
 import { DrillDJScreen } from '../screens/drill-dj'
 import { DrillDJInfoScreen } from '../screens/drill-dj-info'
 import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
+import { CueCraftScreen } from '../screens/cue-craft'
+import { CueCraftInfoScreen } from '../screens/cue-craft-info'
+import { CueCraftSettingsScreen } from '../screens/cue-craft-settings'
 import { ExampleVideosScreen } from '../screens/example-videos'
 import { ExampleVideoPlayerScreen } from '../screens/example-video-player'
 import { VoiceSetScreen } from '../screens/voice-set'
@@ -101,6 +104,21 @@ export function RootNavigator() {
         <Stack.Screen
           name="DrillDJInfo"
           component={DrillDJInfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CueCraft"
+          component={CueCraftScreen}
+          options={{ title: 'CueCraft' }}
+        />
+        <Stack.Screen
+          name="CueCraftSettings"
+          component={CueCraftSettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CueCraftInfo"
+          component={CueCraftInfoScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

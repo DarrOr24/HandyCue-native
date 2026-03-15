@@ -2,7 +2,7 @@ import { StyleSheet, Text, Pressable } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 interface ExampleVideosLinkProps {
-  featureKey: 'holdOn' | 'entryBuddy' | 'shapeJam' | 'drillDJ'
+  featureKey: 'holdOn' | 'entryBuddy' | 'shapeJam' | 'drillDJ' | 'cueCraft'
 }
 
 export function ExampleVideosLink({ featureKey }: ExampleVideosLinkProps) {

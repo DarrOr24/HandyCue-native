@@ -35,6 +35,12 @@ const FEATURES = [
     subtitle: "Your tempo-driven, voice-guided drill companion",
     img: require("../assets/imgs/split-leg-handstand.png"),
   },
+  {
+    id: "cueCraft",
+    label: "CueCraft",
+    subtitle: "Build your own voice-guided sequence from scratch",
+    img: require("../assets/imgs/cuecraft-tuck-handstand.png"),
+  },
 ];
 
 export function HomeScreen() {
@@ -101,11 +107,13 @@ export function HomeScreen() {
             label={f.label}
             subtitle={f.subtitle}
             img={f.img}
+            imageZoom={f.id === "cueCraft" ? 1.35 : undefined}
             onPress={() => {
               if (f.id === "holdOn") navigation.navigate("HoldOn")
               else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
               else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
               else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
+              else if (f.id === "cueCraft") navigation.navigate("CueCraft")
             }}
           />
         ))}

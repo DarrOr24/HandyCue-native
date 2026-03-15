@@ -107,10 +107,14 @@ export function runRestCycle(options: {
       return
     }
 
-    onTick(elapsed, formatTime(elapsed))
-
     const remaining = restTime - elapsed
     const countdownStart = restTime <= 10 ? 5 : 10
+    const display =
+      remaining <= countdownStart && remaining > 0
+        ? String(remaining)
+        : formatTime(elapsed)
+    onTick(elapsed, display)
+
     if (remaining <= countdownStart && remaining > 0) {
       speak(String(remaining), storedVoice)
     }

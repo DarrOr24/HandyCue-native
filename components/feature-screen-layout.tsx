@@ -2,6 +2,7 @@ import { Platform, StyleSheet, View, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
+import { NestableScrollContainer } from 'react-native-draggable-flatlist'
 
 interface FeatureScreenLayoutProps {
   timerContent: ReactNode
@@ -9,6 +10,8 @@ interface FeatureScreenLayoutProps {
   children: ReactNode
   inputsDisabled?: boolean
   footer?: ReactNode
+  /** Use NestableScrollContainer for drag-and-drop lists (e.g. CueCraft) */
+  useNestableScroll?: boolean
 }
 
 /**
@@ -21,7 +24,10 @@ export function FeatureScreenLayout({
   children,
   inputsDisabled = false,
   footer,
+  useNestableScroll = false,
 }: FeatureScreenLayoutProps) {
+  const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
+
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <LinearGradient
@@ -33,14 +39,14 @@ export function FeatureScreenLayout({
 
         <View style={styles.actionsSection}>{actions}</View>
 
-        <ScrollView
+        <ScrollComponent
           style={styles.inputsSection}
           contentContainerStyle={[styles.inputsContent, inputsDisabled && styles.inputsDisabled]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
           {children}
-        </ScrollView>
+        </ScrollComponent>
 
         {footer && <View style={styles.footer}>{footer}</View>}
       </View>
