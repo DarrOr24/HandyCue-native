@@ -52,13 +52,19 @@ export function CueCraftInfoScreen() {
       <InfoSectionTitle>Timer callouts</InfoSectionTitle>
       <InfoParagraph>
         Timer steps let you set <InfoBold>Callout every (sec)</InfoBold> — how often the voice says
-        elapsed time during the hold (e.g. every 10 seconds: "10", "20", "30"...). Set it to
+        elapsed time during the hold (e.g. every 10 seconds: "10", "20", "30"...). Set it to{' '}
         <InfoBold>No</InfoBold> for no callouts during the hold; you'll only hear the countdown at the end.
       </InfoParagraph>
       <InfoParagraph>
         Callouts only happen before the countdown starts. <InfoBold>Countdown from</InfoBold> sets when
         the voice switches to counting down (e.g. 10, 9, 8...). For short holds (24 seconds or less), the default is no callout — the hold is brief enough that
         the countdown is all you need. For holds of 25 seconds and above, the default is every 10 seconds.
+      </InfoParagraph>
+
+      <InfoSectionTitle>Reorder steps</InfoSectionTitle>
+      <InfoParagraph>
+        Long-press the grip icon (≡) on the left of each step, then drag to reorder. You can
+        also use the up/down arrows to move steps one at a time.
       </InfoParagraph>
 
       <InfoSectionTitle>Example flow</InfoSectionTitle>
@@ -68,19 +74,15 @@ export function CueCraftInfoScreen() {
       <InfoParagraph>
         • <InfoBold>Get ready</InfoBold> — countdown to start{'\n'}
         • <InfoBold>Sets (2)</InfoBold> — run the whole sequence twice, with 60 seconds rest between{'\n'}
-        • <InfoBold>Reps (5)</InfoBold>, Say reps: off — L sit → Timer 15 → down → Rest 10
+        • <InfoBold>Reps (5)</InfoBold> — L sit 15 sec → down → Rest 10 sec
       </InfoParagraph>
       <InfoParagraph>
-        The voice guides you: "L sit" (15-second hold), "down" (10-second rest), repeated 5 times.
-        That completes set 1. After a 60-second rest with countdown, the whole thing runs again
-        for set 2. You can edit any step or add your own — try yoga poses, stretches, or strength
-        holds.
+        The voice guides you: 5 reps of L sit for 15 seconds, then down and rest for 10 seconds.
+        That completes the first set. After a 60-second rest with countdown, the whole thing runs
+        again for the second set.
       </InfoParagraph>
-
-      <InfoSectionTitle>Reorder steps</InfoSectionTitle>
       <InfoParagraph>
-        Long-press the grip icon (≡) on the left of each step, then drag to reorder. You can
-        also use the up/down arrows to move steps one at a time.
+        You can edit any step or add your own — try yoga poses, stretches, or strength holds.
       </InfoParagraph>
     </InfoScreenLayout>
   )
