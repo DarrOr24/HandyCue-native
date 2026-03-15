@@ -30,7 +30,7 @@ import {
   type HoldOnInputs,
 } from '../services/holdOn.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile, upsertProfile } from '../services/profile.service'
+import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -62,28 +62,12 @@ export function HoldOnScreen() {
 
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
-    try {
-      const p = await getProfile(session.user.id)
-      const current = (p?.settings as Record<string, unknown>) ?? {}
-      const existing = (current.holdOn as HoldOnUserSettings) ?? {}
-      await upsertProfile(session.user.id, {
-        settings: {
-          ...current,
-          holdOn: {
-            ...existing,
-            defaultValues: {
-              ...(existing.defaultValues ?? {}),
-              holdTime,
-              getReadyTime,
-              numSets,
-              restTime,
-            },
-          },
-        },
-      })
-    } catch {
-      // ignore
-    }
+    await saveInputsToProfile(session.user.id, FEATURE_KEY, {
+      holdTime,
+      getReadyTime,
+      numSets,
+      restTime,
+    })
   }
 
   const menuHandlersRef = useRef({

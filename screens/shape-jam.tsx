@@ -32,7 +32,7 @@ import {
   type ShapeJamInputs,
 } from '../services/shapeJam.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile, upsertProfile } from '../services/profile.service'
+import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 
@@ -95,31 +95,15 @@ export function ShapeJamScreen() {
 
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
-    try {
-      const p = await getProfile(session.user.id)
-      const current = (p?.settings as Record<string, unknown>) ?? {}
-      const existing = (current.shapeJam as ShapeJamUserSettings) ?? {}
-      const holdTimeVal = shapes[0]?.holdTime ?? shapeJamDefaults.defaultValues.holdTime
-      await upsertProfile(session.user.id, {
-        settings: {
-          ...current,
-          shapeJam: {
-            ...existing,
-            defaultValues: {
-              ...(existing.defaultValues ?? {}),
-              getReadyTime,
-              numReps,
-              numSets,
-              restTime,
-              holdTime: holdTimeVal,
-              shapes: shapes.map((s) => s.shape),
-            },
-          },
-        },
-      })
-    } catch {
-      // ignore
-    }
+    const holdTimeVal = shapes[0]?.holdTime ?? shapeJamDefaults.defaultValues.holdTime
+    await saveInputsToProfile(session.user.id, FEATURE_KEY, {
+      getReadyTime,
+      numReps,
+      numSets,
+      restTime,
+      holdTime: holdTimeVal,
+      shapes: shapes.map((s) => s.shape),
+    })
   }
 
   const menuHandlersRef = useRef({

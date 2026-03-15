@@ -40,3 +40,33 @@ export async function upsertProfile(
   if (error) throw error
   return data as Profile
 }
+
+/**
+ * Save feature input values to the user's profile as defaultValues.
+ * Used by HoldOn, EntryBuddy, ShapeJam, DrillDJ before navigating away.
+ */
+export async function saveInputsToProfile(
+  userId: string,
+  featureKey: string,
+  defaultValues: Record<string, unknown>
+): Promise<void> {
+  try {
+    const p = await getProfile(userId)
+    const current = (p?.settings as Record<string, unknown>) ?? {}
+    const existing = (current[featureKey] as Record<string, unknown>) ?? {}
+    await upsertProfile(userId, {
+      settings: {
+        ...current,
+        [featureKey]: {
+          ...existing,
+          defaultValues: {
+            ...((existing.defaultValues as Record<string, unknown>) ?? {}),
+            ...defaultValues,
+          },
+        },
+      },
+    })
+  } catch {
+    // ignore
+  }
+}

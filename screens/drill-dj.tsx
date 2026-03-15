@@ -42,7 +42,7 @@ import {
   type DrillDJInputs,
 } from '../services/drillDJ.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile, upsertProfile } from '../services/profile.service'
+import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 import { CalloutBlock } from '../components/callout-block'
@@ -120,37 +120,21 @@ export function DrillDJScreen() {
 
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
-    try {
-      const p = await getProfile(session.user.id)
-      const current = (p?.settings as Record<string, unknown>) ?? {}
-      const existing = (current.drillDJ as DrillDJUserSettings) ?? {}
-      await upsertProfile(session.user.id, {
-        settings: {
-          ...current,
-          drillDJ: {
-            ...existing,
-            defaultValues: {
-              ...(existing.defaultValues ?? {}),
-              getReadyTime,
-              numReps,
-              numSets,
-              restTime,
-              slideDownTime,
-              slideUpTime,
-              holdTime,
-              floatTime,
-              timeBetweenFloats,
-              switchTime,
-              timeBetweenSwitches,
-              slideCallout,
-              floatCallout,
-            },
-          },
-        },
-      })
-    } catch {
-      // ignore
-    }
+    await saveInputsToProfile(session.user.id, FEATURE_KEY, {
+      getReadyTime,
+      numReps,
+      numSets,
+      restTime,
+      slideDownTime,
+      slideUpTime,
+      holdTime,
+      floatTime,
+      timeBetweenFloats,
+      switchTime,
+      timeBetweenSwitches,
+      slideCallout,
+      floatCallout,
+    })
   }
 
   const menuHandlersRef = useRef({

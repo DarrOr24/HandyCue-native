@@ -32,7 +32,7 @@ import {
   saveFavoriteForFeature,
 } from '../services/cueCoach.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile, upsertProfile } from '../services/profile.service'
+import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 
 export type EntryBuddyInputs = {
   getReadyTime: number
@@ -65,30 +65,14 @@ export function EntryBuddyScreen() {
 
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
-    try {
-      const p = await getProfile(session.user.id)
-      const current = (p?.settings as Record<string, unknown>) ?? {}
-      const existing = (current.entryBuddy as EntryBuddyUserSettings) ?? {}
-      await upsertProfile(session.user.id, {
-        settings: {
-          ...current,
-          entryBuddy: {
-            ...existing,
-            defaultValues: {
-              ...(existing.defaultValues ?? {}),
-              getReadyTime,
-              entryCount: numEntries,
-              holdTime,
-              timeBetween,
-              numSets,
-              restTime,
-            },
-          },
-        },
-      })
-    } catch {
-      // ignore
-    }
+    await saveInputsToProfile(session.user.id, FEATURE_KEY, {
+      getReadyTime,
+      entryCount: numEntries,
+      holdTime,
+      timeBetween,
+      numSets,
+      restTime,
+    })
   }
 
   const menuHandlersRef = useRef({
