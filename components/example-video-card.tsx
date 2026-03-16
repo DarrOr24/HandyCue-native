@@ -12,9 +12,11 @@ interface ExampleVideoCardProps {
   video: ExampleVideo
   onPress: () => void
   thumbnailBaseUrl?: string
+  /** Fixed width for Android landscape grid */
+  cardWidth?: number
 }
 
-export function ExampleVideoCard({ video, onPress, thumbnailBaseUrl }: ExampleVideoCardProps) {
+export function ExampleVideoCard({ video, onPress, thumbnailBaseUrl, cardWidth }: ExampleVideoCardProps) {
   const thumbnailUrl = video.thumbnailUrl && thumbnailBaseUrl
     ? thumbnailBaseUrl + encodeURIComponent(video.thumbnailUrl)
     : null
@@ -22,7 +24,14 @@ export function ExampleVideoCard({ video, onPress, thumbnailBaseUrl }: ExampleVi
   const isComingSoon = video.available === false
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={[
+        styles.card,
+        cardWidth != null && { width: cardWidth, marginBottom: 0 },
+      ]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
       <View style={styles.thumbnail}>
         {thumbnailUrl ? (
           <Image source={{ uri: thumbnailUrl }} style={styles.thumbnailImage} resizeMode="cover" />

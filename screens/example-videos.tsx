@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -14,6 +15,7 @@ import {
 export function ExampleVideosScreen() {
   const navigation = useNavigation<any>()
   const route = useRoute<any>()
+  const [scrollHeight, setScrollHeight] = useState(0)
   const featureKey = route.params?.featureKey ?? 'drillDJ'
   const config = EXAMPLE_VIDEOS[featureKey]
 
@@ -66,17 +68,20 @@ export function ExampleVideosScreen() {
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        <ExampleVideoGrid
+      <View style={styles.scroll} onLayout={(e) => setScrollHeight(e.nativeEvent.layout.height)}>
+        <ScrollView
+          style={StyleSheet.absoluteFill}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <ExampleVideoGrid
           videos={config.videos}
           thumbnailBaseUrl={EXAMPLE_VIDEOS_STORAGE_BASE}
           onVideoPress={handleVideoPress}
+          containerHeight={scrollHeight}
         />
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }
