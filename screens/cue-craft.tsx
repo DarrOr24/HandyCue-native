@@ -25,6 +25,7 @@ import { CueStepRow } from '../components/cue-step-row'
 import { AddStepModal } from '../components/Modals/AddStepModal'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { MenuHint } from '../components/menu-hint'
 
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
@@ -266,6 +267,7 @@ export function CueCraftScreen() {
 
   return (
     <>
+      <MenuHint featureKey="cueCraft" />
       <FeatureScreenLayout
         timerContent={timerContent}
         actions={

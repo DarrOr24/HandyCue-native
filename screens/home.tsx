@@ -18,6 +18,7 @@ import { HomeLinksCards } from "../components/home-links-cards";
 import { ProfileMenu } from "../components/profile-menu";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
+import { clearMenuHintDismissed } from "../services/menu-hint.service";
 
 const FEATURES = [
   {
@@ -101,6 +102,7 @@ export function HomeScreen() {
           icon: "log-out-outline" as const,
           label: "Log out",
           onPress: async () => {
+            await clearMenuHintDismissed();
             await supabase.auth.signOut();
           },
           variant: "danger" as const,

@@ -13,6 +13,7 @@ import { FeatureHeaderRight } from '../components/feature-header-right'
 import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { MenuHint } from '../components/menu-hint'
 
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
@@ -367,6 +368,7 @@ export function EntryBuddyScreen() {
 
   return (
     <>
+      <MenuHint featureKey="entryBuddy" />
       <FeatureScreenLayout
         timerContent={
           <TimerDisplay

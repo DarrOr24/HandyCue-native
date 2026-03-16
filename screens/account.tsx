@@ -16,6 +16,7 @@ import { ProfileAvatar } from '../components/avatar/profile-avatar'
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile, type Profile } from '../services/profile.service'
 import { supabase } from '../lib/supabase'
+import { clearMenuHintDismissed } from '../services/menu-hint.service'
 import { validatePassword } from '../lib/password-validation'
 
 export function AccountScreen() {
@@ -76,6 +77,7 @@ export function AccountScreen() {
             try {
               // Supabase requires an Edge Function for user self-deletion (calls admin.deleteUser).
               // Until that's set up, we sign the user out.
+              await clearMenuHintDismissed()
               await supabase.auth.signOut()
               navigation.navigate('Home')
               Alert.alert(

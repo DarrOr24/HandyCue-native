@@ -2,6 +2,7 @@ import { StyleSheet, View, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ProfileMenu } from './profile-menu'
 import { supabase } from '../lib/supabase'
+import { clearMenuHintDismissed } from '../services/menu-hint.service'
 import type { Session } from '@supabase/supabase-js'
 import { ReactNode } from 'react'
 
@@ -34,6 +35,7 @@ export function FeatureHeaderRight({ session, overflowMenu }: FeatureHeaderRight
           icon: 'log-out-outline' as const,
           label: 'Log out',
           onPress: async () => {
+            await clearMenuHintDismissed()
             await supabase.auth.signOut()
           },
           variant: 'danger' as const,

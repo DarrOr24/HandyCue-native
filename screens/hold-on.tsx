@@ -34,6 +34,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { MenuHint } from '../components/menu-hint'
 
 const DEFAULT_HOLD = 60
 const DEFAULT_GET_READY = 5
@@ -422,6 +423,7 @@ export function HoldOnScreen() {
 
   return (
     <>
+    <MenuHint featureKey="holdOn" />
     <FeatureScreenLayout
       timerContent={
         <TimerDisplay

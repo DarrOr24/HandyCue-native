@@ -43,6 +43,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { MenuHint } from '../components/menu-hint'
 
 const FEATURE_KEY = 'shapeJam'
 const DEFAULT_HOLD_TIME = 1
@@ -388,6 +389,7 @@ export function ShapeJamScreen() {
 
   return (
     <>
+      <MenuHint featureKey="shapeJam" />
       <View style={styles.screenWrapper}>
         <FeatureScreenLayout
         timerContent={timerContent}

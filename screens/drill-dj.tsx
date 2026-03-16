@@ -47,6 +47,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getProfile, upsertProfile, saveInputsToProfile } from '../services/profile.service'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
+import { MenuHint } from '../components/menu-hint'
 import { CalloutBlock } from '../components/callout-block'
 
 const FEATURE_KEY = 'drillDJ'
@@ -561,6 +562,7 @@ export function DrillDJScreen() {
 
   return (
     <>
+      <MenuHint featureKey="drillDJ" />
       <View style={styles.screenWrapper}>
         <FeatureScreenLayout
           timerContent={timerContent}
