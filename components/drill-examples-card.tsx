@@ -21,13 +21,19 @@ const FEATURE_OPTIONS = [
   { id: 'drillDJ' as const, label: 'DrillDJ' },
 ]
 
+interface DrillExamplesCardProps {
+  /** When true, removes bottom margin (for grid layouts). */
+  inGrid?: boolean
+}
+
 /**
  * Card for the home screen that opens a feature picker, then navigates to that
  * feature's example videos page. Uses heel pulls thumbnail and distinct styling.
  */
-export function DrillExamplesCard() {
+export function DrillExamplesCard({ inGrid }: DrillExamplesCardProps = {}) {
   const navigation = useNavigation<any>()
   const [menuVisible, setMenuVisible] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const thumbnailUri = getExampleThumbnailUrl(HEEL_PULLS_THUMBNAIL)
 
@@ -39,16 +45,21 @@ export function DrillExamplesCard() {
   return (
     <>
       <TouchableOpacity
-        style={styles.card}
+        style={[styles.card, inGrid && styles.cardInGrid]}
         activeOpacity={0.7}
         onPress={() => setMenuVisible(true)}
       >
         <View style={styles.imageWrap}>
-          <Image
-            source={{ uri: thumbnailUri }}
-            style={styles.image}
-            resizeMode="contain"
-          />
+          {imageError ? (
+            <Ionicons name="play-circle" size={48} color="#9ca3af" />
+          ) : (
+            <Image
+              source={{ uri: thumbnailUri }}
+              style={styles.image}
+              resizeMode="contain"
+              onError={() => setImageError(true)}
+            />
+          )}
         </View>
         <View style={styles.text}>
           <Text style={styles.label}>Example Videos</Text>
@@ -97,6 +108,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e5ddd0',
+  },
+  cardInGrid: {
+    marginBottom: 0,
   },
   imageWrap: {
     width: 120,

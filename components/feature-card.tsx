@@ -7,14 +7,20 @@ interface FeatureCardProps {
   onPress?: () => void
   /** Values > 1 zoom out (show more of image, subject smaller). Default 1. */
   imageZoom?: number
+  /** When true, removes bottom margin (for grid layouts). */
+  inGrid?: boolean
 }
 
-export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1 }: FeatureCardProps) {
+export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGrid }: FeatureCardProps) {
   const zoom = imageZoom > 1 ? imageZoom : 1
   const imgSize = zoom > 1 ? 120 / zoom : 120
 
   return (
-    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.card, inGrid && styles.cardInGrid]}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
       <View style={styles.imageWrap}>
         <Image
           source={img}
@@ -40,6 +46,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e5e7eb',
+  },
+  cardInGrid: {
+    marginBottom: 0,
   },
   imageWrap: {
     width: 120,

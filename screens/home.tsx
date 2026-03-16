@@ -1,6 +1,15 @@
 import { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView, Alert, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Alert,
+  Image,
+  useWindowDimensions,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -43,9 +52,23 @@ const FEATURES = [
   },
 ];
 
+const CARD_GAP = 12;
+const MAX_CONTENT_WIDTH = 1500;
+
 export function HomeScreen() {
   const navigation = useNavigation<any>();
   const { session } = useAuth();
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+  const useGrid = Platform.OS === "android" && isLandscape;
+  const numColumns = useGrid ? 2 : 1;
+  const contentWidth = useGrid
+    ? Math.min(width - 40, MAX_CONTENT_WIDTH)
+    : width - 40;
+  const cardWidth =
+    numColumns === 1
+      ? undefined
+      : (contentWidth - CARD_GAP * (numColumns - 1)) / numColumns;
 
   const profileMenuItems = [
     {
@@ -101,24 +124,71 @@ export function HomeScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        {FEATURES.map((f) => (
-          <FeatureCard
-            key={f.id}
-            label={f.label}
-            subtitle={f.subtitle}
-            img={f.img}
-            imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-            onPress={() => {
-              if (f.id === "holdOn") navigation.navigate("HoldOn")
-              else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
-              else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
-              else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
-              else if (f.id === "cueCraft") navigation.navigate("CueCraft")
-            }}
-          />
-        ))}
-
-        <DrillExamplesCard />
+        {useGrid ? (
+          <View
+            style={[
+              styles.cardGrid,
+              {
+                width: contentWidth,
+                gap: CARD_GAP,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            {FEATURES.map((f) => (
+              <View
+                key={f.id}
+                style={[
+                  styles.cardWrapper,
+                  cardWidth !== undefined && { width: cardWidth },
+                ]}
+              >
+                <FeatureCard
+                  label={f.label}
+                  subtitle={f.subtitle}
+                  img={f.img}
+                  imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
+                  inGrid
+                  onPress={() => {
+                    if (f.id === "holdOn") navigation.navigate("HoldOn")
+                    else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
+                    else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
+                    else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
+                    else if (f.id === "cueCraft") navigation.navigate("CueCraft")
+                  }}
+                />
+              </View>
+            ))}
+            <View
+              style={[
+                styles.cardWrapper,
+                cardWidth !== undefined && { width: cardWidth },
+              ]}
+            >
+              <DrillExamplesCard inGrid />
+            </View>
+          </View>
+        ) : (
+          <>
+            {FEATURES.map((f) => (
+              <FeatureCard
+                key={f.id}
+                label={f.label}
+                subtitle={f.subtitle}
+                img={f.img}
+                imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
+                onPress={() => {
+                  if (f.id === "holdOn") navigation.navigate("HoldOn")
+                  else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
+                  else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
+                  else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
+                  else if (f.id === "cueCraft") navigation.navigate("CueCraft")
+                }}
+              />
+            ))}
+            <DrillExamplesCard />
+          </>
+        )}
 
         <StatusBar style="auto" />
       </ScrollView>
@@ -130,4 +200,9 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
+  cardGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  cardWrapper: {},
 });
