@@ -18,6 +18,8 @@ interface FeatureScreenLayoutProps {
   children: ReactNode
   inputsDisabled?: boolean
   footer?: ReactNode
+  /** Fixed header above scroll (e.g. CueCraft Sequence + Add step) */
+  stickyHeader?: ReactNode
   /** Use NestableScrollContainer for drag-and-drop lists (e.g. CueCraft) */
   useNestableScroll?: boolean
 }
@@ -32,6 +34,7 @@ export function FeatureScreenLayout({
   children,
   inputsDisabled = false,
   footer,
+  stickyHeader,
   useNestableScroll = false,
 }: FeatureScreenLayoutProps) {
   const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
@@ -58,6 +61,7 @@ export function FeatureScreenLayout({
               <View style={styles.actionsSection}>{actions}</View>
             </View>
             <View style={styles.rightColumn}>
+              {stickyHeader}
               <ScrollComponent
                 style={styles.inputsSection}
                 contentContainerStyle={[
@@ -76,6 +80,7 @@ export function FeatureScreenLayout({
           <>
             <View style={styles.timerSection}>{timerContent}</View>
             <View style={styles.actionsSection}>{actions}</View>
+            {stickyHeader}
             <ScrollComponent
               style={styles.inputsSection}
               contentContainerStyle={[

@@ -1,6 +1,14 @@
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+  useWindowDimensions,
+  Platform,
+} from 'react-native'
 import {
   ScaleDecorator,
   NestableDraggableFlatList,
@@ -41,6 +49,8 @@ const FEATURE_KEY = 'cueCraft'
 export function CueCraftScreen() {
   const navigation = useNavigation<any>()
   const { session } = useAuth()
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   const [steps, setSteps] = useState<CueStep[]>(getDefaultSteps())
   const [profile, setProfile] = useState<Awaited<ReturnType<typeof getProfile>>>(null)
@@ -268,12 +278,80 @@ export function CueCraftScreen() {
           />
         }
         inputsDisabled={inputsDisabled}
+        stickyHeader={
+          <View style={styles.headerRow}>
+            <View style={[styles.headerTextWrap, isAndroidLandscape && styles.headerTextWrapLandscape]}>
+              <Text style={styles.sectionTitle}>Sequence</Text>
+              <Text style={styles.hint}>
+                {isAndroidLandscape
+                  ? 'Use arrows to reorder'
+                  : 'Long-press the ≡ icon to drag and reorder'}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.addBtnCompact, inputsDisabled && styles.addBtnDisabled]}
+              onPress={() => setIsAddStepModalOpen(true)}
+              disabled={inputsDisabled}
+            >
+              <Ionicons name="add-circle" size={20} color={inputsDisabled ? '#999' : '#fff'} />
+              <Text style={[styles.addBtnCompactText, inputsDisabled && styles.addBtnTextDisabled]}>
+                Add step
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
         useNestableScroll
       >
-        <Text style={styles.sectionTitle}>Sequence</Text>
-        <Text style={styles.hint}>Long-press the ≡ icon to drag and reorder</Text>
-
-        <NestableDraggableFlatList
+        {isAndroidLandscape ? (
+          <View style={styles.stepsGrid}>
+            {(() => {
+              const mid = Math.ceil(steps.length / 2)
+              const col1 = steps.slice(0, mid)
+              const col2 = steps.slice(mid)
+              const renderStep = (item: CueStep, index: number) => (
+                <View key={item.id} style={styles.stepCardLandscape}>
+                  <View style={styles.stepRowWrapper}>
+                    <View style={styles.dragHandlePlaceholder} />
+                    <View style={styles.stepRowContent}>
+                      <CueStepRow
+                        step={item}
+                        index={index}
+                        total={steps.length}
+                        onUpdate={(s) => updateStep(index, s)}
+                        onRemove={() => removeStep(index)}
+                        onMoveUp={() => moveStep(index, 'up')}
+                        onMoveDown={() => moveStep(index, 'down')}
+                        disabled={inputsDisabled}
+                        inputSettings={
+                          (() => {
+                            const cueCraft = (profile?.settings as Record<string, unknown>)
+                              ?.cueCraft as CueCraftUserSettings | undefined
+                            const { inputSettings } = getFeatureInputSettings(
+                              cueCraft,
+                              cueCraftDefaults
+                            )
+                            return inputSettings as typeof cueCraftDefaults.inputSettings
+                          })()
+                        }
+                      />
+                    </View>
+                  </View>
+                </View>
+              )
+              return (
+                <>
+                  <View style={styles.stepsColumn}>
+                    {col1.map((item, i) => renderStep(item, i))}
+                  </View>
+                  <View style={styles.stepsColumn}>
+                    {col2.map((item, i) => renderStep(item, mid + i))}
+                  </View>
+                </>
+              )
+            })()}
+          </View>
+        ) : (
+          <NestableDraggableFlatList
             data={steps}
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => setSteps(data)}
@@ -321,17 +399,7 @@ export function CueCraftScreen() {
               )
             }}
           />
-
-        <TouchableOpacity
-          style={[styles.addBtn, inputsDisabled && styles.addBtnDisabled]}
-          onPress={() => setIsAddStepModalOpen(true)}
-          disabled={inputsDisabled}
-        >
-          <Ionicons name="add-circle" size={26} color={inputsDisabled ? '#999' : '#fff'} />
-          <Text style={[styles.addBtnText, inputsDisabled && styles.addBtnTextDisabled]}>
-            Add step
-          </Text>
-        </TouchableOpacity>
+        )}
       </FeatureScreenLayout>
 
       <AddStepModal
@@ -371,6 +439,46 @@ export function CueCraftScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    marginBottom: 12,
+    flexShrink: 0,
+  },
+  headerTextWrap: {
+    flex: 1,
+  },
+  headerTextWrapLandscape: {
+    paddingLeft: 8,
+  },
+  addBtnCompact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    backgroundColor: '#5B9A8B',
+    borderRadius: 10,
+  },
+  addBtnCompactText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  stepsGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  stepsColumn: {
+    flex: 1,
+    minWidth: 0,
+  },
+  stepCardLandscape: {
+    marginBottom: 12,
+  },
+  dragHandlePlaceholder: {
+    width: 8,
+  },
   stepRowWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -386,12 +494,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
-    marginBottom: 4,
   },
   hint: {
     fontSize: 13,
     color: '#6b7280',
-    marginBottom: 12,
+    marginTop: 2,
   },
   addBtn: {
     flexDirection: 'row',
