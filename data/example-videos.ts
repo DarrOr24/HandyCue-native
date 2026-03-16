@@ -20,9 +20,9 @@ export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
   entryBuddy: {
     title: 'EntryBuddy',
     videos: [
-      { title: 'Mixed standing entries', url: 'EntryBuddy - mixed standing entries.mp4', available: false },
-      { title: 'Straddle press entries', url: 'EntryBuddy - straddle press entries.mp4', available: false },
-      { title: 'Pike kneeling entries', url: 'EntryBuddy - pike kneeling entries.mp4', available: false },
+      { title: 'Mixed standing entries', url: 'EntryBuddy - mixed standing entries.mp4', available: true, thumbnailUrl: 'EntryBuddy - mixed standing entries.jpeg' },
+      { title: 'Straddle press entries', url: 'EntryBuddy - straddle press entries.mp4', available: true, thumbnailUrl: 'EntryBuddy - straddle press entries.jpeg' },
+      { title: 'Pike kneeling entries', url: 'EntryBuddy - pike kneeling entries.mp4', available: true, thumbnailUrl:'EntryBuddy - pike kneeling entries.jpeg' },
     ],
   },
   shapeJam: {
