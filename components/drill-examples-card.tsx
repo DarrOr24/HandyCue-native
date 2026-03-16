@@ -24,13 +24,17 @@ const FEATURE_OPTIONS = [
 interface DrillExamplesCardProps {
   /** When true, removes bottom margin (for grid layouts). */
   inGrid?: boolean
+  /** When true, card uses calculated height for portrait fit. */
+  flexible?: boolean
+  /** Card height when flexible (responsive to screen size). */
+  cardHeight?: number
 }
 
 /**
  * Card for the home screen that opens a feature picker, then navigates to that
  * feature's example videos page. Uses heel pulls thumbnail and distinct styling.
  */
-export function DrillExamplesCard({ inGrid }: DrillExamplesCardProps = {}) {
+export function DrillExamplesCard({ inGrid, flexible, cardHeight = 100 }: DrillExamplesCardProps = {}) {
   const navigation = useNavigation<any>()
   const [menuVisible, setMenuVisible] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -45,25 +49,38 @@ export function DrillExamplesCard({ inGrid }: DrillExamplesCardProps = {}) {
   return (
     <>
       <TouchableOpacity
-        style={[styles.card, inGrid && styles.cardInGrid]}
+        style={[
+          styles.card,
+          !flexible && styles.cardFixed,
+          inGrid && styles.cardInGrid,
+          flexible && [styles.cardFlexible, { height: cardHeight }],
+        ]}
         activeOpacity={0.7}
         onPress={() => setMenuVisible(true)}
       >
-        <View style={styles.imageWrap}>
+        <View style={[styles.imageWrap, flexible && { width: cardHeight, height: cardHeight }]}>
           {imageError ? (
             <Ionicons name="play-circle" size={48} color="#9ca3af" />
           ) : (
             <Image
               source={{ uri: thumbnailUri }}
-              style={styles.image}
+              style={[
+                styles.image,
+                flexible && { width: (cardHeight * 68) / 120, height: cardHeight },
+              ]}
               resizeMode="contain"
               onError={() => setImageError(true)}
             />
           )}
         </View>
-        <View style={styles.text}>
+        <View style={[styles.text, flexible && cardHeight < 108 && styles.textCompact]}>
           <Text style={styles.label}>Example Videos</Text>
-          <Text style={styles.subtitle}>
+          <Text
+            style={[
+              styles.subtitle,
+              flexible && cardHeight < 108 && styles.subtitleCompact,
+            ]}
+          >
             Watch demos for HoldOn, EntryBuddy, ShapeJam & DrillDJ
           </Text>
         </View>
@@ -101,7 +118,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
     width: '100%',
-    height: 120,
     backgroundColor: '#f0ebe6',
     borderRadius: 12,
     marginBottom: 14,
@@ -109,7 +125,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5ddd0',
   },
+  cardFixed: {
+    height: 120,
+  },
   cardInGrid: {
+    marginBottom: 0,
+  },
+  cardFlexible: {
     marginBottom: 0,
   },
   imageWrap: {
@@ -125,12 +147,18 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    minWidth: 0,
     paddingHorizontal: 18,
     paddingVertical: 12,
     justifyContent: 'center',
   },
+  textCompact: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
   label: { fontSize: 19, fontWeight: '600', marginBottom: 6, color: '#374151' },
   subtitle: { fontSize: 14, color: '#6b7280', lineHeight: 21 },
+  subtitleCompact: { fontSize: 12, lineHeight: 17, color: '#6b7280' },
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',

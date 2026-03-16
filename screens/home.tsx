@@ -47,13 +47,17 @@ const FEATURES = [
   {
     id: "cueCraft",
     label: "CueCraft",
-    subtitle: "Build your own voice-guided sequence from scratch",
+    subtitle: "Build your own audio sequence from scratch",
     img: require("../assets/imgs/cuecraft-tuck-handstand.png"),
   },
 ];
 
 const CARD_GAP = 12;
 const MAX_CONTENT_WIDTH = 1500;
+const PORTRAIT_CARD_GAP = 10;
+const PORTRAIT_OVERHEAD = 170; // header, safe area, padding
+const CARD_HEIGHT_MIN = 95;
+const CARD_HEIGHT_MAX = 120;
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
@@ -69,6 +73,16 @@ export function HomeScreen() {
     numColumns === 1
       ? undefined
       : (contentWidth - CARD_GAP * (numColumns - 1)) / numColumns;
+
+  const portraitCardHeight = useGrid
+    ? undefined
+    : Math.min(
+        CARD_HEIGHT_MAX,
+        Math.max(
+          CARD_HEIGHT_MIN,
+          (height - PORTRAIT_OVERHEAD - PORTRAIT_CARD_GAP * 5) / 6
+        )
+      );
 
   const profileMenuItems = [
     {
@@ -122,7 +136,12 @@ export function HomeScreen() {
       />
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          !useGrid && styles.contentPortraitFit,
+        ]}
+        scrollEnabled={useGrid}
+        showsVerticalScrollIndicator={useGrid}
       >
         {useGrid ? (
           <View
@@ -169,7 +188,7 @@ export function HomeScreen() {
             </View>
           </View>
         ) : (
-          <>
+          <View style={[styles.portraitCards, { gap: PORTRAIT_CARD_GAP }]}>
             {FEATURES.map((f) => (
               <FeatureCard
                 key={f.id}
@@ -177,6 +196,8 @@ export function HomeScreen() {
                 subtitle={f.subtitle}
                 img={f.img}
                 imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
+                flexible
+                cardHeight={portraitCardHeight}
                 onPress={() => {
                   if (f.id === "holdOn") navigation.navigate("HoldOn")
                   else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -186,8 +207,8 @@ export function HomeScreen() {
                 }}
               />
             ))}
-            <DrillExamplesCard />
-          </>
+            <DrillExamplesCard flexible cardHeight={portraitCardHeight} />
+          </View>
         )}
 
         <StatusBar style="auto" />
@@ -200,6 +221,10 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
+  contentPortraitFit: { flexGrow: 1 },
+  portraitCards: {
+    flex: 1,
+  },
   cardGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
