@@ -65,6 +65,23 @@ export function EntryBuddyScreen() {
 
   const favorites = getFavoritesForFeature<EntryBuddyInputs>(profile, FEATURE_KEY)
 
+  const inputsRef = useRef({
+    getReadyTime,
+    numEntries,
+    holdTime,
+    timeBetween,
+    numSets,
+    restTime,
+  })
+  inputsRef.current = {
+    getReadyTime,
+    numEntries,
+    holdTime,
+    timeBetween,
+    numSets,
+    restTime,
+  }
+
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
     await saveInputsToProfile(session.user.id, FEATURE_KEY, {
@@ -171,6 +188,20 @@ export function EntryBuddyScreen() {
           setProfile(null)
           setInputSettings(entryBuddyDefaults.inputSettings)
         })
+      return () => {
+        const { getReadyTime: g, numEntries: n, holdTime: h, timeBetween: t, numSets: ns, restTime: r } =
+          inputsRef.current
+        if (session?.user?.id) {
+          saveInputsToProfile(session.user.id, FEATURE_KEY, {
+            getReadyTime: g,
+            entryCount: n,
+            holdTime: h,
+            timeBetween: t,
+            numSets: ns,
+            restTime: r,
+          }).catch(() => {})
+        }
+      }
     }, [session?.user?.id])
   )
 

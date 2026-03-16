@@ -42,7 +42,7 @@ import {
   saveFavoriteForFeature,
 } from '../services/cueCraft.favorites.service'
 import { useAuth } from '../contexts/AuthContext'
-import { getProfile } from '../services/profile.service'
+import { getProfile, saveCueCraftToProfile } from '../services/profile.service'
 import type { CueStep } from '../services/cueCraft.types'
 
 const FEATURE_KEY = 'cueCraft'
@@ -55,6 +55,8 @@ export function CueCraftScreen() {
 
   const [steps, setSteps] = useState<CueStep[]>(getDefaultSteps())
   const [profile, setProfile] = useState<Awaited<ReturnType<typeof getProfile>>>(null)
+  const stepsRef = useRef(steps)
+  stepsRef.current = steps
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
   const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false)
   const [isAddStepModalOpen, setIsAddStepModalOpen] = useState(false)
@@ -103,14 +105,24 @@ export function CueCraftScreen() {
         .then((p) => {
           setProfile(p)
           const cueCraft = (p?.settings as Record<string, unknown>)?.cueCraft as
-            | CueCraftUserSettings
+            | (CueCraftUserSettings & { steps?: CueStep[] })
             | undefined
-          setSteps(getDefaultSteps(cueCraft))
+          const savedSteps = cueCraft?.steps
+          if (savedSteps && Array.isArray(savedSteps) && savedSteps.length > 0) {
+            setSteps(savedSteps)
+          } else {
+            setSteps(getDefaultSteps(cueCraft))
+          }
         })
         .catch(() => {
           setProfile(null)
           setSteps(getDefaultSteps())
         })
+      return () => {
+        if (session?.user?.id && stepsRef.current.length > 0) {
+          saveCueCraftToProfile(session.user.id, stepsRef.current).catch(() => {})
+        }
+      }
     }, [session?.user?.id])
   )
 

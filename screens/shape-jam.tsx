@@ -92,6 +92,21 @@ export function ShapeJamScreen() {
 
   const favorites = getFavoritesForFeature<ShapeJamInputs>(profile, FEATURE_KEY)
 
+  const inputsRef = useRef({
+    getReadyTime,
+    numReps,
+    numSets,
+    restTime,
+    shapes,
+  })
+  inputsRef.current = {
+    getReadyTime,
+    numReps,
+    numSets,
+    restTime,
+    shapes,
+  }
+
   const baseShapes = inputSettings.shapes ?? []
   const allShapeValues = [
     ...new Set([
@@ -221,6 +236,20 @@ export function ShapeJamScreen() {
           setProfile(null)
           setInputSettings(shapeJamDefaults.inputSettings)
         })
+      return () => {
+        const { getReadyTime: g, numReps: nr, numSets: ns, restTime: r, shapes: s } = inputsRef.current
+        const holdTimeVal = s[0]?.holdTime ?? shapeJamDefaults.defaultValues.holdTime
+        if (session?.user?.id) {
+          saveInputsToProfile(session.user.id, FEATURE_KEY, {
+            getReadyTime: g,
+            numReps: nr,
+            numSets: ns,
+            restTime: r,
+            holdTime: holdTimeVal,
+            shapes: s.map((x) => x.shape),
+          }).catch(() => {})
+        }
+      }
     }, [session?.user?.id])
   )
 

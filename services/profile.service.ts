@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase'
+import type { CueStep } from './cueCraft.types'
 
 export interface Profile {
   id: string
@@ -63,6 +64,32 @@ export async function saveInputsToProfile(
             ...((existing.defaultValues as Record<string, unknown>) ?? {}),
             ...defaultValues,
           },
+        },
+      },
+    })
+  } catch {
+    // ignore
+  }
+}
+
+/**
+ * Save CueCraft sequence steps to the user's profile.
+ * Used when navigating away from CueCraft to persist the current sequence.
+ */
+export async function saveCueCraftToProfile(
+  userId: string,
+  steps: CueStep[]
+): Promise<void> {
+  try {
+    const p = await getProfile(userId)
+    const current = (p?.settings as Record<string, unknown>) ?? {}
+    const existing = (current.cueCraft as Record<string, unknown>) ?? {}
+    await upsertProfile(userId, {
+      settings: {
+        ...current,
+        cueCraft: {
+          ...existing,
+          steps,
         },
       },
     })

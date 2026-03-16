@@ -123,6 +123,43 @@ export function DrillDJScreen() {
 
   const favorites = getFavoritesForFeature<DrillDJInputs>(profile, FEATURE_KEY)
 
+  const inputsRef = useRef({
+    getReadyTime,
+    numReps,
+    numSets,
+    restTime,
+    drillType,
+    slideDownTime,
+    slideUpTime,
+    holdTime,
+    floatTime,
+    timeBetweenFloats,
+    switchTime,
+    timeBetweenSwitches,
+    slideCallout,
+    floatCallout,
+    sayRepCount,
+    metronomeEnabled,
+  })
+  inputsRef.current = {
+    getReadyTime,
+    numReps,
+    numSets,
+    restTime,
+    drillType,
+    slideDownTime,
+    slideUpTime,
+    holdTime,
+    floatTime,
+    timeBetweenFloats,
+    switchTime,
+    timeBetweenSwitches,
+    slideCallout,
+    floatCallout,
+    sayRepCount,
+    metronomeEnabled,
+  }
+
   async function saveCurrentInputsToProfile() {
     if (!session?.user?.id) return
     await saveInputsToProfile(session.user.id, FEATURE_KEY, {
@@ -130,6 +167,7 @@ export function DrillDJScreen() {
       numReps,
       numSets,
       restTime,
+      drillType,
       slideDownTime,
       slideUpTime,
       holdTime,
@@ -139,6 +177,8 @@ export function DrillDJScreen() {
       timeBetweenSwitches,
       slideCallout,
       floatCallout,
+      sayRepCount,
+      metronomeEnabled,
     })
   }
 
@@ -231,7 +271,7 @@ export function DrillDJScreen() {
             merged.holdTime = merged.timeBetweenSlides
           }
           setInputSettings(merged as typeof drillDJDefaults.inputSettings)
-          const dv = defaultValues as Record<string, number>
+          const dv = defaultValues as Record<string, unknown>
           setGetReadyTime((dv.getReadyTime as number) ?? drillDJDefaults.defaultValues.getReadyTime)
           setNumReps((dv.numReps as number) ?? drillDJDefaults.defaultValues.numReps)
           setNumSets((dv.numSets as number) ?? drillDJDefaults.defaultValues.numSets)
@@ -251,11 +291,37 @@ export function DrillDJScreen() {
           if (dv.floatCallout) setFloatCallout(dv.floatCallout as CalloutConfig)
           setSwitchTime((dv.switchTime as number) ?? drillDJDefaults.defaultValues.switchTime)
           setTimeBetweenSwitches((dv.timeBetweenSwitches as number) ?? drillDJDefaults.defaultValues.timeBetweenSwitches)
+          if (dv.drillType) setDrillType(dv.drillType as DrillType)
+          if (dv.sayRepCount != null) setSayRepCount(dv.sayRepCount as boolean)
+          if (dv.metronomeEnabled != null) setMetronomeEnabled(dv.metronomeEnabled as boolean)
         })
         .catch(() => {
           setProfile(null)
           setInputSettings(drillDJDefaults.inputSettings)
         })
+      return () => {
+        const i = inputsRef.current
+        if (session?.user?.id) {
+          saveInputsToProfile(session.user.id, FEATURE_KEY, {
+            getReadyTime: i.getReadyTime,
+            numReps: i.numReps,
+            numSets: i.numSets,
+            restTime: i.restTime,
+            drillType: i.drillType,
+            slideDownTime: i.slideDownTime,
+            slideUpTime: i.slideUpTime,
+            holdTime: i.holdTime,
+            floatTime: i.floatTime,
+            timeBetweenFloats: i.timeBetweenFloats,
+            switchTime: i.switchTime,
+            timeBetweenSwitches: i.timeBetweenSwitches,
+            slideCallout: i.slideCallout,
+            floatCallout: i.floatCallout,
+            sayRepCount: i.sayRepCount,
+            metronomeEnabled: i.metronomeEnabled,
+          }).catch(() => {})
+        }
+      }
     }, [session?.user?.id])
   )
 
