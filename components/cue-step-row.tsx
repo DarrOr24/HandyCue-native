@@ -23,7 +23,7 @@ const STEP_LABELS: Record<string, string> = {
   rest: 'Rest',
   reps: 'Reps',
   sets: 'Sets',
-  customText: 'Custom',
+  customText: 'Audio Cue',
 }
 
 const STEP_HINTS: Record<string, string> = {

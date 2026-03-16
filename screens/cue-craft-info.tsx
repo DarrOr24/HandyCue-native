@@ -15,7 +15,7 @@ export function CueCraftInfoScreen() {
 
       <InfoParagraph>
         CueCraft lets you create custom flows by combining get-ready countdowns, timers, rest
-        periods, and your own custom text. Add steps in any order, reorder with the grip icon
+        periods, and your own audio cues. Add steps in any order, reorder with the grip icon
         (≡), and the voice will guide you through. Save your favorite sequences for quick access.
       </InfoParagraph>
       <InfoParagraph>

@@ -16,7 +16,7 @@ const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionic
   { type: 'rest', label: 'Rest', icon: 'pause-outline' },
   { type: 'reps', label: 'Reps (repeat following steps)', icon: 'repeat-outline' },
   { type: 'sets', label: 'Sets (repeat whole sequence)', icon: 'layers-outline' },
-  { type: 'customText', label: 'Custom text', icon: 'chatbubble-outline' },
+  { type: 'customText', label: 'Audio Cue', icon: 'chatbubble-outline' },
 ]
 
 export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddStepModalProps) {
