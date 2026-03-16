@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
-import { DrillExamplesCard } from "../components/drill-examples-card";
+import { HomeLinksCards } from "../components/home-links-cards";
 import { ProfileMenu } from "../components/profile-menu";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -184,7 +184,7 @@ export function HomeScreen() {
                 cardWidth !== undefined && { width: cardWidth },
               ]}
             >
-              <DrillExamplesCard inGrid />
+              <HomeLinksCards inGrid />
             </View>
           </View>
         ) : (
@@ -207,7 +207,7 @@ export function HomeScreen() {
                 }}
               />
             ))}
-            <DrillExamplesCard flexible cardHeight={portraitCardHeight} />
+            <HomeLinksCards flexible cardHeight={portraitCardHeight} />
           </View>
         )}
 
