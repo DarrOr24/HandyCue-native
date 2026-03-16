@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
-import { inputContainerStyle, decrementFloor } from '../theme/input-styles'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TouchableOpacity,
+  useWindowDimensions,
+  Platform,
+} from 'react-native'
+import { inputContainerStyle, decrementFloor, INPUT_HEIGHT } from '../theme/input-styles'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -42,6 +50,8 @@ const DEFAULT_HOLD_TIME = 1
 export function ShapeJamScreen() {
   const navigation = useNavigation<any>()
   const { session } = useAuth()
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   const [getReadyTime, setGetReadyTime] = useState<number>(shapeJamDefaults.defaultValues.getReadyTime)
   const [numReps, setNumReps] = useState<number>(shapeJamDefaults.defaultValues.numReps)
@@ -385,41 +395,51 @@ export function ShapeJamScreen() {
         inputsDisabled={inputsDisabled}
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
         >
-          <View style={styles.topButtonsRow}>
-            <TouchableOpacity
-              style={[styles.topBtn, inputsDisabled && styles.topBtnDisabled]}
-              onPress={async () => {
-                await saveCurrentInputsToProfile()
-                navigation.navigate('ShapeJamSettings')
-              }}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name="create-outline"
-                size={22}
-                color={inputsDisabled ? '#999' : '#5B9A8B'}
-              />
-              <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
-                Add shape names
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.topBtn, inputsDisabled && styles.topBtnDisabled]}
-              onPress={addShape}
-              disabled={inputsDisabled}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={24}
-                color={inputsDisabled ? '#999' : '#5B9A8B'}
-              />
-              <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
-                Add Shape
-              </Text>
-            </TouchableOpacity>
-          </View>
           <FeatureInputsGrid>
+            <FeatureInputsGrid.GridItem>
+              <TouchableOpacity
+                style={[
+                  styles.topBtn,
+                  isAndroidLandscape && styles.topBtnLandscape,
+                  inputsDisabled && styles.topBtnDisabled,
+                ]}
+                onPress={async () => {
+                  await saveCurrentInputsToProfile()
+                  navigation.navigate('ShapeJamSettings')
+                }}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="create-outline"
+                  size={22}
+                  color={inputsDisabled ? '#999' : '#5B9A8B'}
+                />
+                <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
+                  Add shape names
+                </Text>
+              </TouchableOpacity>
+            </FeatureInputsGrid.GridItem>
+            <FeatureInputsGrid.GridItem>
+              <TouchableOpacity
+                style={[
+                  styles.topBtn,
+                  isAndroidLandscape && styles.topBtnLandscape,
+                  inputsDisabled && styles.topBtnDisabled,
+                ]}
+                onPress={addShape}
+                disabled={inputsDisabled}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={24}
+                  color={inputsDisabled ? '#999' : '#5B9A8B'}
+                />
+                <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
+                  Add Shape
+                </Text>
+              </TouchableOpacity>
+            </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
             <NumberInput
             label="Get ready"
@@ -580,20 +600,18 @@ const styles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
   },
-  topButtonsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
-  },
   topBtn: {
-    flex: 1,
     flexDirection: 'row',
+    alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     minHeight: 72,
     padding: 12,
     ...inputContainerStyle,
+  },
+  topBtnLandscape: {
+    height: INPUT_HEIGHT,
   },
   topBtnDisabled: {
     opacity: 0.6,

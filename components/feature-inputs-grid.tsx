@@ -1,23 +1,52 @@
-import { StyleSheet, View } from 'react-native'
-import { ReactNode } from 'react'
+import { StyleSheet, View, useWindowDimensions, Platform } from 'react-native'
+import { ReactNode, createContext, useContext } from 'react'
 
-const CELL_WIDTH = '48%'
 const GAP = 12
+const CELL_WIDTH_2COL = '48%'
+const CELL_WIDTH_3COL = '31%'
+
+const CellWidthContext = createContext<string>(CELL_WIDTH_2COL)
 
 /**
- * Grid layout for feature screens. All cells are the same size (48% width).
+ * Grid layout for feature screens. 2 columns in portrait, 3 columns on Android landscape.
  * Wrap each input in GridItem. Use SingleInput for a single cell in the last row (left-aligned).
  */
 export function FeatureInputsGrid({ children }: { children: ReactNode }) {
-  return <View style={styles.grid}>{children}</View>
+  const { width, height } = useWindowDimensions()
+  const use3Col = Platform.OS === 'android' && width > height
+  const cellWidth = use3Col ? CELL_WIDTH_3COL : CELL_WIDTH_2COL
+
+  return (
+    <CellWidthContext.Provider value={cellWidth}>
+      <View style={styles.grid}>{children}</View>
+    </CellWidthContext.Provider>
+  )
 }
 
 function GridItem({ children }: { children: ReactNode }) {
-  return <View style={styles.cell}>{children}</View>
+  const cellWidth = useContext(CellWidthContext)
+  return (
+    <View
+      style={[styles.cell, { width: cellWidth, minWidth: cellWidth, maxWidth: cellWidth }]}
+    >
+      {children}
+    </View>
+  )
 }
 
 function SingleInput({ children }: { children: ReactNode }) {
-  return <View style={[styles.cell, styles.singleCell]}>{children}</View>
+  const cellWidth = useContext(CellWidthContext)
+  return (
+    <View
+      style={[
+        styles.cell,
+        styles.singleCell,
+        { width: cellWidth, minWidth: cellWidth, maxWidth: cellWidth },
+      ]}
+    >
+      {children}
+    </View>
+  )
 }
 
 FeatureInputsGrid.GridItem = GridItem
@@ -33,9 +62,6 @@ const styles = StyleSheet.create({
     rowGap: 24,
   },
   cell: {
-    width: CELL_WIDTH,
-    minWidth: CELL_WIDTH,
-    maxWidth: CELL_WIDTH,
     flexGrow: 0,
     flexShrink: 0,
   },

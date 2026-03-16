@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity,
   Switch,
+  useWindowDimensions,
 } from 'react-native'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
@@ -30,7 +31,7 @@ import {
   runCallout,
   type CalloutConfig,
 } from '../services/drillDJ.service'
-import { decrementFloor } from '../theme/input-styles'
+import { decrementFloor, INPUT_HEIGHT } from '../theme/input-styles'
 import {
   drillDJDefaults,
   getFeatureInputSettings,
@@ -61,6 +62,8 @@ const DRILL_OPTIONS: SelectOption[] = [
 export function DrillDJScreen() {
   const navigation = useNavigation<any>()
   const { session } = useAuth()
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   const [getReadyTime, setGetReadyTime] = useState<number>(drillDJDefaults.defaultValues.getReadyTime)
   const [numReps, setNumReps] = useState<number>(drillDJDefaults.defaultValues.numReps)
@@ -567,7 +570,7 @@ export function DrillDJScreen() {
         >
           <FeatureInputsGrid>
             <FeatureInputsGrid.GridItem>
-            <View style={styles.toggleRow}>
+            <View style={[styles.toggleRow, isAndroidLandscape && styles.toggleRowLandscape]}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Say reps
               </Text>
@@ -584,7 +587,7 @@ export function DrillDJScreen() {
             </View>
             </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
-            <View style={styles.toggleRow}>
+            <View style={[styles.toggleRow, isAndroidLandscape && styles.toggleRowLandscape]}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Voice count
               </Text>
@@ -884,6 +887,9 @@ const styles = StyleSheet.create({
   },
   toggleLabelDisabled: {
     color: '#999',
+  },
+  toggleRowLandscape: {
+    height: INPUT_HEIGHT,
   },
   switchWrapperIOS: {
     alignItems: 'center',

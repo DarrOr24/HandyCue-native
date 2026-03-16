@@ -1,8 +1,16 @@
-import { Platform, StyleSheet, View, ScrollView } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  View,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
 import { NestableScrollContainer } from 'react-native-draggable-flatlist'
+
+const LANDSCAPE_LEFT_COLUMN_WIDTH = 200
 
 interface FeatureScreenLayoutProps {
   timerContent: ReactNode
@@ -27,6 +35,9 @@ export function FeatureScreenLayout({
   useNestableScroll = false,
 }: FeatureScreenLayoutProps) {
   const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
+  const { width, height } = useWindowDimensions()
+  const useLandscapeLayout =
+    Platform.OS === 'android' && width > height
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -34,21 +45,51 @@ export function FeatureScreenLayout({
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}
       />
-      <View style={styles.content}>
-        <View style={styles.timerSection}>{timerContent}</View>
-
-        <View style={styles.actionsSection}>{actions}</View>
-
-        <ScrollComponent
-          style={styles.inputsSection}
-          contentContainerStyle={[styles.inputsContent, inputsDisabled && styles.inputsDisabled]}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {children}
-        </ScrollComponent>
-
-        {footer && <View style={styles.footer}>{footer}</View>}
+      <View
+        style={[
+          styles.content,
+          useLandscapeLayout && styles.contentLandscape,
+        ]}
+      >
+        {useLandscapeLayout ? (
+          <>
+            <View style={styles.leftColumn}>
+              <View style={styles.timerSection}>{timerContent}</View>
+              <View style={styles.actionsSection}>{actions}</View>
+            </View>
+            <View style={styles.rightColumn}>
+              <ScrollComponent
+                style={styles.inputsSection}
+                contentContainerStyle={[
+                  styles.inputsContent,
+                  inputsDisabled && styles.inputsDisabled,
+                ]}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+              >
+                {children}
+              </ScrollComponent>
+              {footer && <View style={styles.footer}>{footer}</View>}
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.timerSection}>{timerContent}</View>
+            <View style={styles.actionsSection}>{actions}</View>
+            <ScrollComponent
+              style={styles.inputsSection}
+              contentContainerStyle={[
+                styles.inputsContent,
+                inputsDisabled && styles.inputsDisabled,
+              ]}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {children}
+            </ScrollComponent>
+            {footer && <View style={styles.footer}>{footer}</View>}
+          </>
+        )}
       </View>
     </SafeAreaView>
   )
@@ -62,6 +103,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 16,
+  },
+  contentLandscape: {
+    flexDirection: 'row',
+    paddingTop: 8,
+  },
+  leftColumn: {
+    width: LANDSCAPE_LEFT_COLUMN_WIDTH,
+    marginRight: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rightColumn: {
+    flex: 1,
+    minWidth: 0,
   },
   timerSection: {
     marginTop: Platform.OS === 'ios' ? 0 : 8,
