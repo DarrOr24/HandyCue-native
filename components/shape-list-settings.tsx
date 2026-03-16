@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { inputContainerStyle } from '../theme/input-styles'
@@ -24,6 +25,8 @@ interface ShapeListSettingsProps {
 export function ShapeListSettings({ customShapes, setCustomShapes }: ShapeListSettingsProps) {
   const [newShape, setNewShape] = useState('')
   const [shapeToRemove, setShapeToRemove] = useState('')
+  const { width, height } = useWindowDimensions()
+  const isLandscape = Platform.OS === 'android' && width > height
 
   const allCustomShapes = customShapes.filter((s) => !DEFAULT_SHAPES.includes(s))
 
@@ -45,74 +48,126 @@ export function ShapeListSettings({ customShapes, setCustomShapes }: ShapeListSe
     setShapeToRemove('')
   }
 
-  return (
-    <View style={styles.group}>
-      <Text style={styles.groupTitle}>Shapes</Text>
-
-      {/* Add Shape */}
-      <View style={styles.addRow}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter shape name"
-          placeholderTextColor="#9ca3af"
-          value={newShape}
-          onChangeText={setNewShape}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onSubmitEditing={handleAddShape}
+  const addBlock = (
+    <View style={[styles.addSection, !isLandscape && styles.addSectionPortrait]}>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter shape name"
+        placeholderTextColor="#9ca3af"
+        value={newShape}
+        onChangeText={setNewShape}
+        autoCapitalize="none"
+        autoCorrect={false}
+        onSubmitEditing={handleAddShape}
+      />
+      <TouchableOpacity
+        style={styles.addBtn}
+        onPress={handleAddShape}
+        disabled={!newShape.trim()}
+      >
+        <Ionicons
+          name="add-circle-outline"
+          size={28}
+          color={newShape.trim() ? '#5B9A8B' : '#9ca3af'}
         />
+      </TouchableOpacity>
+    </View>
+  )
+
+  const removeBlock = allCustomShapes.length > 0 ? (
+    <View style={[styles.removeSection, !isLandscape && styles.removeSectionPortrait]}>
+      <Text style={[styles.pickerLabel, styles.pickerLabelAbove]}>Remove shape:</Text>
+      <View style={styles.removeChipRow}>
+        <View style={styles.pickerRow}>
+          {allCustomShapes.map((shape) => (
+            <TouchableOpacity
+              key={shape}
+              style={[
+                styles.chip,
+                shapeToRemove === shape && styles.chipSelected,
+              ]}
+              onPress={() => setShapeToRemove(shapeToRemove === shape ? '' : shape)}
+            >
+              <Text
+                style={[
+                  styles.chipText,
+                  shapeToRemove === shape && styles.chipTextSelected,
+                ]}
+              >
+                {shape}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <TouchableOpacity
-          style={styles.addBtn}
-          onPress={handleAddShape}
-          disabled={!newShape.trim()}
+          style={[styles.removeBtn, !shapeToRemove && styles.removeBtnDisabled]}
+          onPress={handleRemoveShape}
+          disabled={!shapeToRemove}
         >
           <Ionicons
-            name="add-circle-outline"
+            name="close-circle-outline"
             size={28}
-            color={newShape.trim() ? '#5B9A8B' : '#9ca3af'}
+            color={shapeToRemove ? '#dc2626' : '#9ca3af'}
           />
         </TouchableOpacity>
       </View>
+    </View>
+  ) : null
 
-      {/* Remove Shape */}
-      {allCustomShapes.length > 0 && (
-        <View style={styles.removeRow}>
-          <View style={styles.pickerWrapper}>
-            <Text style={styles.pickerLabel}>Remove shape:</Text>
-            <View style={styles.pickerRow}>
-              {allCustomShapes.map((shape) => (
-                <TouchableOpacity
-                  key={shape}
-                  style={[
-                    styles.chip,
-                    shapeToRemove === shape && styles.chipSelected,
-                  ]}
-                  onPress={() => setShapeToRemove(shapeToRemove === shape ? '' : shape)}
-                >
-                  <Text
-                    style={[
-                      styles.chipText,
-                      shapeToRemove === shape && styles.chipTextSelected,
-                    ]}
+  return (
+    <View style={styles.group}>
+      {isLandscape ? (
+        <>
+          <Text style={styles.groupTitle}>Shapes</Text>
+          <View style={styles.shapesRow}>
+            {addBlock}
+            {allCustomShapes.length > 0 ? (
+              <View style={styles.removeSection}>
+                <View style={styles.removeChipRow}>
+                  <Text style={styles.pickerLabel}>Remove shape:</Text>
+                  <View style={styles.pickerRow}>
+                    {allCustomShapes.map((shape) => (
+                      <TouchableOpacity
+                        key={shape}
+                        style={[
+                          styles.chip,
+                          shapeToRemove === shape && styles.chipSelected,
+                        ]}
+                        onPress={() => setShapeToRemove(shapeToRemove === shape ? '' : shape)}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            shapeToRemove === shape && styles.chipTextSelected,
+                          ]}
+                        >
+                          {shape}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.removeBtn, !shapeToRemove && styles.removeBtnDisabled]}
+                    onPress={handleRemoveShape}
+                    disabled={!shapeToRemove}
                   >
-                    {shape}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+                    <Ionicons
+                      name="close-circle-outline"
+                      size={28}
+                      color={shapeToRemove ? '#dc2626' : '#9ca3af'}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : null}
           </View>
-          <TouchableOpacity
-            style={[styles.removeBtn, !shapeToRemove && styles.removeBtnDisabled]}
-            onPress={handleRemoveShape}
-            disabled={!shapeToRemove}
-          >
-            <Ionicons
-              name="close-circle-outline"
-              size={24}
-              color={shapeToRemove ? '#dc2626' : '#9ca3af'}
-            />
-          </TouchableOpacity>
-        </View>
+        </>
+      ) : (
+        <>
+          <Text style={styles.groupTitle}>Shapes</Text>
+          {addBlock}
+          {removeBlock}
+        </>
       )}
     </View>
   )
@@ -128,10 +183,20 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 10,
   },
-  addRow: {
+  shapesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  addSection: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    minWidth: 0,
+  },
+  addSectionPortrait: {
+    flex: 0,
     marginBottom: 12,
   },
   input: {
@@ -149,23 +214,31 @@ const styles = StyleSheet.create({
   addBtn: {
     padding: 4,
   },
-  removeRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  pickerWrapper: {
+  removeSection: {
     flex: 1,
+    minWidth: 0,
+  },
+  removeSectionPortrait: {
+    flex: 0,
+  },
+  removeChipRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   pickerLabel: {
     fontSize: 14,
     color: '#6b7280',
+  },
+  pickerLabelAbove: {
     marginBottom: 8,
   },
   pickerRow: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    minWidth: 0,
   },
   chip: {
     paddingVertical: 8,

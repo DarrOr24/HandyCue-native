@@ -76,6 +76,8 @@ export const drillDJDefaults = {
     slideDownTime: { min: 1, step: 1 },
     slideUpTime: { min: 1, step: 1 },
     holdTime: { min: 0, step: 1 },
+    slideTime: { min: 1, step: 1 },
+    timeBetweenSlides: { min: 0, step: 1 },
   },
   defaultValues: {
     ...sharedDefaults.defaultValues,
@@ -87,6 +89,8 @@ export const drillDJDefaults = {
     slideDownTime: 4,
     slideUpTime: 4,
     holdTime: 0,
+    slideTime: 4,
+    timeBetweenSlides: 2,
   },
 } as const
 

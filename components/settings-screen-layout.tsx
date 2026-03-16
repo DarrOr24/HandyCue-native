@@ -1,15 +1,25 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
+  Platform,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ReactNode } from 'react'
+import { ReactNode, Children } from 'react'
 
 interface SettingsScreenLayoutProps {
   title: string
   children: ReactNode
   onSave?: () => void
   onReset?: () => void
+  /** When true, first child spans full width in landscape (e.g. ShapeJam shapes row) */
+  firstChildFullWidthInLandscape?: boolean
 }
 
 /**
@@ -21,8 +31,11 @@ export function SettingsScreenLayout({
   children,
   onSave,
   onReset,
+  firstChildFullWidthInLandscape,
 }: SettingsScreenLayoutProps) {
   const navigation = useNavigation<any>()
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -64,7 +77,22 @@ export function SettingsScreenLayout({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {children}
+        {isAndroidLandscape ? (
+          <View style={styles.settingsGrid}>
+            {Children.map(children, (child, index) => (
+              <View
+                style={[
+                  styles.settingsGridCell,
+                  firstChildFullWidthInLandscape && index === 0 && styles.settingsGridCellFullWidth,
+                ]}
+              >
+                {child}
+              </View>
+            ))}
+          </View>
+        ) : (
+          children
+        )}
       </ScrollView>
     </SafeAreaView>
   )
@@ -86,4 +114,17 @@ const styles = StyleSheet.create({
   headerRight: { flexDirection: 'row', gap: 8 },
   scroll: { flex: 1 },
   content: { padding: 16, paddingBottom: 32 },
+  settingsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  settingsGridCell: {
+    width: '48%',
+    minWidth: '48%',
+  },
+  settingsGridCellFullWidth: {
+    width: '100%',
+    minWidth: '100%',
+  },
 })

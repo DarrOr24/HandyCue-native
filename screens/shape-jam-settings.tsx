@@ -130,6 +130,7 @@ export function ShapeJamSettingsScreen() {
       title="ShapeJam"
       onSave={handleSave}
       onReset={handleReset}
+      firstChildFullWidthInLandscape
     >
       <ShapeListSettings
         customShapes={customShapes}
