@@ -28,7 +28,7 @@ export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
   shapeJam: {
     title: 'ShapeJam',
     videos: [
-      { title: 'Tuck-Straddle-Straight', url: 'ShapeJam - tuck straddle straight.mp4', available: false },
+      { title: 'Tuck-Straddle-Straight', url: 'Tuck-Straddle-Straight.mp4', available: true, thumbnailUrl: 'Tuck-Straddle-Straight.jpeg' },
     ],
   },
   holdOn: {
