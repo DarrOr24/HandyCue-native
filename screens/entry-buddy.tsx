@@ -95,6 +95,10 @@ export function EntryBuddyScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'entryBuddy' })
     },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'entryBuddy' })
+    },
     session,
   })
   menuHandlersRef.current = {
@@ -115,6 +119,10 @@ export function EntryBuddyScreen() {
     onExampleVideos: async () => {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'entryBuddy' })
+    },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'entryBuddy' })
     },
     session,
   }

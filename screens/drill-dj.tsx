@@ -160,6 +160,10 @@ export function DrillDJScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
     },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'drillDJ' })
+    },
     session,
   })
   menuHandlersRef.current = {
@@ -180,6 +184,10 @@ export function DrillDJScreen() {
     onExampleVideos: async () => {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
+    },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'drillDJ' })
     },
     session,
   }

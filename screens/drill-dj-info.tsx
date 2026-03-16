@@ -6,6 +6,7 @@ import {
   InfoBold,
 } from '../components/info-screen-layout'
 import { ExampleVideosLink } from '../components/example-videos-link'
+import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function DrillDJInfoScreen() {
   return (
@@ -45,6 +46,7 @@ export function DrillDJInfoScreen() {
       </InfoParagraph>
 
       <ExampleVideosLink featureKey="drillDJ" />
+      <DrillIdeasLink featureKey="drillDJ" />
     </InfoScreenLayout>
   )
 }

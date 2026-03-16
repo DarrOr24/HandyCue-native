@@ -19,6 +19,7 @@ import { CueCraftInfoScreen } from '../screens/cue-craft-info'
 import { CueCraftSettingsScreen } from '../screens/cue-craft-settings'
 import { ExampleVideosScreen } from '../screens/example-videos'
 import { ExampleVideoPlayerScreen } from '../screens/example-video-player'
+import { DrillIdeasScreen } from '../screens/drill-ideas'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { BillingScreen } from '../screens/billing'
@@ -124,6 +125,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="ExampleVideos"
           component={ExampleVideosScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DrillIdeas"
+          component={DrillIdeasScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -4,6 +4,7 @@ import {
   InfoParagraph,
 } from '../components/info-screen-layout'
 import { ExampleVideosLink } from '../components/example-videos-link'
+import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function ShapeJamInfoScreen() {
   return (
@@ -28,6 +29,7 @@ export function ShapeJamInfoScreen() {
       </InfoParagraph>
 
       <ExampleVideosLink featureKey="shapeJam" />
+      <DrillIdeasLink featureKey="shapeJam" />
     </InfoScreenLayout>
   )
 }

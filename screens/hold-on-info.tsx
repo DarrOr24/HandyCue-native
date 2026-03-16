@@ -4,6 +4,7 @@ import {
   InfoParagraph,
 } from '../components/info-screen-layout'
 import { ExampleVideosLink } from '../components/example-videos-link'
+import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function HoldOnInfoScreen() {
   return (
@@ -24,6 +25,7 @@ export function HoldOnInfoScreen() {
       </InfoParagraph>
 
       <ExampleVideosLink featureKey="holdOn" />
+      <DrillIdeasLink featureKey="holdOn" />
     </InfoScreenLayout>
   )
 }

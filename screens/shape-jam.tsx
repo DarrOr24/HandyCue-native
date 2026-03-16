@@ -135,6 +135,10 @@ export function ShapeJamScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'shapeJam' })
     },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'shapeJam' })
+    },
     session,
   })
   menuHandlersRef.current = {
@@ -155,6 +159,10 @@ export function ShapeJamScreen() {
     onExampleVideos: async () => {
       await saveCurrentInputsToProfile()
       navigation.navigate('ExampleVideos', { featureKey: 'shapeJam' })
+    },
+    onDrillIdeas: async () => {
+      await saveCurrentInputsToProfile()
+      navigation.navigate('DrillIdeas', { featureKey: 'shapeJam' })
     },
     session,
   }

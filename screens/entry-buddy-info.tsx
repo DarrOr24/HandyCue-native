@@ -4,6 +4,7 @@ import {
   InfoParagraph,
 } from '../components/info-screen-layout'
 import { ExampleVideosLink } from '../components/example-videos-link'
+import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function EntryBuddyInfoScreen() {
   return (
@@ -30,6 +31,7 @@ export function EntryBuddyInfoScreen() {
       </InfoParagraph>
 
       <ExampleVideosLink featureKey="entryBuddy" />
+      <DrillIdeasLink featureKey="entryBuddy" />
     </InfoScreenLayout>
   )
 }
