@@ -44,7 +44,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100 }: HomeLinks
 
   const cardStyle = [
     styles.card,
-    flexible && [styles.cardFlexible, { height: cardHeight }],
+    (flexible || inGrid) && [styles.cardFlexible, cardHeight && { height: cardHeight }],
     inGrid && styles.cardInGrid,
   ]
 

@@ -184,7 +184,7 @@ export function HomeScreen() {
                 cardWidth !== undefined && { width: cardWidth },
               ]}
             >
-              <HomeLinksCards inGrid />
+              <HomeLinksCards inGrid cardHeight={120} />
             </View>
           </View>
         ) : (
