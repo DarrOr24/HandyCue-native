@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const STORAGE_KEY = '@handycue/menuHintDismissed'
 
-export type MenuHintFeatureKey = 'holdOn' | 'entryBuddy' | 'shapeJam' | 'drillDJ' | 'cueCraft'
+export type MenuHintFeatureKey = 'holdOn' | 'entryBuddy' | 'shapeJam' | 'drillDJ' | 'cueCraft' | 'home'
 
 async function getDismissed(): Promise<Record<MenuHintFeatureKey, boolean>> {
   try {

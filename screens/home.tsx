@@ -16,6 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
 import { HomeLinksCards } from "../components/home-links-cards";
 import { ProfileMenu } from "../components/profile-menu";
+import { OverflowMenu } from "../components/overflow-menu";
+import { MenuHint } from "../components/menu-hint";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { clearMenuHintDismissed } from "../services/menu-hint.service";
@@ -114,6 +116,14 @@ export function HomeScreen() {
         },
   ];
 
+  const homeOverflowItems = [
+    {
+      icon: "book-outline" as const,
+      label: "Behind HandyCue",
+      onPress: () => navigation.navigate("BehindHandyCue"),
+    },
+  ];
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -126,12 +136,18 @@ export function HomeScreen() {
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>HandyCue</Text>
         </View>
       ),
-      headerRight: () => <ProfileMenu items={profileMenuItems} />,
+      headerRight: () => (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <OverflowMenu items={homeOverflowItems} />
+          <ProfileMenu items={profileMenuItems} />
+        </View>
+      ),
     });
   }, [navigation, session]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+      <MenuHint featureKey="home" text="to discover HandyCue's story" />
       <LinearGradient
         colors={["#ffffff", "#e0f0eb"]}
         style={StyleSheet.absoluteFillObject}

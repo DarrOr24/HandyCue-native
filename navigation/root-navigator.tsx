@@ -24,6 +24,7 @@ import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
 import { BillingScreen } from '../screens/billing'
 import { LoginScreen } from '../screens/login'
+import { BehindHandyCueScreen } from '../screens/behind-handycue'
 
 const Stack = createNativeStackNavigator()
 
@@ -45,6 +46,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BehindHandyCue"
+          component={BehindHandyCueScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

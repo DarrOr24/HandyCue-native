@@ -15,13 +15,15 @@ import {
 
 interface MenuHintProps {
   featureKey: MenuHintFeatureKey
+  /** Override the default hint text. Used for home: "Tap ⋯ to discover HandyCue's story" */
+  text?: string
 }
 
 /**
  * Absolute overlay: animated arrow pointing up at the ⋮ menu.
- * "Tap the … to explore the feature". Dismissible. Per-feature, resets on logout.
+ * "Tap the … to explore the feature" (or custom text). Dismissible. Per-feature, resets on logout.
  */
-export function MenuHint({ featureKey }: MenuHintProps) {
+export function MenuHint({ featureKey, text }: MenuHintProps) {
   const [visible, setVisible] = useState<boolean | null>(null)
   const bounce = useRef(new Animated.Value(0)).current
 
@@ -77,9 +79,19 @@ export function MenuHint({ featureKey }: MenuHintProps) {
           <Ionicons name="chevron-up" size={18} color="#5B9A8B" />
         </Animated.View>
         <View style={styles.textRow}>
-          <Text style={styles.text}>Tap the </Text>
-          <Ionicons name="ellipsis-horizontal" size={14} color="#374151" style={styles.dotsIcon} />
-          <Text style={styles.text}> to explore the feature</Text>
+          {text ? (
+            <>
+              <Text style={styles.text}>Tap </Text>
+              <Ionicons name="ellipsis-horizontal" size={14} color="#374151" style={styles.dotsIcon} />
+              <Text style={styles.text}> {text}</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.text}>Tap the </Text>
+              <Ionicons name="ellipsis-horizontal" size={14} color="#374151" style={styles.dotsIcon} />
+              <Text style={styles.text}> to explore the feature</Text>
+            </>
+          )}
         </View>
       </View>
     </View>
