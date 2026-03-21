@@ -35,6 +35,7 @@ import {
   migrateSteps,
   cueCraftDefaults,
   getFeatureInputSettings,
+  genId,
 } from '../services/cueCraft.settings.service'
 import type { CueCraftUserSettings } from '../services/cueCraft.settings.service'
 import {
@@ -199,13 +200,25 @@ export function CueCraftScreen() {
   function updateStep(index: number, step: CueStep) {
     setSteps((prev) => {
       const next = [...prev]
-      next[index] = step
+      let s = step
+      if (s.type === 'customText' && (s.duration ?? 0) > 0 && (s.countdownFrom ?? 0) > (s.duration ?? 0)) {
+        s = { ...s, countdownFrom: s.duration }
+      }
+      next[index] = s
       return next
     })
   }
 
   function removeStep(index: number) {
     setSteps((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  function duplicateStep(index: number) {
+    setSteps((prev) => {
+      const step = prev[index]
+      const copy = { ...step, id: genId() }
+      return [...prev.slice(0, index + 1), copy, ...prev.slice(index + 1)]
+    })
   }
 
   function moveStep(index: number, direction: 'up' | 'down') {
@@ -316,6 +329,7 @@ export function CueCraftScreen() {
           </View>
         }
         useNestableScroll
+        useKeyboardAvoiding
       >
         {isAndroidLandscape ? (
           <View style={styles.stepsGrid}>
@@ -334,6 +348,7 @@ export function CueCraftScreen() {
                         total={steps.length}
                         onUpdate={(s) => updateStep(index, s)}
                         onRemove={() => removeStep(index)}
+                        onDuplicate={() => duplicateStep(index)}
                         onMoveUp={() => moveStep(index, 'up')}
                         onMoveDown={() => moveStep(index, 'down')}
                         disabled={inputsDisabled}
@@ -393,6 +408,7 @@ export function CueCraftScreen() {
                         total={steps.length}
                         onUpdate={(s) => updateStep(index, s)}
                         onRemove={() => removeStep(index)}
+                        onDuplicate={() => duplicateStep(index)}
                         onMoveUp={() => moveStep(index, 'up')}
                         onMoveDown={() => moveStep(index, 'down')}
                         disabled={inputsDisabled}

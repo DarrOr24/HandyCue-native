@@ -10,6 +10,7 @@ interface CueStepRowProps {
   total: number
   onUpdate: (step: CueStep) => void
   onRemove: () => void
+  onDuplicate: () => void
   onMoveUp: () => void
   onMoveDown: () => void
   disabled?: boolean
@@ -45,6 +46,7 @@ export function CueStepRow({
   total,
   onUpdate,
   onRemove,
+  onDuplicate,
   onMoveUp,
   onMoveDown,
   disabled = false,
@@ -82,6 +84,13 @@ export function CueStepRow({
           </TouchableOpacity>
           <TouchableOpacity
             disabled={disabled}
+            onPress={onDuplicate}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons name="copy-outline" size={20} color={disabled ? '#ccc' : '#5B9A8B'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled={disabled}
             onPress={() => {
               Alert.alert(
                 'Delete step?',
@@ -111,7 +120,7 @@ export function CueStepRow({
                 onUpdate({
                   ...step,
                   duration: Math.max(floor, step.duration - cfg.step),
-                } as CustomTextStep)
+                })
               }}
             >
               <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
@@ -123,7 +132,7 @@ export function CueStepRow({
                 onUpdate({
                   ...step,
                   duration: step.duration + is.getReadyTime.step,
-                } as CustomTextStep)
+                })
               }
             >
               <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
@@ -248,6 +257,8 @@ export function CueStepRow({
             onChangeText={(text) => onUpdate({ ...step, text })}
             editable={!disabled}
             multiline
+            returnKeyType="done"
+            submitBehavior="blurAndSubmit"
           />
           <View style={styles.durationRow}>
             <Text style={styles.durationLabel}>Duration (sec)</Text>

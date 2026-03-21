@@ -1,4 +1,5 @@
 import {
+  KeyboardAvoidingView,
   Platform,
   StyleSheet,
   View,
@@ -23,6 +24,8 @@ interface FeatureScreenLayoutProps {
   stickyHeader?: ReactNode
   /** Use NestableScrollContainer for drag-and-drop lists (e.g. CueCraft) */
   useNestableScroll?: boolean
+  /** Wrap scroll in KeyboardAvoidingView so inputs stay visible when keyboard opens */
+  useKeyboardAvoiding?: boolean
 }
 
 /**
@@ -37,6 +40,7 @@ export function FeatureScreenLayout({
   footer,
   stickyHeader,
   useNestableScroll = false,
+  useKeyboardAvoiding = false,
 }: FeatureScreenLayoutProps) {
   const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
   const { width, height } = useWindowDimensions()
@@ -67,6 +71,61 @@ export function FeatureScreenLayout({
             </View>
             <View style={styles.rightColumn}>
               {stickyHeader}
+              {useKeyboardAvoiding ? (
+                <KeyboardAvoidingView
+                  style={styles.keyboardAvoidingWrapper}
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                >
+                  <ScrollComponent
+                    style={styles.inputsSection}
+                    contentContainerStyle={[
+                      styles.inputsContent,
+                      inputsDisabled && styles.inputsDisabled,
+                    ]}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                  >
+                    {children}
+                  </ScrollComponent>
+                </KeyboardAvoidingView>
+              ) : (
+                <ScrollComponent
+                  style={styles.inputsSection}
+                  contentContainerStyle={[
+                    styles.inputsContent,
+                    inputsDisabled && styles.inputsDisabled,
+                  ]}
+                  showsVerticalScrollIndicator={false}
+                  keyboardShouldPersistTaps="handled"
+                >
+                  {children}
+                </ScrollComponent>
+              )}
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.timerSection}>{timerContent}</View>
+            <View style={styles.actionsSection}>{actions}</View>
+            {stickyHeader}
+            {useKeyboardAvoiding ? (
+              <KeyboardAvoidingView
+                style={styles.keyboardAvoidingWrapper}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              >
+                <ScrollComponent
+                  style={styles.inputsSection}
+                  contentContainerStyle={[
+                    styles.inputsContent,
+                    inputsDisabled && styles.inputsDisabled,
+                  ]}
+                  showsVerticalScrollIndicator={false}
+                  keyboardShouldPersistTaps="handled"
+                >
+                  {children}
+                </ScrollComponent>
+              </KeyboardAvoidingView>
+            ) : (
               <ScrollComponent
                 style={styles.inputsSection}
                 contentContainerStyle={[
@@ -78,24 +137,7 @@ export function FeatureScreenLayout({
               >
                 {children}
               </ScrollComponent>
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.timerSection}>{timerContent}</View>
-            <View style={styles.actionsSection}>{actions}</View>
-            {stickyHeader}
-            <ScrollComponent
-              style={styles.inputsSection}
-              contentContainerStyle={[
-                styles.inputsContent,
-                inputsDisabled && styles.inputsDisabled,
-              ]}
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled"
-            >
-              {children}
-            </ScrollComponent>
+            )}
             {footer && <View style={styles.footer}>{footer}</View>}
           </>
         )}
@@ -143,6 +185,7 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
+  keyboardAvoidingWrapper: { flex: 1 },
   inputsSection: { flex: 1, width: '100%' },
   inputsContent: {
     flexGrow: 1,
