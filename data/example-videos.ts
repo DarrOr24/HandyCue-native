@@ -34,7 +34,7 @@ export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
   holdOn: {
     title: 'HoldOn',
     videos: [
-      { title: 'Chest to wall hold', url: 'HoldOn - chest to wall hold.mp4', available: false },
+      { title: 'Chest to wall hold', url: 'HoldOn - chest to wall hold.mp4', available: true, thumbnailUrl: 'HoldOn - chest to wall hold.jpeg' },
     ],
   },
   cueCraft: {
