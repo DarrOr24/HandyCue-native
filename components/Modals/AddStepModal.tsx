@@ -18,6 +18,8 @@ interface AddStepModalProps {
   onAdd: (step: CueStep) => void
   onCancel: () => void
   defaultValues?: { defaultValues?: Record<string, number> }
+  /** When true, hide Sets option (only one allowed per flow) */
+  hasSetsStep?: boolean
 }
 
 const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
@@ -27,7 +29,7 @@ const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionic
   { type: 'customText', label: 'Audio Cue', icon: 'chatbubble-outline' },
 ]
 
-export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddStepModalProps) {
+export function AddStepModal({ visible, onAdd, onCancel, defaultValues, hasSetsStep = false }: AddStepModalProps) {
   const { width, height } = useWindowDimensions()
   const isAndroidLandscape = Platform.OS === 'android' && width > height
 
@@ -65,7 +67,7 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
           <Ionicons name="close" size={24} color="#6b7280" />
         </TouchableOpacity>
       </View>
-      {STEP_OPTIONS.map((opt) => (
+      {STEP_OPTIONS.filter((opt) => opt.type !== 'sets' || !hasSetsStep).map((opt) => (
         <TouchableOpacity
           key={opt.type}
           style={styles.option}

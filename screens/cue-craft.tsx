@@ -390,6 +390,7 @@ export function CueCraftScreen() {
             | { defaultValues?: Record<string, number> }
             | undefined
         }
+        hasSetsStep={steps.some((s) => s.type === 'sets')}
       />
 
       <SaveFavoriteModal

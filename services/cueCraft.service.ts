@@ -39,37 +39,6 @@ async function runSteps(
     }
 
     if (step.type === 'sets') {
-      const setSteps = steps.slice(i + 1)
-      const nextSetsIndex = setSteps.findIndex((s) => s.type === 'sets')
-      const stepsInSet = nextSetsIndex >= 0 ? setSteps.slice(0, nextSetsIndex) : setSteps
-      if (stepsInSet.length === 0) continue
-
-      for (let set = 1; set <= step.count; set++) {
-        if (isCancelled()) return
-        if (step.count > 1) {
-          await speak(`Set ${set} of ${step.count}`, storedVoice)
-          if (isCancelled()) return
-        }
-        await runSteps(stepsInSet, storedVoice, onDisplay, isCancelled)
-        if (isCancelled()) return
-        if (set < step.count && step.restBetween > 0) {
-          onDisplay('Rest')
-          await speak(`Rest for ${step.restBetween} seconds`, storedVoice)
-          if (isCancelled()) return
-          await new Promise<void>((resolve) => {
-            runRestCycle({
-              restTime: step.restBetween,
-              storedVoice,
-              onTick: (_, display) => onDisplay(display),
-              onRestComplete: resolve,
-              isCancelled,
-              onCancelled: resolve,
-              announceCountdown: step.announceRestCountdown ?? true,
-            })
-          })
-        }
-      }
-      i += stepsInSet.length
       continue
     }
 
@@ -153,5 +122,36 @@ export async function runCueSequence(options: {
 }): Promise<void> {
   const { steps, storedVoice, onDisplay, isCancelled } = options
   const migrated = migrateSteps(steps)
-  await runSteps(migrated, storedVoice, onDisplay, isCancelled)
+
+  const setsStep = migrated.find((s) => s.type === 'sets')
+  if (setsStep) {
+    const innerSteps = migrated.filter((s) => s.type !== 'sets')
+    for (let set = 1; set <= setsStep.count; set++) {
+      if (isCancelled()) return
+      if (setsStep.count > 1) {
+        await speak(`Set ${set} of ${setsStep.count}`, storedVoice)
+        if (isCancelled()) return
+      }
+      await runSteps(innerSteps, storedVoice, onDisplay, isCancelled)
+      if (isCancelled()) return
+      if (set < setsStep.count && setsStep.restBetween > 0) {
+        onDisplay('Rest')
+        await speak(`Rest for ${setsStep.restBetween} seconds`, storedVoice)
+        if (isCancelled()) return
+        await new Promise<void>((resolve) => {
+          runRestCycle({
+            restTime: setsStep.restBetween,
+            storedVoice,
+            onTick: (_, display) => onDisplay(display),
+            onRestComplete: resolve,
+            isCancelled,
+            onCancelled: resolve,
+            announceCountdown: setsStep.announceRestCountdown ?? true,
+          })
+        })
+      }
+    }
+  } else {
+    await runSteps(migrated, storedVoice, onDisplay, isCancelled)
+  }
 }
