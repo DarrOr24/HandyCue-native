@@ -64,7 +64,8 @@ export { VOICE_STORAGE_KEY }
  */
 function isVoiceLikelyUnavailable(voiceOpt: string, platform: string): boolean {
   if (platform === 'ios') {
-    return /en-in-x-|network|google/i.test(voiceOpt)
+    // Android-style identifiers (en-us-x-tpf-local, etc.) don't exist on iOS
+    return /en-in-x-|network|google|x-tpf|-local/i.test(voiceOpt)
   }
   return false
 }
