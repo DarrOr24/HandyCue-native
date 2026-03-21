@@ -2,7 +2,7 @@
  * CueCraft settings - intervals and default values for step types.
  */
 
-import type { CueStep } from './cueCraft.types'
+import type { CueStep, CustomTextStep, TimerStep, RestStep } from './cueCraft.types'
 
 export type CueCraftUserSettings = {
   inputSettings?: {
@@ -71,6 +71,35 @@ function genId() {
   return `cue-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
 
+/** Migrate legacy timer/rest steps to customText (Audio Cue with duration). */
+export function migrateSteps(steps: CueStep[]): CueStep[] {
+  return steps.map((step) => {
+    if (step.type === 'timer') {
+      const t = step as TimerStep
+      return {
+        id: step.id,
+        type: 'customText' as const,
+        text: '',
+        duration: t.duration,
+        calloutInterval: t.calloutInterval ?? (t.duration <= 24 ? 0 : 10),
+        countdownFrom: t.countdownFrom ?? 10,
+      } satisfies CustomTextStep
+    }
+    if (step.type === 'rest') {
+      const r = step as RestStep
+      return {
+        id: step.id,
+        type: 'customText' as const,
+        text: 'Rest',
+        duration: r.duration,
+        calloutInterval: 0,
+        countdownFrom: 10,
+      } satisfies CustomTextStep
+    }
+    return step
+  })
+}
+
 export function getDefaultSteps(settings?: CueCraftUserSettings | null): CueStep[] {
   const dv = settings?.defaultValues
   const getReady = dv?.getReadyTime ?? cueCraftDefaults.defaultValues.getReadyTime
@@ -79,10 +108,9 @@ export function getDefaultSteps(settings?: CueCraftUserSettings | null): CueStep
     { id: genId(), type: 'getReady', duration: getReady },
     { id: genId(), type: 'sets', count: 2, restBetween: 60, announceRestCountdown: true },
     { id: genId(), type: 'reps', count: 5 },
-    { id: genId(), type: 'customText', text: 'L sit' },
-    { id: genId(), type: 'timer', duration: 15, calloutInterval: 0 },
+    { id: genId(), type: 'customText', text: 'L sit', duration: 15, calloutInterval: 0, countdownFrom: 10 },
     { id: genId(), type: 'customText', text: 'down' },
-    { id: genId(), type: 'rest', duration: 10, announceCountdown: false },
+    { id: genId(), type: 'customText', text: 'Rest', duration: 10 },
   ]
 }
 

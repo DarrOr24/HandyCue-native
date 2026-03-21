@@ -12,8 +12,6 @@ interface AddStepModalProps {
 
 const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { type: 'getReady', label: 'Get ready', icon: 'timer-outline' },
-  { type: 'timer', label: 'Timer', icon: 'stopwatch-outline' },
-  { type: 'rest', label: 'Rest', icon: 'pause-outline' },
   { type: 'reps', label: 'Reps (repeat following steps)', icon: 'repeat-outline' },
   { type: 'sets', label: 'Sets (repeat whole sequence)', icon: 'layers-outline' },
   { type: 'customText', label: 'Audio Cue', icon: 'chatbubble-outline' },
@@ -29,18 +27,6 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
     switch (type) {
       case 'getReady':
         return { id, type: 'getReady' as const, duration: dv.getReadyTime ?? 5 }
-      case 'timer': {
-        const duration = dv.timerDuration ?? 30
-        return {
-          id,
-          type: 'timer' as const,
-          duration,
-          calloutInterval: duration <= 24 ? 0 : 10,
-          countdownFrom: 10,
-        }
-      }
-      case 'rest':
-        return { id, type: 'rest' as const, duration: dv.restDuration ?? 20, announceCountdown: true }
       case 'reps':
         return { id, type: 'reps' as const, count: dv.repsCount ?? 5, announceReps: false }
       case 'sets':
@@ -52,9 +38,9 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
           announceRestCountdown: true,
         }
       case 'customText':
-        return { id, type: 'customText' as const, text: '' }
+        return { id, type: 'customText' as const, text: '', duration: 0 }
       default:
-        return { id, type: 'customText' as const, text: '' }
+        return { id, type: 'customText' as const, text: '', duration: 0 }
     }
   }
 

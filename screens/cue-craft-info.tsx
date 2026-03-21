@@ -14,8 +14,8 @@ export function CueCraftInfoScreen() {
       </InfoEmphasis>
 
       <InfoParagraph>
-        CueCraft lets you create custom flows by combining get-ready countdowns, timers, rest
-        periods, and your own audio cues. Add steps in any order, reorder with the grip icon
+        CueCraft lets you create custom flows by combining get-ready countdowns, audio cues
+        (with optional timers), and your own text. Add steps in any order, reorder with the grip icon
         (≡), and the voice will guide you through. Save your favorite sequences for quick access.
       </InfoParagraph>
       <InfoParagraph>
@@ -28,7 +28,7 @@ export function CueCraftInfoScreen() {
       <InfoParagraph>
         <InfoBold>Reps</InfoBold> repeats the steps that follow it — until the next Reps or Sets —
         a set number of times, with no rest between. For example, if you put Reps (5) before
-        "L sit" and a 15-second timer, the voice will say "L sit", run the timer, then do that
+        "L sit" with a 15-second duration, the voice will say "L sit", run the timer, then do that
         again five times in a row.
       </InfoParagraph>
       <InfoParagraph>
@@ -49,16 +49,12 @@ export function CueCraftInfoScreen() {
         short rests where it can be annoying.
       </InfoParagraph>
 
-      <InfoSectionTitle>Timer callouts</InfoSectionTitle>
+      <InfoSectionTitle>Audio Cue with duration</InfoSectionTitle>
       <InfoParagraph>
-        Timer steps let you set <InfoBold>Callout every (sec)</InfoBold> — how often the voice says
-        elapsed time during the hold (e.g. every 10 seconds: "10", "20", "30"...). Set it to{' '}
-        <InfoBold>No</InfoBold> for no callouts during the hold; you'll only hear the countdown at the end.
-      </InfoParagraph>
-      <InfoParagraph>
-        Callouts only happen before the countdown starts. <InfoBold>Countdown from</InfoBold> sets when
-        the voice switches to counting down (e.g. 10, 9, 8...). For short holds (24 seconds or less), the default is no callout — the hold is brief enough that
-        the countdown is all you need. For holds of 25 seconds and above, the default is every 10 seconds.
+        Audio Cues can have a duration: enter your text (e.g. "L sit" or "Rest") and set duration
+        to 0 for a quick voice cue, or to a number of seconds for a timed hold. When duration is
+        greater than 0, you'll see <InfoBold>Callout every (sec)</InfoBold> — how often the voice says
+        elapsed time — and <InfoBold>Countdown from</InfoBold> — when it switches to counting down (e.g. 10, 9, 8...).
       </InfoParagraph>
 
       <InfoSectionTitle>Reorder steps</InfoSectionTitle>

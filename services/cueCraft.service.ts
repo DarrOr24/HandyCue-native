@@ -5,6 +5,7 @@
 import { formatTime, speak, type StoredVoice } from './core.service'
 import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
 import type { CueStep } from './cueCraft.types'
+import { migrateSteps } from './cueCraft.settings.service'
 
 export { runGetReadyCountdown }
 
@@ -82,75 +83,64 @@ async function runSteps(
         })
         break
 
-      case 'timer': {
-        const countdownFrom = Math.min(step.countdownFrom ?? 10, step.duration)
-        const calloutInterval = step.calloutInterval ?? (step.duration <= 24 ? 0 : 10)
-        const useCallouts = step.duration > countdownFrom
-        const initialDisplay =
-          step.duration <= countdownFrom ? String(step.duration) : '0:00'
-        onDisplay(initialDisplay)
-        if (isCancelled()) return
-        await new Promise<void>((resolve) => {
-          const startTime = Date.now()
-          let lastElapsed = -1
-          const interval = setInterval(() => {
-            if (isCancelled()) {
-              clearInterval(interval)
-              resolve()
-              return
-            }
-            const elapsed = Math.floor((Date.now() - startTime) / 1000)
-            if (elapsed === lastElapsed) return
-            lastElapsed = elapsed
-            const remaining = step.duration - elapsed
-            const display =
-              remaining <= countdownFrom && remaining > 0
-                ? String(remaining)
-                : formatTime(elapsed)
-            onDisplay(display)
-            if (remaining <= countdownFrom && remaining > 0) {
-              speak(String(remaining), storedVoice)
-            } else if (
-              useCallouts &&
-              calloutInterval > 0 &&
-              elapsed > 0 &&
-              elapsed % calloutInterval === 0 &&
-              remaining > countdownFrom
-            ) {
-              speak(String(elapsed), storedVoice)
-            }
-            if (elapsed >= step.duration) {
-              clearInterval(interval)
-              resolve()
-            }
-          }, 100)
-        })
+      case 'customText': {
+        const duration = step.duration ?? 0
+        const text = step.text?.trim()
+        const displayText = text || (duration > 0 ? 'Hold' : '...')
+        onDisplay(displayText)
+        const toSpeak = text
+          ? text
+          : duration > 0
+            ? `Hold for ${duration} seconds`
+            : null
+        if (toSpeak) {
+          await speak(toSpeak, storedVoice)
+        }
+        if (duration > 0) {
+          if (isCancelled()) return
+          const countdownFrom = Math.min(step.countdownFrom ?? 10, duration)
+          const calloutInterval = step.calloutInterval ?? (duration <= 24 ? 0 : 10)
+          const useCallouts = duration > countdownFrom
+          onDisplay(duration <= countdownFrom ? String(duration) : '0:00')
+          await new Promise<void>((resolve) => {
+            const startTime = Date.now()
+            let lastElapsed = -1
+            const interval = setInterval(() => {
+              if (isCancelled()) {
+                clearInterval(interval)
+                resolve()
+                return
+              }
+              const elapsed = Math.floor((Date.now() - startTime) / 1000)
+              if (elapsed === lastElapsed) return
+              lastElapsed = elapsed
+              const remaining = duration - elapsed
+              const display =
+                remaining <= countdownFrom && remaining > 0
+                  ? String(remaining)
+                  : formatTime(elapsed)
+              onDisplay(display)
+              if (remaining <= countdownFrom && remaining > 0) {
+                speak(String(remaining), storedVoice)
+              } else if (
+                useCallouts &&
+                calloutInterval > 0 &&
+                elapsed > 0 &&
+                elapsed % calloutInterval === 0 &&
+                remaining > countdownFrom
+              ) {
+                speak(String(elapsed), storedVoice)
+              }
+              if (elapsed >= duration) {
+                clearInterval(interval)
+                resolve()
+              }
+            }, 100)
+          })
+        }
         break
       }
 
-      case 'rest':
-        onDisplay('Rest')
-        await speak(`Rest for ${step.duration} seconds`, storedVoice)
-        if (isCancelled()) return
-        await new Promise<void>((resolve) => {
-          runRestCycle({
-            restTime: step.duration,
-            storedVoice,
-            onTick: (_, display) => onDisplay(display),
-            onRestComplete: resolve,
-            isCancelled,
-            onCancelled: resolve,
-            announceCountdown: step.announceCountdown ?? true,
-          })
-        })
-        break
-
-      case 'customText':
-        onDisplay(step.text || '...')
-        if (step.text?.trim()) {
-          await speak(step.text.trim(), storedVoice)
-        }
-        break
     }
   }
 }
@@ -162,5 +152,6 @@ export async function runCueSequence(options: {
   isCancelled: () => boolean
 }): Promise<void> {
   const { steps, storedVoice, onDisplay, isCancelled } = options
-  await runSteps(steps, storedVoice, onDisplay, isCancelled)
+  const migrated = migrateSteps(steps)
+  await runSteps(migrated, storedVoice, onDisplay, isCancelled)
 }

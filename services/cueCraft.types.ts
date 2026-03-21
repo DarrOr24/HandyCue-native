@@ -51,6 +51,12 @@ export interface SetsStep extends CueStepBase {
 export interface CustomTextStep extends CueStepBase {
   type: 'customText'
   text: string
+  /** Duration in seconds. 0 = just say the text, no timer. > 0 = run timer with callouts/countdown. */
+  duration?: number
+  /** When duration > 0: how often to say elapsed (sec). 0 = no callouts during, only countdown. */
+  calloutInterval?: number
+  /** When duration > 0: when to start countdown (e.g. 10 = say 10, 9, 8... at the end). */
+  countdownFrom?: number
 }
 
 export type CueStep = GetReadyStep | TimerStep | RestStep | RepsStep | SetsStep | CustomTextStep

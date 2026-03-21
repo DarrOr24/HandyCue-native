@@ -32,6 +32,7 @@ import { getVoice } from '../services/voice.service'
 import { runCueSequence } from '../services/cueCraft.service'
 import {
   getDefaultSteps,
+  migrateSteps,
   cueCraftDefaults,
   getFeatureInputSettings,
 } from '../services/cueCraft.settings.service'
@@ -109,7 +110,7 @@ export function CueCraftScreen() {
             | undefined
           const savedSteps = cueCraft?.steps
           if (savedSteps && Array.isArray(savedSteps) && savedSteps.length > 0) {
-            setSteps(savedSteps)
+            setSteps(migrateSteps(savedSteps))
           } else {
             setSteps(getDefaultSteps(cueCraft))
           }
@@ -204,7 +205,14 @@ export function CueCraftScreen() {
   }
 
   function removeStep(index: number) {
-    setSteps((prev) => prev.filter((_, i) => i !== index))
+    Alert.alert(
+      'Delete step?',
+      'Are you sure you want to remove this step?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => setSteps((prev) => prev.filter((_, i) => i !== index)) },
+      ]
+    )
   }
 
   function moveStep(index: number, direction: 'up' | 'down') {
@@ -258,7 +266,7 @@ export function CueCraftScreen() {
   function loadFavorite(name: string) {
     const fav = favorites.find((f) => f.name === name)
     if (!fav) return
-    setSteps(fav.inputs.steps ?? [])
+    setSteps(migrateSteps(fav.inputs.steps ?? []))
     setIsFavoritesModalOpen(false)
   }
 
