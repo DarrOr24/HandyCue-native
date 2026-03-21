@@ -65,7 +65,7 @@ export function CalloutBlock({
     <>
       {wrap(
         <SelectInput
-          label="More callouts"
+          label="More cues"
           options={CALLOUT_TYPE_OPTIONS}
           value={type}
           onChange={(v) => updateType(v as 'none' | 'switch' | 'both')}

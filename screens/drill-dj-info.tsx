@@ -31,9 +31,9 @@ export function DrillDJInfoScreen() {
         <InfoBold>Switch</InfoBold> — Hold, then switch. Ideal for one-arm prep: time your hold on each hand accurately. Adjust time between switches and switch duration to match your practice.
       </InfoParagraph>
 
-      <InfoSectionTitle>More callouts</InfoSectionTitle>
+      <InfoSectionTitle>More cues</InfoSectionTitle>
       <InfoParagraph>
-        For Slide and Float, you can add extra callouts after the main reps. Choose "Switch legs" to do additional reps on one leg at a time, or "Both legs" for reps on both legs. You can chain them — e.g. switch legs for a few reps, then both legs for a few more. This helps balance training and adds variety without changing your main drill.
+        For Slide and Float, you can add extra cues after the main reps. Choose "Switch legs" to do additional reps on one leg at a time, or "Both legs" for reps on both legs. You can chain them — e.g. switch legs for a few reps, then both legs for a few more. This helps balance training and adds variety without changing your main drill.
       </InfoParagraph>
 
       <InfoParagraph>

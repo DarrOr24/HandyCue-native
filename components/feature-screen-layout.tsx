@@ -59,8 +59,11 @@ export function FeatureScreenLayout({
         {useLandscapeLayout ? (
           <>
             <View style={styles.leftColumn}>
-              <View style={styles.timerSection}>{timerContent}</View>
-              <View style={styles.actionsSection}>{actions}</View>
+              <View style={styles.timerActionsWrapper}>
+                <View style={styles.timerSection}>{timerContent}</View>
+                <View style={styles.actionsSection}>{actions}</View>
+              </View>
+              {footer && <View style={styles.footerLandscape}>{footer}</View>}
             </View>
             <View style={styles.rightColumn}>
               {stickyHeader}
@@ -75,7 +78,6 @@ export function FeatureScreenLayout({
               >
                 {children}
               </ScrollComponent>
-              {footer && <View style={styles.footer}>{footer}</View>}
             </View>
           </>
         ) : (
@@ -114,12 +116,17 @@ const styles = StyleSheet.create({
   contentLandscape: {
     flexDirection: 'row',
     paddingTop: 8,
+    paddingBottom: 0,
   },
   leftColumn: {
     width: LANDSCAPE_LEFT_COLUMN_WIDTH,
     marginRight: 20,
     alignItems: 'center',
+  },
+  timerActionsWrapper: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   rightColumn: {
     flex: 1,
@@ -148,6 +155,15 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     paddingTop: 4,
     paddingBottom: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footerLandscape: {
+    flexShrink: 0,
+    paddingTop: 8,
+    paddingHorizontal: 8,
+    paddingBottom: 0,
+    marginBottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },

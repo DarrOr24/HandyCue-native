@@ -7,6 +7,8 @@ import {
   Modal,
   ScrollView,
   Pressable,
+  Platform,
+  useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
@@ -34,6 +36,8 @@ export function SelectInput({
   onRemove,
 }: SelectInputProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
   const idx = options.findIndex((o) => o.value === value)
   const currentIdx = idx >= 0 ? idx : 0
   const displayLabel = options[currentIdx]?.label ?? value
@@ -91,12 +95,20 @@ export function SelectInput({
             style={StyleSheet.absoluteFill}
             onPress={() => setDropdownOpen(false)}
           />
-          <View style={styles.modalContent}>
+          <View
+            style={[
+              styles.modalContent,
+              isAndroidLandscape && styles.modalContentLandscape,
+            ]}
+          >
             <Text style={styles.modalTitle}>Choose {label}</Text>
             <ScrollView
-              style={styles.optionsList}
+              style={[
+                styles.optionsList,
+                isAndroidLandscape && styles.optionsListLandscape,
+              ]}
               keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={true}
+              showsVerticalScrollIndicator={!isAndroidLandscape}
             >
               {options.map((opt) => (
                 <TouchableOpacity
@@ -182,6 +194,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
   },
+  modalContentLandscape: {
+    maxHeight: '90%',
+  },
   modalTitle: {
     fontSize: 16,
     fontWeight: '600',
@@ -190,6 +205,9 @@ const styles = StyleSheet.create({
   },
   optionsList: {
     maxHeight: 280,
+  },
+  optionsListLandscape: {
+    maxHeight: 260,
   },
   optionRow: {
     flexDirection: 'row',
