@@ -1,7 +1,9 @@
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  TouchableWithoutFeedback,
   View,
   ScrollView,
   useWindowDimensions,
@@ -26,6 +28,8 @@ interface FeatureScreenLayoutProps {
   useNestableScroll?: boolean
   /** Wrap scroll in KeyboardAvoidingView so inputs stay visible when keyboard opens */
   useKeyboardAvoiding?: boolean
+  /** Offset for KeyboardAvoidingView (e.g. header height). Defaults to 60. */
+  keyboardVerticalOffset?: number
 }
 
 /**
@@ -41,6 +45,7 @@ export function FeatureScreenLayout({
   stickyHeader,
   useNestableScroll = false,
   useKeyboardAvoiding = false,
+  keyboardVerticalOffset = 60,
 }: FeatureScreenLayoutProps) {
   const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
   const { width, height } = useWindowDimensions()
@@ -54,12 +59,13 @@ export function FeatureScreenLayout({
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}
       />
-      <View
-        style={[
-          styles.content,
-          useLandscapeLayout && styles.contentLandscape,
-        ]}
-      >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View
+          style={[
+            styles.content,
+            useLandscapeLayout && styles.contentLandscape,
+          ]}
+        >
         {useLandscapeLayout ? (
           <>
             <View style={styles.leftColumn}>
@@ -74,7 +80,8 @@ export function FeatureScreenLayout({
               {useKeyboardAvoiding ? (
                 <KeyboardAvoidingView
                   style={styles.keyboardAvoidingWrapper}
-                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                  behavior="padding"
+                  keyboardVerticalOffset={keyboardVerticalOffset}
                 >
                   <ScrollComponent
                     style={styles.inputsSection}
@@ -111,7 +118,8 @@ export function FeatureScreenLayout({
             {useKeyboardAvoiding ? (
               <KeyboardAvoidingView
                 style={styles.keyboardAvoidingWrapper}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior="padding"
+                keyboardVerticalOffset={keyboardVerticalOffset}
               >
                 <ScrollComponent
                   style={styles.inputsSection}
@@ -141,7 +149,8 @@ export function FeatureScreenLayout({
             {footer && <View style={styles.footer}>{footer}</View>}
           </>
         )}
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   )
 }

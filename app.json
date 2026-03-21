@@ -21,6 +21,7 @@
     },
     "android": {
       "package": "com.darrmorgan.handycue",
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#E0F0EB",
         "foregroundImage": "./assets/app-icon-android.png"

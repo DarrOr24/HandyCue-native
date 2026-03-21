@@ -25,10 +25,8 @@ const STEP_LABELS: Record<string, string> = {
   customText: 'Audio Cue',
 }
 
-const STEP_HINTS: Record<string, string> = {
-  reps: 'Repeats the steps below',
-  sets: 'Repeats the whole sequence',
-}
+/** Explanations only in AddStepModal; not shown on cards to save space */
+const STEP_HINTS: Record<string, string> = {}
 
 /** Default callout: no callout for holds ≤24 sec, else 10 sec. */
 function defaultCalloutInterval(duration: number): number {
