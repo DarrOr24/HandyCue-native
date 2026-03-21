@@ -14,47 +14,39 @@ export function CueCraftInfoScreen() {
       </InfoEmphasis>
 
       <InfoParagraph>
-        CueCraft lets you create custom flows by combining get-ready countdowns, audio cues
-        (with optional timers), and your own text. Add steps in any order, reorder with the grip icon
+        CueCraft lets you create custom flows by combining get-ready countdowns and audio cues
+        (your own text with optional timers). Add steps in any order, reorder with the grip icon
         (≡), and the voice will guide you through. Save your favorite sequences for quick access.
       </InfoParagraph>
       <InfoParagraph>
-        While HandyCue is built for handstands, CueCraft can be used for many things — yoga flows,
-        stretching routines, strength circuits, meditation, or any activity where you want voice-guided
-        timing and cues.
+        Like in regular training, we have sets and reps.
       </InfoParagraph>
 
       <InfoSectionTitle>Reps</InfoSectionTitle>
       <InfoParagraph>
-        <InfoBold>Reps</InfoBold> repeats the steps that follow it — until the next Reps or Sets —
-        a set number of times, with no rest between. For example, if you put Reps (5) before
-        "L sit" with a 15-second duration, the voice will say "L sit", run the timer, then do that
-        again five times in a row.
-      </InfoParagraph>
-      <InfoParagraph>
+        <InfoBold>Reps</InfoBold> are repetitions of an exercise — you can have several different
+        exercises with different rep numbers in a sequence. Reps repeat the steps below it the number
+        of times you choose. For example, Reps (5) before "L sit" and "V snap" will run those two
+        cues five times in a row.{'\n'}
         Use the <InfoBold>Say reps</InfoBold> toggle to choose whether the voice announces "5 reps"
-        at the start. Turn it off for a smooth, flowing sequence where the voice goes straight
-        into your cues without interruption.
+        at the start. Turn it off for a smooth, flowing sequence.
       </InfoParagraph>
 
       <InfoSectionTitle>Sets</InfoSectionTitle>
       <InfoParagraph>
-        <InfoBold>Sets</InfoBold> repeats the steps that follow it — until the next Sets — a set
-        number of times, with optional rest between each round. Sets can wrap Reps, so you can
-        build complex flows like "2 sets of 5 reps each, with rest between sets".
-      </InfoParagraph>
-      <InfoParagraph>
-        When you set 2 or more sets, you can add rest time between them. Use <InfoBold>Say countdown</InfoBold> to
-        choose whether the voice announces the countdown in the last 10 seconds — turn it off for
-        short rests where it can be annoying.
+        <InfoBold>Sets</InfoBold> repeat the whole sequence. Between sets, you can set your rest —
+        the recovery time. When you set 2 or more sets, you can add rest time between them.{'\n'}
+        Use <InfoBold>Say countdown</InfoBold> to choose whether the voice calls out the countdown
+        in the final seconds of rest.
       </InfoParagraph>
 
-      <InfoSectionTitle>Audio Cue with duration</InfoSectionTitle>
+      <InfoSectionTitle>Audio Cue</InfoSectionTitle>
       <InfoParagraph>
-        Audio Cues can have a duration: enter your text (e.g. "L sit" or "Rest") and set duration
-        to 0 for a quick voice cue, or to a number of seconds for a timed hold. When duration is
-        greater than 0, you'll see <InfoBold>Callout every (sec)</InfoBold> — how often the voice says
-        elapsed time — and <InfoBold>Countdown from</InfoBold> — when it switches to counting down (e.g. 10, 9, 8...).
+        Audio Cues can have a duration: enter your text (e.g. "L sit" or "Hollow body") and set
+        duration to 0 for a quick voice cue, or to a number of seconds for a timed hold. When
+        duration is greater than 0, you'll see <InfoBold>Callout every (sec)</InfoBold> — how often
+        the voice says elapsed time — and <InfoBold>Countdown from</InfoBold> — when it switches to
+        counting down (e.g. 10, 9, 8...).
       </InfoParagraph>
 
       <InfoSectionTitle>Reorder steps</InfoSectionTitle>
@@ -65,20 +57,23 @@ export function CueCraftInfoScreen() {
 
       <InfoSectionTitle>Example flow</InfoSectionTitle>
       <InfoParagraph>
-        The default sequence is an L-sit hold routine you can use as a starting point:
+        A conditioning drill with V snap and L sit:{'\n'}
+        • Get ready countdown{'\n'}
+        • 2 sets with 60 seconds rest between{'\n'}
+        • 5 reps:{'\n'}
+        {'   '}– 1st position: Hollow body (duration 0){'\n'}
+        {'   '}– 2nd position: V snap (duration 0){'\n'}
+        {'   '}– 3rd position: L sit (duration 3){'\n'}
+        {'   '}– 4th position: V snap (duration 0)
       </InfoParagraph>
       <InfoParagraph>
-        • <InfoBold>Get ready</InfoBold> — countdown to start{'\n'}
-        • <InfoBold>Sets (2)</InfoBold> — run the whole sequence twice, with 60 seconds rest between{'\n'}
-        • <InfoBold>Reps (5)</InfoBold> — L sit 15 sec → down → Rest 10 sec
-      </InfoParagraph>
-      <InfoParagraph>
-        The voice guides you: 5 reps of L sit for 15 seconds, then down and rest for 10 seconds.
+        The voice guides you through 5 reps of hollow body → V snap → L sit (3 sec) → V snap.
         That completes the first set. After a 60-second rest with countdown, the whole thing runs
         again for the second set.
       </InfoParagraph>
       <InfoParagraph>
-        You can edit any step or add your own — try yoga poses, stretches, or strength holds.
+        In CueCraft you can edit any step and/or add your own. Be creative — especially useful for{' '}
+        <InfoBold>conditioning exercises</InfoBold>.
       </InfoParagraph>
     </InfoScreenLayout>
   )
