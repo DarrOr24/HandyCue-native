@@ -1,4 +1,14 @@
-import { StyleSheet, Text, View, Modal, Pressable, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  Pressable,
+  TouchableOpacity,
+  Platform,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import type { CueStep, CueStepType } from '../../services/cueCraft.types'
 import { genId, cueCraftDefaults } from '../../services/cueCraft.settings.service'
@@ -18,6 +28,9 @@ const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionic
 ]
 
 export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddStepModalProps) {
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
+
   if (!visible) return null
 
   const dv = defaultValues?.defaultValues ?? cueCraftDefaults.defaultValues
@@ -44,28 +57,54 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
     }
   }
 
+  const modalContent = (
+    <>
+      <Text style={styles.title}>Add step</Text>
+      {STEP_OPTIONS.map((opt) => (
+        <TouchableOpacity
+          key={opt.type}
+          style={styles.option}
+          onPress={() => {
+            onAdd(createStep(opt.type))
+            onCancel()
+          }}
+        >
+          <Ionicons name={opt.icon} size={24} color="#5B9A8B" />
+          <Text style={styles.optionLabel}>{opt.label}</Text>
+          <Ionicons name="chevron-forward" size={20} color="#999" />
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
+        <Text style={styles.cancelText}>Cancel</Text>
+      </TouchableOpacity>
+    </>
+  )
+
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+      statusBarTranslucent={Platform.OS === 'android'}
+    >
       <Pressable style={styles.backdrop} onPress={onCancel}>
-        <View style={styles.modal} onStartShouldSetResponder={() => true}>
-          <Text style={styles.title}>Add step</Text>
-          {STEP_OPTIONS.map((opt) => (
-            <TouchableOpacity
-              key={opt.type}
-              style={styles.option}
-              onPress={() => {
-                onAdd(createStep(opt.type))
-                onCancel()
-              }}
+        <View style={styles.backdropInner} onStartShouldSetResponder={() => true}>
+          <View
+            style={[styles.modal, isAndroidLandscape && { maxHeight: height * 0.7 }]}
+          >
+          {isAndroidLandscape ? (
+            <ScrollView
+              showsVerticalScrollIndicator={true}
+              bounces={false}
+              contentContainerStyle={styles.modalScrollContent}
             >
-              <Ionicons name={opt.icon} size={24} color="#5B9A8B" />
-              <Text style={styles.optionLabel}>{opt.label}</Text>
-              <Ionicons name="chevron-forward" size={20} color="#999" />
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
+              {modalContent}
+            </ScrollView>
+          ) : (
+            modalContent
+          )}
+          </View>
         </View>
       </Pressable>
     </Modal>
@@ -78,7 +117,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backdropInner: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 24,
+  },
+  modalScrollContent: {
+    paddingBottom: 16,
   },
   modal: {
     backgroundColor: '#fff',

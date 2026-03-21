@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  Platform,
+  useWindowDimensions,
+  ScrollView,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -109,27 +112,60 @@ function FeaturePickerModal({
   onClose: () => void
   onSelect: (featureKey: string) => void
 }) {
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
       onRequestClose={onClose}
+      statusBarTranslucent={Platform.OS === 'android'}
     >
       <Pressable style={styles.backdrop} onPress={onClose}>
-        <View style={styles.menu} onStartShouldSetResponder={() => true}>
-          <Text style={styles.menuTitle}>Choose feature</Text>
-          {FEATURE_OPTIONS.map((opt, idx) => (
-            <TouchableOpacity
-              key={opt.id}
-              style={[styles.menuItem, idx < FEATURE_OPTIONS.length - 1 && styles.menuItemBorder]}
-              onPress={() => onSelect(opt.id)}
-              activeOpacity={0.7}
+        <View
+          style={[
+            styles.menu,
+            isAndroidLandscape && { maxHeight: height * 0.6 },
+          ]}
+          onStartShouldSetResponder={() => true}
+        >
+          {isAndroidLandscape ? (
+            <ScrollView
+              showsVerticalScrollIndicator={true}
+              bounces={false}
+              contentContainerStyle={styles.menuScrollContent}
             >
-              <Text style={styles.menuLabel}>{opt.label}</Text>
-              <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
-            </TouchableOpacity>
-          ))}
+              <Text style={styles.menuTitle}>Choose feature</Text>
+              {FEATURE_OPTIONS.map((opt, idx) => (
+                <TouchableOpacity
+                  key={opt.id}
+                  style={[styles.menuItem, idx < FEATURE_OPTIONS.length - 1 && styles.menuItemBorder]}
+                  onPress={() => onSelect(opt.id)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.menuLabel}>{opt.label}</Text>
+                  <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          ) : (
+            <>
+              <Text style={styles.menuTitle}>Choose feature</Text>
+              {FEATURE_OPTIONS.map((opt, idx) => (
+                <TouchableOpacity
+                  key={opt.id}
+                  style={[styles.menuItem, idx < FEATURE_OPTIONS.length - 1 && styles.menuItemBorder]}
+                  onPress={() => onSelect(opt.id)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.menuLabel}>{opt.label}</Text>
+                  <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+                </TouchableOpacity>
+              ))}
+            </>
+          )}
         </View>
       </Pressable>
     </Modal>
@@ -221,4 +257,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e5e7eb',
   },
   menuLabel: { fontSize: 16, color: '#374151', fontWeight: '500' },
+  menuScrollContent: {
+    paddingBottom: 16,
+  },
 })

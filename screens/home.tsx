@@ -158,6 +158,7 @@ export function HomeScreen() {
         style={styles.container}
         contentContainerStyle={[
           styles.content,
+          useGrid && styles.contentLandscape,
           !useGrid && styles.contentPortraitFit,
         ]}
         scrollEnabled={useGrid}
@@ -241,6 +242,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
+  contentLandscape: { paddingHorizontal: 32 },
   contentPortraitFit: { flexGrow: 1 },
   portraitCards: {
     flex: 1,

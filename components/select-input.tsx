@@ -89,6 +89,7 @@ export function SelectInput({
         transparent
         animationType="fade"
         onRequestClose={() => setDropdownOpen(false)}
+        statusBarTranslucent={Platform.OS === 'android'}
       >
         <View style={styles.modalBackdrop}>
           <Pressable
@@ -108,7 +109,7 @@ export function SelectInput({
                 isAndroidLandscape && styles.optionsListLandscape,
               ]}
               keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={!isAndroidLandscape}
+              showsVerticalScrollIndicator={true}
             >
               {options.map((opt) => (
                 <TouchableOpacity

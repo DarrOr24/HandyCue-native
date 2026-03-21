@@ -44,7 +44,7 @@ export function SaveFavoriteModal({
   if (!visible) return null
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel} statusBarTranslucent={Platform.OS === 'android'}>
       <Pressable style={styles.backdrop} onPress={onCancel}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}

@@ -5,6 +5,7 @@ import {
   Modal,
   Pressable,
   TouchableOpacity,
+  Platform,
 } from 'react-native'
 
 interface ConfirmReplaceModalProps {
@@ -26,7 +27,7 @@ export function ConfirmReplaceModal({
   if (!visible) return null
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel} statusBarTranslucent={Platform.OS === 'android'}>
       <Pressable style={styles.backdrop} onPress={onCancel}>
         <View style={styles.modal} onStartShouldSetResponder={() => true}>
           <Text style={styles.title}>Replace Favorite?</Text>

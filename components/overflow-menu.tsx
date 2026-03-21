@@ -70,32 +70,34 @@ export function OverflowMenu({ items }: OverflowMenuProps) {
         transparent
         animationType="fade"
         onRequestClose={() => setVisible(false)}
+        statusBarTranslucent={Platform.OS === 'android'}
       >
-        <Pressable
-          style={[
-            styles.backdrop,
-            isAndroidLandscape && {
-              paddingRight: 16 + insets.right,
-              paddingBottom: 24 + insets.bottom,
-            },
-          ]}
-          onPress={() => setVisible(false)}
-        >
+        <Pressable style={styles.backdrop} onPress={() => setVisible(false)}>
           <View
-            style={[styles.menu, isAndroidLandscape && { maxHeight: height * 0.55 }]}
+            style={[
+              styles.menuWrapper,
+              isAndroidLandscape && {
+                right: 16 + insets.right,
+                bottom: 24 + insets.bottom,
+              },
+            ]}
             onStartShouldSetResponder={() => true}
           >
-            {isAndroidLandscape ? (
-              <ScrollView
-                showsVerticalScrollIndicator={true}
-                bounces={false}
-                style={styles.menuScroll}
-              >
-                {menuContent}
-              </ScrollView>
-            ) : (
-              menuContent
-            )}
+            <View
+              style={[styles.menu, isAndroidLandscape && { maxHeight: height * 0.55 }]}
+            >
+              {isAndroidLandscape ? (
+                <ScrollView
+                  showsVerticalScrollIndicator={true}
+                  bounces={false}
+                  style={styles.menuScroll}
+                >
+                  {menuContent}
+                </ScrollView>
+              ) : (
+                menuContent
+              )}
+            </View>
           </View>
         </Pressable>
       </Modal>
@@ -115,10 +117,11 @@ const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    paddingTop: 56,
-    paddingRight: 16,
+  },
+  menuWrapper: {
+    position: 'absolute',
+    top: 56,
+    right: 16,
   },
   menuScroll: {
     maxHeight: '100%',

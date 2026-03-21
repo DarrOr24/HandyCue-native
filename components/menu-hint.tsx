@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import {
+  Platform,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Animated,
+  useWindowDimensions,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import {
   isMenuHintDismissed,
@@ -19,12 +22,21 @@ interface MenuHintProps {
   text?: string
 }
 
+/** In Android landscape, add extra right margin to avoid Samsung nav bar */
+function useHintRightMargin() {
+  const { width, height } = useWindowDimensions()
+  const insets = useSafeAreaInsets()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
+  return isAndroidLandscape ? 28 + insets.right : 28
+}
+
 /**
  * Absolute overlay: animated arrow pointing up at the ⋮ menu.
  * "Tap the … to explore the feature" (or custom text). Dismissible. Per-feature, resets on logout.
  */
 export function MenuHint({ featureKey, text }: MenuHintProps) {
   const [visible, setVisible] = useState<boolean | null>(null)
+  const marginRight = useHintRightMargin()
   const bounce = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -67,7 +79,10 @@ export function MenuHint({ featureKey, text }: MenuHintProps) {
 
   return (
     <View style={styles.overlay} pointerEvents="box-none">
-      <View style={[styles.bubble, { marginTop: 6, marginRight: 28 }]} pointerEvents="auto">
+      <View
+        style={[styles.bubble, { marginTop: 6, marginRight }]}
+        pointerEvents="auto"
+      >
         <TouchableOpacity
           onPress={handleDismiss}
           style={styles.closeBtn}

@@ -10,6 +10,9 @@ import {
   FlatList,
   Alert,
   ActivityIndicator,
+  Platform,
+  useWindowDimensions,
+  ScrollView,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { deleteFavorite } from '../../services/cueCoach.favorites.service'
@@ -43,6 +46,8 @@ export function FavoritesModal({
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedName, setSelectedName] = useState<string | null>(null)
   const [deletingName, setDeletingName] = useState<string | null>(null)
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   const filteredFavorites = useMemo(() => {
     if (!searchTerm.trim()) return favorites
@@ -86,80 +91,163 @@ export function FavoritesModal({
   if (!visible) return null
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent={Platform.OS === 'android'}>
       <Pressable style={styles.backdrop} onPress={onClose}>
-        <View style={styles.modal} onStartShouldSetResponder={() => true}>
-          <Text style={styles.title}>Choose a Favorite</Text>
-
-          <View style={styles.searchRow}>
-            <Ionicons name="search" size={20} color="#9ca3af" style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search favorites..."
-              placeholderTextColor="#9ca3af"
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-            />
-            {searchTerm.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchTerm('')} hitSlop={12}>
-                <Ionicons name="close-circle" size={20} color="#9ca3af" />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <FlatList
-            data={filteredFavorites}
-            keyExtractor={(item) => item.name}
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
-            ListEmptyComponent={
-              <Text style={styles.empty}>
-                {favorites.length === 0
-                  ? 'No favorites yet. Save your current settings to get started.'
-                  : 'No matches'}
-              </Text>
-            }
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[
-                  styles.item,
-                  selectedName === item.name && styles.itemSelected,
-                ]}
-                onPress={() => setSelectedName(item.name)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.itemText} numberOfLines={1}>
-                  {item.name}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => handleDelete(item.name)}
-                  disabled={deletingName === item.name}
-                  hitSlop={12}
-                  style={styles.deleteBtn}
-                >
-                  {deletingName === item.name ? (
-                    <ActivityIndicator size="small" color="#dc2626" />
-                  ) : (
-                    <Ionicons name="trash-outline" size={20} color="#dc2626" />
-                  )}
-                </TouchableOpacity>
-              </TouchableOpacity>
-            )}
-          />
-
-          <View style={styles.actions}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={onClose} activeOpacity={0.7}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.openBtn, !selectedName && styles.openBtnDisabled]}
-              onPress={handleOpen}
-              disabled={!selectedName}
-              activeOpacity={0.7}
+        <View
+          style={[styles.modal, isAndroidLandscape && { maxHeight: height * 0.85 }]}
+          onStartShouldSetResponder={() => true}
+        >
+          {isAndroidLandscape ? (
+            <ScrollView
+              showsVerticalScrollIndicator={true}
+              bounces={false}
+              contentContainerStyle={styles.modalScrollContent}
             >
-              <Text style={styles.openText}>Open</Text>
-            </TouchableOpacity>
-          </View>
+              <Text style={styles.title}>Choose a Favorite</Text>
+
+              <View style={styles.searchRow}>
+                <Ionicons name="search" size={20} color="#9ca3af" style={styles.searchIcon} />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Search favorites..."
+                  placeholderTextColor="#9ca3af"
+                  value={searchTerm}
+                  onChangeText={setSearchTerm}
+                />
+                {searchTerm.length > 0 && (
+                  <TouchableOpacity onPress={() => setSearchTerm('')} hitSlop={12}>
+                    <Ionicons name="close-circle" size={20} color="#9ca3af" />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              {filteredFavorites.length === 0 ? (
+                <Text style={styles.empty}>
+                  {favorites.length === 0
+                    ? 'No favorites yet. Save your current settings to get started.'
+                    : 'No matches'}
+                </Text>
+              ) : (
+                <View style={styles.listContent}>
+                  {filteredFavorites.map((item) => (
+                    <TouchableOpacity
+                      key={item.name}
+                      style={[
+                        styles.item,
+                        selectedName === item.name && styles.itemSelected,
+                      ]}
+                      onPress={() => setSelectedName(item.name)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.itemText} numberOfLines={1}>
+                        {item.name}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => handleDelete(item.name)}
+                        disabled={deletingName === item.name}
+                        hitSlop={12}
+                        style={styles.deleteBtn}
+                      >
+                        {deletingName === item.name ? (
+                          <ActivityIndicator size="small" color="#dc2626" />
+                        ) : (
+                          <Ionicons name="trash-outline" size={20} color="#dc2626" />
+                        )}
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+
+              <View style={styles.actions}>
+                <TouchableOpacity style={styles.cancelBtn} onPress={onClose} activeOpacity={0.7}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.openBtn, !selectedName && styles.openBtnDisabled]}
+                  onPress={handleOpen}
+                  disabled={!selectedName}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.openText}>Open</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          ) : (
+            <>
+              <Text style={styles.title}>Choose a Favorite</Text>
+
+              <View style={styles.searchRow}>
+                <Ionicons name="search" size={20} color="#9ca3af" style={styles.searchIcon} />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Search favorites..."
+                  placeholderTextColor="#9ca3af"
+                  value={searchTerm}
+                  onChangeText={setSearchTerm}
+                />
+                {searchTerm.length > 0 && (
+                  <TouchableOpacity onPress={() => setSearchTerm('')} hitSlop={12}>
+                    <Ionicons name="close-circle" size={20} color="#9ca3af" />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <FlatList
+                data={filteredFavorites}
+                keyExtractor={(item) => item.name}
+                style={styles.list}
+                contentContainerStyle={styles.listContent}
+                ListEmptyComponent={
+                  <Text style={styles.empty}>
+                    {favorites.length === 0
+                      ? 'No favorites yet. Save your current settings to get started.'
+                      : 'No matches'}
+                  </Text>
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.item,
+                      selectedName === item.name && styles.itemSelected,
+                    ]}
+                    onPress={() => setSelectedName(item.name)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.itemText} numberOfLines={1}>
+                      {item.name}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => handleDelete(item.name)}
+                      disabled={deletingName === item.name}
+                      hitSlop={12}
+                      style={styles.deleteBtn}
+                    >
+                      {deletingName === item.name ? (
+                        <ActivityIndicator size="small" color="#dc2626" />
+                      ) : (
+                        <Ionicons name="trash-outline" size={20} color="#dc2626" />
+                      )}
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+              />
+
+              <View style={styles.actions}>
+                <TouchableOpacity style={styles.cancelBtn} onPress={onClose} activeOpacity={0.7}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.openBtn, !selectedName && styles.openBtnDisabled]}
+                  onPress={handleOpen}
+                  disabled={!selectedName}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.openText}>Open</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </Pressable>
     </Modal>
@@ -211,6 +299,9 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 8,
+  },
+  modalScrollContent: {
+    paddingBottom: 16,
   },
   empty: {
     fontSize: 14,
