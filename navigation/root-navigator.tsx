@@ -1,3 +1,4 @@
+import { Platform, useWindowDimensions } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { navigationRef } from '../lib/navigation-ref'
@@ -29,9 +30,20 @@ import { BehindHandyCueScreen } from '../screens/behind-handycue'
 const Stack = createNativeStackNavigator()
 
 export function RootNavigator() {
+  const { width, height } = useWindowDimensions()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
+
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={
+          isAndroidLandscape
+            ? {
+                headerTitleStyle: { fontSize: 18, fontWeight: '600' },
+              }
+            : undefined
+        }
+      >
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'HandyCue' }} />
         <Stack.Screen
           name="Account"
