@@ -7,16 +7,14 @@ import type { CueStep, CustomTextStep, TimerStep, RestStep } from './cueCraft.ty
 export type CueCraftUserSettings = {
   inputSettings?: {
     getReadyTime?: { min: number; step: number }
-    timerDuration?: { min: number; step: number }
-    restDuration?: { min: number; step: number }
+    duration?: { min: number; step: number }
     repsCount?: { min: number; step: number }
     setsCount?: { min: number; step: number }
     setsRestBetween?: { min: number; step: number }
   }
   defaultValues?: {
     getReadyTime?: number
-    timerDuration?: number
-    restDuration?: number
+    duration?: number
     repsCount?: number
     setsCount?: number
     setsRestBetween?: number
@@ -27,31 +25,33 @@ export function getFeatureInputSettings(
   userSettings: CueCraftUserSettings | null | undefined,
   defaults: { inputSettings: Record<string, unknown>; defaultValues: Record<string, number> }
 ) {
-  return {
-    inputSettings: {
-      ...defaults.inputSettings,
-      ...(userSettings?.inputSettings ?? {}),
-    },
-    defaultValues: {
-      ...defaults.defaultValues,
-      ...(userSettings?.defaultValues ?? {}),
-    },
+  const ui = (userSettings?.inputSettings ?? {}) as Record<string, unknown>
+  const uv = (userSettings?.defaultValues ?? {}) as Record<string, unknown>
+  // Backward compat: map legacy timerDuration -> duration
+  const inputSettings = {
+    ...defaults.inputSettings,
+    ...ui,
+    ...(ui.timerDuration != null && ui.duration == null ? { duration: ui.timerDuration } : {}),
   }
+  const defaultValues = {
+    ...defaults.defaultValues,
+    ...uv,
+    ...(uv.timerDuration != null && uv.duration == null ? { duration: uv.timerDuration } : {}),
+  }
+  return { inputSettings, defaultValues }
 }
 
 export const cueCraftDefaults = {
   inputSettings: {
     getReadyTime: { min: 0, step: 1 },
-    timerDuration: { min: 5, step: 5 },
-    restDuration: { min: 5, step: 5 },
+    duration: { min: 0, step: 5 },
     repsCount: { min: 1, step: 1 },
     setsCount: { min: 1, step: 1 },
     setsRestBetween: { min: 0, step: 5 },
   },
   defaultValues: {
     getReadyTime: 5,
-    timerDuration: 30,
-    restDuration: 20,
+    duration: 30,
     repsCount: 5,
     setsCount: 1,
     setsRestBetween: 20,
@@ -60,8 +60,7 @@ export const cueCraftDefaults = {
 
 export const CUE_CRAFT_FIELD_LIMITS = {
   getReadyTime: { minLimit: 0 },
-  timerDuration: { minLimit: 1 },
-  restDuration: { minLimit: 1 },
+  duration: { minLimit: 0 },
   repsCount: { minLimit: 1 },
   setsCount: { minLimit: 1 },
   setsRestBetween: { minLimit: 0 },
@@ -76,24 +75,26 @@ export function migrateSteps(steps: CueStep[]): CueStep[] {
   return steps.map((step) => {
     if (step.type === 'timer') {
       const t = step as TimerStep
+      const dur = t.duration
       return {
         id: step.id,
         type: 'customText' as const,
         text: '',
-        duration: t.duration,
-        calloutInterval: t.calloutInterval ?? (t.duration <= 24 ? 0 : 10),
-        countdownFrom: t.countdownFrom ?? 10,
+        duration: dur,
+        calloutInterval: t.calloutInterval ?? (dur <= 24 ? 0 : 10),
+        countdownFrom: Math.min(t.countdownFrom ?? 10, dur),
       } satisfies CustomTextStep
     }
     if (step.type === 'rest') {
       const r = step as RestStep
+      const dur = r.duration
       return {
         id: step.id,
         type: 'customText' as const,
         text: 'Rest',
-        duration: r.duration,
+        duration: dur,
         calloutInterval: 0,
-        countdownFrom: 10,
+        countdownFrom: Math.min(10, dur),
       } satisfies CustomTextStep
     }
     return step
@@ -105,12 +106,11 @@ export function getDefaultSteps(settings?: CueCraftUserSettings | null): CueStep
   const getReady = dv?.getReadyTime ?? cueCraftDefaults.defaultValues.getReadyTime
 
   return [
-    { id: genId(), type: 'getReady', duration: getReady },
+    { id: genId(), type: 'getReady', duration: 2 },
     { id: genId(), type: 'sets', count: 2, restBetween: 60, announceRestCountdown: true },
-    { id: genId(), type: 'reps', count: 5 },
+    { id: genId(), type: 'reps', count: 5, announceReps: false },
     { id: genId(), type: 'customText', text: 'L sit', duration: 15, calloutInterval: 0, countdownFrom: 10 },
-    { id: genId(), type: 'customText', text: 'down' },
-    { id: genId(), type: 'customText', text: 'Rest', duration: 10 },
+    { id: genId(), type: 'customText', text: 'Down', duration: 10, calloutInterval: 0, countdownFrom: 0 },
   ]
 }
 

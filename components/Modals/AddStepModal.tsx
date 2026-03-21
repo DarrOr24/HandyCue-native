@@ -12,8 +12,8 @@ interface AddStepModalProps {
 
 const STEP_OPTIONS: { type: CueStepType; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { type: 'getReady', label: 'Get ready', icon: 'timer-outline' },
-  { type: 'reps', label: 'Reps (repeat following steps)', icon: 'repeat-outline' },
-  { type: 'sets', label: 'Sets (repeat whole sequence)', icon: 'layers-outline' },
+  { type: 'reps', label: 'Reps (repeats the steps below)', icon: 'repeat-outline' },
+  { type: 'sets', label: 'Sets (repeats the whole sequence)', icon: 'layers-outline' },
   { type: 'customText', label: 'Audio Cue', icon: 'chatbubble-outline' },
 ]
 

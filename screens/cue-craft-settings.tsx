@@ -27,10 +27,8 @@ export function CueCraftSettingsScreen() {
 
   const [getReadyStep, setGetReadyStep] = useState(inputSettings.getReadyTime.step)
   const [getReadyDefault, setGetReadyDefault] = useState(defaultValues.getReadyTime)
-  const [timerStep, setTimerStep] = useState(inputSettings.timerDuration.step)
-  const [timerDefault, setTimerDefault] = useState(defaultValues.timerDuration)
-  const [restStep, setRestStep] = useState(inputSettings.restDuration.step)
-  const [restDefault, setRestDefault] = useState(defaultValues.restDuration)
+  const [durationStep, setDurationStep] = useState(inputSettings.duration.step)
+  const [durationDefault, setDurationDefault] = useState(defaultValues.duration)
   const [repsStep, setRepsStep] = useState(inputSettings.repsCount.step)
   const [repsDefault, setRepsDefault] = useState(defaultValues.repsCount)
   const [setsStep, setSetsStep] = useState(inputSettings.setsCount.step)
@@ -55,10 +53,8 @@ export function CueCraftSettingsScreen() {
         const mergedDef = { ...cueCraftDefaults.defaultValues, ...dv }
         setGetReadyStep(mergedInput.getReadyTime.step)
         setGetReadyDefault(mergedDef.getReadyTime)
-        setTimerStep(mergedInput.timerDuration.step)
-        setTimerDefault(mergedDef.timerDuration)
-        setRestStep(mergedInput.restDuration.step)
-        setRestDefault(mergedDef.restDuration)
+        setDurationStep(mergedInput.duration.step)
+        setDurationDefault(mergedDef.duration)
         setRepsStep(mergedInput.repsCount.step)
         setRepsDefault(mergedDef.repsCount)
         setSetsStep(mergedInput.setsCount.step)
@@ -82,8 +78,7 @@ export function CueCraftSettingsScreen() {
       const cueCraftSettings: CueCraftUserSettings = {
         inputSettings: {
           getReadyTime: { min: cueCraftDefaults.inputSettings.getReadyTime.min, step: getReadyStep },
-          timerDuration: { min: cueCraftDefaults.inputSettings.timerDuration.min, step: timerStep },
-          restDuration: { min: cueCraftDefaults.inputSettings.restDuration.min, step: restStep },
+          duration: { min: cueCraftDefaults.inputSettings.duration.min, step: durationStep },
           repsCount: { min: cueCraftDefaults.inputSettings.repsCount.min, step: repsStep },
           setsCount: { min: cueCraftDefaults.inputSettings.setsCount.min, step: setsStep },
           setsRestBetween: {
@@ -93,15 +88,18 @@ export function CueCraftSettingsScreen() {
         },
         defaultValues: {
           getReadyTime: getReadyDefault,
-          timerDuration: timerDefault,
-          restDuration: restDefault,
+          duration: durationDefault,
           repsCount: repsDefault,
           setsCount: setsDefault,
           setsRestBetween: setsRestDefault,
         },
       }
+      const existingCueCraft = (currentSettings.cueCraft as Record<string, unknown>) ?? {}
       await upsertProfile(session.user.id, {
-        settings: { ...currentSettings, cueCraft: cueCraftSettings },
+        settings: {
+          ...currentSettings,
+          cueCraft: { ...existingCueCraft, ...cueCraftSettings },
+        },
       })
       Alert.alert('Saved', 'CueCraft settings saved successfully.')
       navigation.goBack()
@@ -115,10 +113,8 @@ export function CueCraftSettingsScreen() {
   function handleReset() {
     setGetReadyStep(cueCraftDefaults.inputSettings.getReadyTime.step)
     setGetReadyDefault(cueCraftDefaults.defaultValues.getReadyTime)
-    setTimerStep(cueCraftDefaults.inputSettings.timerDuration.step)
-    setTimerDefault(cueCraftDefaults.defaultValues.timerDuration)
-    setRestStep(cueCraftDefaults.inputSettings.restDuration.step)
-    setRestDefault(cueCraftDefaults.defaultValues.restDuration)
+    setDurationStep(cueCraftDefaults.inputSettings.duration.step)
+    setDurationDefault(cueCraftDefaults.defaultValues.duration)
     setRepsStep(cueCraftDefaults.inputSettings.repsCount.step)
     setRepsDefault(cueCraftDefaults.defaultValues.repsCount)
     setSetsStep(cueCraftDefaults.inputSettings.setsCount.step)
@@ -153,21 +149,12 @@ export function CueCraftSettingsScreen() {
       />
 
       <SettingGroup
-        title="Timer Duration"
-        step={timerStep}
-        onStepChange={setTimerStep}
-        startValue={timerDefault ?? cueCraftDefaults.defaultValues.timerDuration}
-        onStartValueChange={setTimerDefault}
-        minLimit={CUE_CRAFT_FIELD_LIMITS.timerDuration.minLimit}
-      />
-
-      <SettingGroup
-        title="Rest Duration"
-        step={restStep}
-        onStepChange={setRestStep}
-        startValue={restDefault ?? cueCraftDefaults.defaultValues.restDuration}
-        onStartValueChange={setRestDefault}
-        minLimit={CUE_CRAFT_FIELD_LIMITS.restDuration.minLimit}
+        title="Duration"
+        step={durationStep}
+        onStepChange={setDurationStep}
+        startValue={durationDefault ?? cueCraftDefaults.defaultValues.duration}
+        onStartValueChange={setDurationDefault}
+        minLimit={CUE_CRAFT_FIELD_LIMITS.duration.minLimit}
       />
 
       <SettingGroup

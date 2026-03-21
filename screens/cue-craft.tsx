@@ -205,14 +205,7 @@ export function CueCraftScreen() {
   }
 
   function removeStep(index: number) {
-    Alert.alert(
-      'Delete step?',
-      'Are you sure you want to remove this step?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => setSteps((prev) => prev.filter((_, i) => i !== index)) },
-      ]
-    )
+    setSteps((prev) => prev.filter((_, i) => i !== index))
   }
 
   function moveStep(index: number, direction: 'up' | 'down') {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Platform } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Switch, Platform, Alert } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { inputContainerStyle, decrementFloor } from '../theme/input-styles'
 import type { CueStep, CustomTextStep } from '../services/cueCraft.types'
@@ -25,7 +25,7 @@ const STEP_LABELS: Record<string, string> = {
 }
 
 const STEP_HINTS: Record<string, string> = {
-  reps: 'Repeats the following steps',
+  reps: 'Repeats the steps below',
   sets: 'Repeats the whole sequence',
 }
 
@@ -82,7 +82,16 @@ export function CueStepRow({
           </TouchableOpacity>
           <TouchableOpacity
             disabled={disabled}
-            onPress={onRemove}
+            onPress={() => {
+              Alert.alert(
+                'Delete step?',
+                'Are you sure you want to remove this step?',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { text: 'Delete', style: 'destructive', onPress: onRemove },
+                ]
+              )
+            }}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Ionicons name="trash-outline" size={20} color={disabled ? '#ccc' : '#c53030'} />
@@ -90,53 +99,36 @@ export function CueStepRow({
         </View>
       </View>
 
-      {(step.type === 'getReady' || step.type === 'rest') && (
-        <View style={step.type === 'rest' ? styles.repsRow : undefined}>
-          <View style={styles.durationRow}>
-            <Text style={styles.durationLabel}>Duration (sec)</Text>
-            <View style={styles.durationControls}>
-              <TouchableOpacity
-                disabled={disabled}
-                onPress={() => {
-                  const cfg = step.type === 'getReady' ? is.getReadyTime : is.restDuration
-                  const floor = decrementFloor(cfg.min, cfg.step)
-                  onUpdate({
-                    ...step,
-                    duration: Math.max(floor, step.duration - cfg.step),
-                  } as CustomTextStep)
-                }}
-              >
-                <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
-              </TouchableOpacity>
-              <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.duration}</Text>
-              <TouchableOpacity
-                disabled={disabled}
-                onPress={() =>
-                  onUpdate({
-                    ...step,
-                    duration: step.duration + (step.type === 'getReady' ? is.getReadyTime.step : is.restDuration.step),
-                  } as CustomTextStep)
-                }
-              >
-                <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
-              </TouchableOpacity>
-            </View>
+      {step.type === 'getReady' && (
+        <View style={styles.durationRow}>
+          <Text style={styles.durationLabel}>Duration (sec)</Text>
+          <View style={styles.durationControls}>
+            <TouchableOpacity
+              disabled={disabled}
+              onPress={() => {
+                const cfg = is.getReadyTime
+                const floor = decrementFloor(cfg.min, cfg.step)
+                onUpdate({
+                  ...step,
+                  duration: Math.max(floor, step.duration - cfg.step),
+                } as CustomTextStep)
+              }}
+            >
+              <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
+            </TouchableOpacity>
+            <Text style={[styles.value, disabled && styles.valueDisabled]}>{step.duration}</Text>
+            <TouchableOpacity
+              disabled={disabled}
+              onPress={() =>
+                onUpdate({
+                  ...step,
+                  duration: step.duration + is.getReadyTime.step,
+                } as CustomTextStep)
+              }
+            >
+              <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
+            </TouchableOpacity>
           </View>
-          {step.type === 'rest' && (
-            <View style={styles.switchRow}>
-              <Text style={styles.switchLabel}>Say countdown</Text>
-              <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
-                <Switch
-                  value={step.announceCountdown ?? true}
-                  onValueChange={(v) => onUpdate({ ...step, announceCountdown: v })}
-                  disabled={disabled}
-                  trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
-                  thumbColor="#fff"
-                  style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
-                />
-              </View>
-            </View>
-          )}
         </View>
       )}
 
@@ -264,8 +256,7 @@ export function CueStepRow({
                 disabled={disabled}
                 onPress={() => {
                   const dur = step.duration ?? 0
-                  const floor = decrementFloor(is.timerDuration.min, is.timerDuration.step)
-                  const newDuration = Math.max(0, Math.max(floor, dur - is.timerDuration.step))
+                  const newDuration = Math.max(0, dur - is.duration.step)
                   const currentCountdown = step.countdownFrom ?? 10
                   onUpdate({
                     ...step,
@@ -282,12 +273,13 @@ export function CueStepRow({
                 disabled={disabled}
                 onPress={() => {
                   const dur = step.duration ?? 0
-                  const newDuration = dur + is.timerDuration.step
+                  const newDuration = dur + is.duration.step
+                  const currentCountdown = step.countdownFrom ?? 10
                   onUpdate({
                     ...step,
                     duration: newDuration,
                     calloutInterval: defaultCalloutInterval(newDuration),
-                    countdownFrom: step.countdownFrom ?? 10,
+                    countdownFrom: Math.min(currentCountdown, newDuration),
                   } as CustomTextStep)
                 }}
               >
@@ -307,7 +299,7 @@ export function CueStepRow({
                         ...step,
                         calloutInterval: Math.max(
                           0,
-                          (step.calloutInterval ?? defaultCalloutInterval(step.duration ?? 0)) - is.timerDuration.step
+                          (step.calloutInterval ?? defaultCalloutInterval(step.duration ?? 0)) - is.duration.step
                         ),
                       } as CustomTextStep)
                     }
@@ -326,7 +318,7 @@ export function CueStepRow({
                         ...step,
                         calloutInterval: Math.min(
                           step.duration ?? 0,
-                          (step.calloutInterval ?? defaultCalloutInterval(step.duration ?? 0)) + is.timerDuration.step
+                          (step.calloutInterval ?? defaultCalloutInterval(step.duration ?? 0)) + is.duration.step
                         ),
                       } as CustomTextStep)
                     }
@@ -340,26 +332,28 @@ export function CueStepRow({
                 <View style={styles.durationControls}>
                   <TouchableOpacity
                     disabled={disabled}
-                    onPress={() =>
-                      onUpdate({
-                        ...step,
-                        countdownFrom: Math.max(0, (step.countdownFrom ?? 10) - 1),
-                      } as CustomTextStep)
-                    }
+                    onPress={() => {
+                      const dur = step.duration ?? 0
+                      const next = Math.max(0, Math.min(step.countdownFrom ?? 10, dur) - 1)
+                      onUpdate({ ...step, countdownFrom: next } as CustomTextStep)
+                    }}
                   >
                     <Text style={[styles.btn, disabled && styles.btnDisabled]}>−</Text>
                   </TouchableOpacity>
                   <Text style={[styles.value, disabled && styles.valueDisabled]}>
-                    {step.countdownFrom ?? 10}
+                    {(() => {
+                      const dur = step.duration ?? 0
+                      const val = Math.min(step.countdownFrom ?? 10, dur)
+                      return val === 0 ? 'No' : val
+                    })()}
                   </Text>
                   <TouchableOpacity
                     disabled={disabled}
-                    onPress={() =>
-                      onUpdate({
-                        ...step,
-                        countdownFrom: Math.min(step.duration ?? 0, (step.countdownFrom ?? 10) + 1),
-                      } as CustomTextStep)
-                    }
+                    onPress={() => {
+                      const dur = step.duration ?? 0
+                      const current = Math.min(step.countdownFrom ?? 10, dur)
+                      onUpdate({ ...step, countdownFrom: Math.min(dur, current + 1) } as CustomTextStep)
+                    }}
                   >
                     <Text style={[styles.btn, disabled && styles.btnDisabled]}>+</Text>
                   </TouchableOpacity>
