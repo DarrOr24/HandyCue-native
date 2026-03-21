@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import {
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Modal,
   Pressable,
+  ScrollView,
+  useWindowDimensions,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import type { IconName } from './icon-button'
 
@@ -25,11 +29,30 @@ interface OverflowMenuProps {
  */
 export function OverflowMenu({ items }: OverflowMenuProps) {
   const [visible, setVisible] = useState(false)
+  const { width, height } = useWindowDimensions()
+  const insets = useSafeAreaInsets()
+  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   function handleItemPress(item: OverflowMenuItem) {
     setVisible(false)
     item.onPress()
   }
+
+  const menuContent = (
+    <>
+      {items.map((item, idx) => (
+        <TouchableOpacity
+          key={idx}
+          style={[styles.menuItem, idx < items.length - 1 && styles.menuItemBorder]}
+          onPress={() => handleItemPress(item)}
+          activeOpacity={0.7}
+        >
+          <Ionicons name={item.icon} size={22} color="#374151" style={styles.menuIcon} />
+          <Text style={styles.menuLabel}>{item.label}</Text>
+        </TouchableOpacity>
+      ))}
+    </>
+  )
 
   return (
     <>
@@ -48,19 +71,31 @@ export function OverflowMenu({ items }: OverflowMenuProps) {
         animationType="fade"
         onRequestClose={() => setVisible(false)}
       >
-        <Pressable style={styles.backdrop} onPress={() => setVisible(false)}>
-          <View style={styles.menu} onStartShouldSetResponder={() => true}>
-            {items.map((item, idx) => (
-              <TouchableOpacity
-                key={idx}
-                style={[styles.menuItem, idx < items.length - 1 && styles.menuItemBorder]}
-                onPress={() => handleItemPress(item)}
-                activeOpacity={0.7}
+        <Pressable
+          style={[
+            styles.backdrop,
+            isAndroidLandscape && {
+              paddingRight: 16 + insets.right,
+              paddingBottom: 24 + insets.bottom,
+            },
+          ]}
+          onPress={() => setVisible(false)}
+        >
+          <View
+            style={[styles.menu, isAndroidLandscape && { maxHeight: height * 0.55 }]}
+            onStartShouldSetResponder={() => true}
+          >
+            {isAndroidLandscape ? (
+              <ScrollView
+                showsVerticalScrollIndicator={true}
+                bounces={false}
+                style={styles.menuScroll}
               >
-                <Ionicons name={item.icon} size={22} color="#374151" style={styles.menuIcon} />
-                <Text style={styles.menuLabel}>{item.label}</Text>
-              </TouchableOpacity>
-            ))}
+                {menuContent}
+              </ScrollView>
+            ) : (
+              menuContent
+            )}
           </View>
         </Pressable>
       </Modal>
@@ -84,6 +119,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingTop: 56,
     paddingRight: 16,
+  },
+  menuScroll: {
+    maxHeight: '100%',
   },
   menu: {
     backgroundColor: '#fff',
