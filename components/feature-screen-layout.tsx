@@ -30,6 +30,8 @@ interface FeatureScreenLayoutProps {
   useKeyboardAvoiding?: boolean
   /** Offset for KeyboardAvoidingView (e.g. header height). Defaults to 60. */
   keyboardVerticalOffset?: number
+  /** CueCraft-only: 2 equal columns, left=timer+add step, right=inputs, enables drag in landscape */
+  landscapeLayoutVariant?: 'default' | 'cueCraft'
 }
 
 /**
@@ -46,6 +48,7 @@ export function FeatureScreenLayout({
   useNestableScroll = false,
   useKeyboardAvoiding = false,
   keyboardVerticalOffset = 60,
+  landscapeLayoutVariant = 'default',
 }: FeatureScreenLayoutProps) {
   const ScrollComponent = useNestableScroll ? NestableScrollContainer : ScrollView
   const { width, height } = useWindowDimensions()
@@ -67,6 +70,53 @@ export function FeatureScreenLayout({
           ]}
         >
         {useLandscapeLayout ? (
+          landscapeLayoutVariant === 'cueCraft' ? (
+            <>
+              <View style={styles.cueCraftLeftColumn}>
+                <View style={styles.cueCraftTopSection}>
+                  <View style={styles.timerSection}>{timerContent}</View>
+                  <View style={styles.actionsSection}>{actions}</View>
+                </View>
+                <View style={styles.cueCraftBottomSection}>
+                  <View style={styles.cueCraftStickyHeaderWrap}>{stickyHeader}</View>
+                  {footer && <View style={styles.footerLandscape}>{footer}</View>}
+                </View>
+              </View>
+              <View style={styles.cueCraftRightColumn}>
+                {useKeyboardAvoiding ? (
+                  <KeyboardAvoidingView
+                    style={styles.keyboardAvoidingWrapper}
+                    behavior="padding"
+                    keyboardVerticalOffset={keyboardVerticalOffset}
+                  >
+                    <ScrollComponent
+                      style={styles.inputsSection}
+                      contentContainerStyle={[
+                        styles.inputsContent,
+                        inputsDisabled && styles.inputsDisabled,
+                      ]}
+                      showsVerticalScrollIndicator={false}
+                      keyboardShouldPersistTaps="handled"
+                    >
+                      {children}
+                    </ScrollComponent>
+                  </KeyboardAvoidingView>
+                ) : (
+                  <ScrollComponent
+                    style={styles.inputsSection}
+                    contentContainerStyle={[
+                      styles.inputsContent,
+                      inputsDisabled && styles.inputsDisabled,
+                    ]}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                  >
+                    {children}
+                  </ScrollComponent>
+                )}
+              </View>
+            </>
+          ) : (
           <>
             <View style={styles.leftColumn}>
               <View style={styles.timerActionsWrapper}>
@@ -110,6 +160,7 @@ export function FeatureScreenLayout({
               )}
             </View>
           </>
+          )
         ) : (
           <>
             <View style={styles.timerSection}>{timerContent}</View>
@@ -173,6 +224,30 @@ const styles = StyleSheet.create({
     width: LANDSCAPE_LEFT_COLUMN_WIDTH,
     marginRight: 20,
     alignItems: 'center',
+  },
+  cueCraftLeftColumn: {
+    flexShrink: 0,
+    marginRight: 12,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    minWidth: 400,
+  },
+  cueCraftTopSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cueCraftBottomSection: {
+    alignSelf: 'stretch',
+    paddingTop: 12,
+  },
+  cueCraftRightColumn: {
+    flex: 1,
+    minWidth: 0,
+  },
+  cueCraftStickyHeaderWrap: {
+    alignSelf: 'stretch',
   },
   timerActionsWrapper: {
     flex: 1,

@@ -311,9 +311,7 @@ export function CueCraftScreen() {
             <View style={[styles.headerTextWrap, isAndroidLandscape && styles.headerTextWrapLandscape]}>
               <Text style={styles.sectionTitle}>Sequence</Text>
               <Text style={styles.hint}>
-                {isAndroidLandscape
-                  ? 'Use arrows to reorder'
-                  : 'Long-press the ≡ icon to drag and reorder'}
+                Long-press the ≡ icon to drag and reorder
               </Text>
             </View>
             <TouchableOpacity
@@ -330,58 +328,9 @@ export function CueCraftScreen() {
         }
         useNestableScroll
         useKeyboardAvoiding
+        landscapeLayoutVariant="cueCraft"
       >
-        {isAndroidLandscape ? (
-          <View style={styles.stepsGrid}>
-            {(() => {
-              const mid = Math.ceil(steps.length / 2)
-              const col1 = steps.slice(0, mid)
-              const col2 = steps.slice(mid)
-              const renderStep = (item: CueStep, index: number) => (
-                <View key={item.id} style={styles.stepCardLandscape}>
-                  <View style={styles.stepRowWrapper}>
-                    <View style={styles.dragHandlePlaceholder} />
-                    <View style={styles.stepRowContent}>
-                      <CueStepRow
-                        step={item}
-                        index={index}
-                        total={steps.length}
-                        onUpdate={(s) => updateStep(index, s)}
-                        onRemove={() => removeStep(index)}
-                        onDuplicate={() => duplicateStep(index)}
-                        onMoveUp={() => moveStep(index, 'up')}
-                        onMoveDown={() => moveStep(index, 'down')}
-                        disabled={inputsDisabled}
-                        inputSettings={
-                          (() => {
-                            const cueCraft = (profile?.settings as Record<string, unknown>)
-                              ?.cueCraft as CueCraftUserSettings | undefined
-                            const { inputSettings } = getFeatureInputSettings(
-                              cueCraft,
-                              cueCraftDefaults
-                            )
-                            return inputSettings as typeof cueCraftDefaults.inputSettings
-                          })()
-                        }
-                      />
-                    </View>
-                  </View>
-                </View>
-              )
-              return (
-                <>
-                  <View style={styles.stepsColumn}>
-                    {col1.map((item, i) => renderStep(item, i))}
-                  </View>
-                  <View style={styles.stepsColumn}>
-                    {col2.map((item, i) => renderStep(item, mid + i))}
-                  </View>
-                </>
-              )
-            })()}
-          </View>
-        ) : (
-          <NestableDraggableFlatList
+        <NestableDraggableFlatList
             data={steps}
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => setSteps(data)}
@@ -430,7 +379,6 @@ export function CueCraftScreen() {
               )
             }}
           />
-        )}
       </FeatureScreenLayout>
 
       <AddStepModal
@@ -495,20 +443,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#fff',
-  },
-  stepsGrid: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  stepsColumn: {
-    flex: 1,
-    minWidth: 0,
-  },
-  stepCardLandscape: {
-    marginBottom: 12,
-  },
-  dragHandlePlaceholder: {
-    width: 8,
   },
   stepRowWrapper: {
     flexDirection: 'row',

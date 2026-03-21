@@ -59,7 +59,12 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
 
   const modalContent = (
     <>
-      <Text style={styles.title}>Add step</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>Add step</Text>
+        <TouchableOpacity onPress={onCancel} hitSlop={12} style={styles.closeBtn}>
+          <Ionicons name="close" size={24} color="#6b7280" />
+        </TouchableOpacity>
+      </View>
       {STEP_OPTIONS.map((opt) => (
         <TouchableOpacity
           key={opt.type}
@@ -74,9 +79,6 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
           <Ionicons name="chevron-forward" size={20} color="#999" />
         </TouchableOpacity>
       ))}
-      <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
-        <Text style={styles.cancelText}>Cancel</Text>
-      </TouchableOpacity>
     </>
   )
 
@@ -88,10 +90,12 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
       onRequestClose={onCancel}
       statusBarTranslucent={Platform.OS === 'android'}
     >
-      <Pressable style={styles.backdrop} onPress={onCancel}>
-        <View style={styles.backdropInner} onStartShouldSetResponder={() => true}>
+      <View style={styles.backdrop}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
+        <View style={styles.backdropInner} pointerEvents="box-none">
           <View
             style={[styles.modal, isAndroidLandscape && { maxHeight: height * 0.7 }]}
+            onStartShouldSetResponder={() => true}
           >
           {isAndroidLandscape ? (
             <ScrollView
@@ -106,7 +110,7 @@ export function AddStepModal({ visible, onAdd, onCancel, defaultValues }: AddSte
           )}
           </View>
         </View>
-      </Pressable>
+      </View>
     </Modal>
   )
 }
@@ -135,11 +139,19 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 320,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 16,
     color: '#374151',
+  },
+  closeBtn: {
+    padding: 4,
   },
   option: {
     flexDirection: 'row',
@@ -154,14 +166,5 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#374151',
-  },
-  cancelBtn: {
-    marginTop: 16,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  cancelText: {
-    fontSize: 16,
-    color: '#6b7280',
   },
 })
