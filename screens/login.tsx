@@ -12,6 +12,7 @@ import {
   ScrollView,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../lib/supabase'
@@ -120,8 +121,10 @@ export function LoginScreen() {
     }
   }
 
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
+
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <KeyboardAvoidingView
         style={styles.keyboard}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

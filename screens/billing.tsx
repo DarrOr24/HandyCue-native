@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 
 export function BillingScreen() {
   const navigation = useNavigation<any>()
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <LinearGradient
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}

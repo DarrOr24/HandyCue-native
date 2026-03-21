@@ -1,5 +1,6 @@
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { useVideoPlayer, VideoView } from 'expo-video'
@@ -8,6 +9,7 @@ export function ExampleVideoPlayerScreen() {
   const navigation = useNavigation<any>()
   const route = useRoute<any>()
   const { videoUrl, title } = route.params as { videoUrl: string; title: string }
+  const safeAreaEdges = useSafeAreaEdges(['top'])
 
   const player = useVideoPlayer(videoUrl, (p) => {
     p.loop = false
@@ -22,7 +24,7 @@ export function ExampleVideoPlayerScreen() {
         contentFit="contain"
         nativeControls={true}
       />
-      <SafeAreaView style={styles.overlay} edges={['top']}>
+      <SafeAreaView style={styles.overlay} edges={safeAreaEdges}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backBtn}

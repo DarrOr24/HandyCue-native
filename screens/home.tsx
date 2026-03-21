@@ -21,6 +21,7 @@ import { MenuHint } from "../components/menu-hint";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { clearMenuHintDismissed } from "../services/menu-hint.service";
+import { useSafeAreaEdges } from "../hooks/useSafeAreaEdges";
 
 const FEATURES = [
   {
@@ -65,6 +66,7 @@ const CARD_HEIGHT_MAX = 120;
 export function HomeScreen() {
   const navigation = useNavigation<any>();
   const { session } = useAuth();
+  const safeAreaEdges = useSafeAreaEdges(["bottom"]);
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const useGrid = Platform.OS === "android" && isLandscape;
@@ -146,7 +148,7 @@ export function HomeScreen() {
   }, [navigation, session]);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={safeAreaEdges}>
       <MenuHint featureKey="home" text="to discover HandyCue's story" />
       <LinearGradient
         colors={["#ffffff", "#e0f0eb"]}

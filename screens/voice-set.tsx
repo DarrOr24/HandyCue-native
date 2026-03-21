@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import {
@@ -59,8 +60,10 @@ export function VoiceSetScreen() {
     }
   }
 
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
+
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

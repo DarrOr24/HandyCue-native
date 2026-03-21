@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -18,6 +19,7 @@ export function ExampleVideosScreen() {
   const [scrollHeight, setScrollHeight] = useState(0)
   const featureKey = route.params?.featureKey ?? 'drillDJ'
   const config = EXAMPLE_VIDEOS[featureKey]
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   function handleVideoPress(video: ExampleVideo) {
     if (video.available) {
@@ -33,7 +35,7 @@ export function ExampleVideosScreen() {
 
   if (!config) {
     return (
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={safeAreaEdges}>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -55,7 +57,7 @@ export function ExampleVideosScreen() {
   const pageTitle = `${config.title} – Example videos`
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

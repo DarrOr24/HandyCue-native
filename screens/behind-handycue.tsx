@@ -15,19 +15,21 @@ import {
   InfoParagraph,
   InfoSectionTitle,
 } from '../components/info-screen-layout'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 
 const CONTACT_EMAIL = 'darrmorgan@gmail.com'
 
 export function BehindHandyCueScreen() {
   const navigation = useNavigation<any>()
   const [fontsLoaded] = useFonts({ DancingScript_400Regular })
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   function handleContact() {
     Linking.openURL(`mailto:${CONTACT_EMAIL}`)
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

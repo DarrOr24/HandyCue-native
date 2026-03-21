@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { ReactNode } from 'react'
@@ -15,9 +16,10 @@ interface InfoScreenLayoutProps {
  */
 export function InfoScreenLayout({ title, children }: InfoScreenLayoutProps) {
   const navigation = useNavigation<any>()
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

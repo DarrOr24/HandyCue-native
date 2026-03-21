@@ -18,6 +18,7 @@ import { getProfile, upsertProfile, type Profile } from '../services/profile.ser
 import { supabase } from '../lib/supabase'
 import { clearMenuHintDismissed } from '../services/menu-hint.service'
 import { validatePassword } from '../lib/password-validation'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 
 export function AccountScreen() {
   const navigation = useNavigation<any>()
@@ -31,6 +32,7 @@ export function AccountScreen() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [updatingPassword, setUpdatingPassword] = useState(false)
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -123,7 +125,7 @@ export function AccountScreen() {
 
   if (!session) {
     return (
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={safeAreaEdges}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} hitSlop={12}>
             <Ionicons name="arrow-back" size={24} color="#374151" />
@@ -140,7 +142,7 @@ export function AccountScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={safeAreaEdges}>
         <View style={styles.centered}>
           <ActivityIndicator size="large" color="#5B9A8B" />
         </View>
@@ -149,7 +151,7 @@ export function AccountScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} hitSlop={12}>
           <Ionicons name="arrow-back" size={24} color="#374151" />

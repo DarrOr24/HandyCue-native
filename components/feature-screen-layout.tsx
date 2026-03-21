@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
 import { NestableScrollContainer } from 'react-native-draggable-flatlist'
@@ -41,9 +42,10 @@ export function FeatureScreenLayout({
   const { width, height } = useWindowDimensions()
   const useLandscapeLayout =
     Platform.OS === 'android' && width > height
+  const safeAreaEdges = useSafeAreaEdges(['bottom'])
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <LinearGradient
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}

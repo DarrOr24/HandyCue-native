@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -36,9 +37,10 @@ export function SettingsScreenLayout({
   const navigation = useNavigation<any>()
   const { width, height } = useWindowDimensions()
   const isAndroidLandscape = Platform.OS === 'android' && width > height
+  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
       <LinearGradient
         colors={['#ffffff', '#e0f0eb']}
         style={StyleSheet.absoluteFillObject}
