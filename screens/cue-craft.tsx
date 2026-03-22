@@ -46,6 +46,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile, saveCueCraftToProfile } from '../services/profile.service'
 import type { CueStep } from '../services/cueCraft.types'
+import { inputContainerStyle } from '../theme/input-styles'
 
 const FEATURE_KEY = 'cueCraft'
 
@@ -307,16 +308,13 @@ export function CueCraftScreen() {
         }
         inputsDisabled={inputsDisabled}
         stickyHeader={
-          <View style={styles.headerRow}>
-            <View style={[styles.headerTextWrap, isAndroidLandscape && styles.headerTextWrapLandscape]}>
-              <Text style={styles.sectionTitle}>Sequence</Text>
-            </View>
+          <View style={[styles.headerRow, isAndroidLandscape ? styles.headerRowCentered : styles.headerRowRight]}>
             <TouchableOpacity
               style={[styles.addBtnCompact, inputsDisabled && styles.addBtnDisabled]}
               onPress={() => setIsAddStepModalOpen(true)}
               disabled={inputsDisabled}
             >
-              <Ionicons name="add" size={22} color={inputsDisabled ? '#999' : '#fff'} />
+              <Ionicons name="add" size={22} color={inputsDisabled ? '#999' : '#5B9A8B'} />
               <Text style={[styles.addBtnCompactText, inputsDisabled && styles.addBtnTextDisabled]}>
                 Add step
               </Text>
@@ -422,25 +420,25 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     flexShrink: 0,
   },
-  headerTextWrap: {
-    flex: 1,
+  headerRowRight: {
+    justifyContent: 'flex-end',
   },
-  headerTextWrapLandscape: {
-    paddingLeft: 8,
+  headerRowCentered: {
+    justifyContent: 'center',
   },
   addBtnCompact: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    paddingHorizontal: 14,
-    backgroundColor: '#5B9A8B',
-    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    ...inputContainerStyle,
   },
   addBtnCompactText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: '500',
+    color: '#5B9A8B',
   },
   stepRowWrapper: {
     flexDirection: 'row',
@@ -452,11 +450,6 @@ const styles = StyleSheet.create({
   },
   stepRowContent: {
     flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#374151',
   },
   addBtn: {
     flexDirection: 'row',
@@ -470,7 +463,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   addBtnDisabled: {
-    backgroundColor: '#d1d5db',
+    opacity: 0.6,
   },
   addBtnText: {
     fontSize: 17,
@@ -478,6 +471,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   addBtnTextDisabled: {
-    color: '#9ca3af',
+    color: '#999',
   },
 })

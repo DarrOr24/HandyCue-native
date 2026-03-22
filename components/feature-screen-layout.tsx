@@ -30,7 +30,7 @@ interface FeatureScreenLayoutProps {
   useKeyboardAvoiding?: boolean
   /** Offset for KeyboardAvoidingView (e.g. header height). Defaults to 60. */
   keyboardVerticalOffset?: number
-  /** CueCraft-only: 2 equal columns, left=timer+add step, right=inputs, enables drag in landscape */
+  /** CueCraft-only: left=timer+add step, right=inputs, enables drag in landscape */
   landscapeLayoutVariant?: 'default' | 'cueCraft'
 }
 
@@ -239,12 +239,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cueCraftLeftColumn: {
-    flexShrink: 0,
-    marginRight: 12,
+    width: LANDSCAPE_LEFT_COLUMN_WIDTH,
+    marginRight: 20,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    minWidth: 400,
   },
   cueCraftTopSection: {
     flex: 1,
