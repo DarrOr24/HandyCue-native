@@ -97,6 +97,8 @@ export function FeatureScreenLayout({
                       ]}
                       showsVerticalScrollIndicator={false}
                       keyboardShouldPersistTaps="handled"
+                      scrollEventThrottle={16}
+                      {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
                     >
                       {children}
                     </ScrollComponent>
@@ -110,6 +112,8 @@ export function FeatureScreenLayout({
                     ]}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
+                    scrollEventThrottle={16}
+                    {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
                   >
                     {children}
                   </ScrollComponent>
@@ -141,6 +145,8 @@ export function FeatureScreenLayout({
                     ]}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
+                    scrollEventThrottle={16}
+                    {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
                   >
                     {children}
                   </ScrollComponent>
@@ -154,6 +160,8 @@ export function FeatureScreenLayout({
                   ]}
                   showsVerticalScrollIndicator={false}
                   keyboardShouldPersistTaps="handled"
+                  scrollEventThrottle={16}
+                  {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
                 >
                   {children}
                 </ScrollComponent>
@@ -180,6 +188,8 @@ export function FeatureScreenLayout({
                   ]}
                   showsVerticalScrollIndicator={false}
                   keyboardShouldPersistTaps="handled"
+                  scrollEventThrottle={16}
+                  {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
                 >
                   {children}
                 </ScrollComponent>
@@ -193,6 +203,8 @@ export function FeatureScreenLayout({
                 ]}
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
+                scrollEventThrottle={16}
+                {...(Platform.OS === 'android' && { nestedScrollEnabled: true })}
               >
                 {children}
               </ScrollComponent>
@@ -211,6 +223,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     width: '100%',
+    minHeight: 0,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 16,
@@ -245,6 +258,7 @@ const styles = StyleSheet.create({
   cueCraftRightColumn: {
     flex: 1,
     minWidth: 0,
+    minHeight: 0,
   },
   cueCraftStickyHeaderWrap: {
     alignSelf: 'stretch',
@@ -257,6 +271,7 @@ const styles = StyleSheet.create({
   rightColumn: {
     flex: 1,
     minWidth: 0,
+    minHeight: 0,
   },
   timerSection: {
     marginTop: Platform.OS === 'ios' ? 0 : 8,
@@ -269,8 +284,8 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
-  keyboardAvoidingWrapper: { flex: 1 },
-  inputsSection: { flex: 1, width: '100%' },
+  keyboardAvoidingWrapper: { flex: 1, minHeight: 0 },
+  inputsSection: { flex: 1, width: '100%', minHeight: 0 },
   inputsContent: {
     flexGrow: 1,
     paddingBottom: 16,
