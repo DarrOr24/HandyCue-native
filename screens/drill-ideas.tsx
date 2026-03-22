@@ -94,15 +94,15 @@ export function DrillIdeasScreen() {
 
 const contentStyles = StyleSheet.create({
   sectionTitle: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
   },
   paragraph: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#374151',
-    lineHeight: 22,
+    lineHeight: 24,
     marginBottom: 16,
   },
   paragraphBeforeList: {
@@ -151,17 +151,17 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   bullet: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#374151',
     marginRight: 8,
-    lineHeight: 22,
+    lineHeight: 24,
   },
   bulletText: {
     flex: 1,
     minWidth: 0,
     flexShrink: 1,
-    fontSize: 15,
+    fontSize: 17,
     color: '#374151',
-    lineHeight: 22,
+    lineHeight: 24,
   },
 })

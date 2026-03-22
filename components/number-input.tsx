@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
+import { inputContainerStyle, getInputHeightStyle } from '../theme/input-styles'
 
 interface NumberInputProps {
   label: string
@@ -17,7 +17,7 @@ export function NumberInput({
   disabled = false,
 }: NumberInputProps) {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, getInputHeightStyle()]}>
       <Text style={[styles.label, disabled && styles.labelDisabled]} numberOfLines={2}>
         {label}
       </Text>
@@ -37,7 +37,6 @@ export function NumberInput({
 const styles = StyleSheet.create({
   row: {
     width: '100%',
-    height: INPUT_HEIGHT,
     padding: 12,
     justifyContent: 'space-between',
     ...inputContainerStyle,

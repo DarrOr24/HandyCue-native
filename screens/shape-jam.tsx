@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
   Platform,
 } from 'react-native'
-import { inputContainerStyle, decrementFloor, INPUT_HEIGHT } from '../theme/input-styles'
+import { inputContainerStyle, decrementFloor, getInputHeightStyle } from '../theme/input-styles'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -439,7 +439,7 @@ export function ShapeJamScreen() {
               <TouchableOpacity
                 style={[
                   styles.topBtn,
-                  isAndroidLandscape && styles.topBtnLandscape,
+                  isAndroidLandscape && [styles.topBtnLandscape, getInputHeightStyle()],
                   inputsDisabled && styles.topBtnDisabled,
                 ]}
                 onPress={async () => {
@@ -462,7 +462,7 @@ export function ShapeJamScreen() {
               <TouchableOpacity
                 style={[
                   styles.topBtn,
-                  isAndroidLandscape && styles.topBtnLandscape,
+                  isAndroidLandscape && [styles.topBtnLandscape, getInputHeightStyle()],
                   inputsDisabled && styles.topBtnDisabled,
                 ]}
                 onPress={addShape}
@@ -649,9 +649,7 @@ const styles = StyleSheet.create({
     padding: 12,
     ...inputContainerStyle,
   },
-  topBtnLandscape: {
-    height: INPUT_HEIGHT,
-  },
+  topBtnLandscape: {},
   topBtnDisabled: {
     opacity: 0.6,
   },

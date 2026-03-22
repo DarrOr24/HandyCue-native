@@ -13,37 +13,40 @@ interface FeatureCardProps {
   flexible?: boolean
   /** Card height when flexible (responsive to screen size). */
   cardHeight?: number
+  /** When true, use minHeight so card can grow with scaled-up text. */
+  allowGrow?: boolean
 }
 
-export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGrid, flexible, cardHeight = 100 }: FeatureCardProps) {
+export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGrid, flexible, cardHeight = 100, allowGrow }: FeatureCardProps) {
   const zoom = imageZoom > 1 ? imageZoom : 1
-  const size = flexible ? cardHeight : 120
+  const size = allowGrow ? CARD_HEIGHT_MIN : flexible && cardHeight ? cardHeight : 120
   const imgSize = zoom > 1 ? size / zoom : size
 
   return (
     <TouchableOpacity
       style={[
         styles.card,
-        !flexible && styles.cardFixed,
+        !flexible && !allowGrow && styles.cardFixed,
         inGrid && styles.cardInGrid,
-        flexible && [styles.cardFlexible, { height: cardHeight }],
+        flexible && cardHeight && [styles.cardFlexible, { height: cardHeight }],
+        allowGrow && [styles.cardFlexible, { minHeight: CARD_HEIGHT_MIN, alignItems: 'center' }],
       ]}
       activeOpacity={0.7}
       onPress={onPress}
     >
-      <View style={[styles.imageWrap, flexible && { width: cardHeight, height: cardHeight }]}>
+      <View style={[styles.imageWrap, (flexible && cardHeight) && { width: cardHeight, height: cardHeight }, allowGrow && { width: CARD_HEIGHT_MIN, height: CARD_HEIGHT_MIN, backgroundColor: '#f5f7f6' }]}>
         <Image
           source={img}
           style={[styles.image, { width: imgSize, height: imgSize }]}
           resizeMode="cover"
         />
       </View>
-      <View style={[styles.text, flexible && cardHeight < 108 && styles.textCompact]}>
+      <View style={[styles.text, flexible && cardHeight && cardHeight < 108 && styles.textCompact]}>
         <Text style={styles.label}>{label}</Text>
         <Text
           style={[
             styles.subtitle,
-            flexible && cardHeight < 108 && styles.subtitleCompact,
+            flexible && cardHeight && cardHeight < 108 && styles.subtitleCompact,
           ]}
         >
           {subtitle}
@@ -52,6 +55,8 @@ export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGr
     </TouchableOpacity>
   )
 }
+
+const CARD_HEIGHT_MIN = 95
 
 const styles = StyleSheet.create({
   card: {
@@ -94,6 +99,6 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   label: { fontSize: 19, fontWeight: '600', marginBottom: 6 },
-  subtitle: { fontSize: 14, color: '#666', lineHeight: 21 },
-  subtitleCompact: { fontSize: 12, lineHeight: 17 },
+  subtitle: { fontSize: 16, color: '#666', lineHeight: 23 },
+  subtitleCompact: { fontSize: 14, lineHeight: 20 },
 })

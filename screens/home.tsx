@@ -9,6 +9,7 @@ import {
   Image,
   useWindowDimensions,
   Platform,
+  PixelRatio,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,7 +28,7 @@ const FEATURES = [
   {
     id: "holdOn",
     label: "HoldOn",
-    subtitle: "Your voice-guided timer for balance and endurance holds",
+    subtitle: "Your voice-guided timer for endurance holds",
     img: require("../assets/imgs/straight-handstand.png"),
   },
   {
@@ -39,13 +40,13 @@ const FEATURES = [
   {
     id: "shapeJam",
     label: "ShapeJam",
-    subtitle: "Your dynamic guide for handstand shape transitions",
+    subtitle: "Your dynamic guide for shape transitions",
     img: require("../assets/imgs/diamond-handstand.png"),
   },
   {
     id: "drillDJ",
     label: "DrillDJ",
-    subtitle: "Your tempo-driven, voice-guided drill companion",
+    subtitle: "Your tempo-driven drill companion",
     img: require("../assets/imgs/split-leg-handstand.png"),
   },
   {
@@ -68,6 +69,8 @@ export function HomeScreen() {
   const { session } = useAuth();
   const safeAreaEdges = useSafeAreaEdges(["bottom"]);
   const { width, height } = useWindowDimensions();
+  const fontScale = PixelRatio.getFontScale();
+  const isScaledUp = fontScale > 1;
   const isLandscape = width > height;
   const useGrid = Platform.OS === "android" && isLandscape;
   const numColumns = useGrid ? 2 : 1;
@@ -81,13 +84,15 @@ export function HomeScreen() {
 
   const portraitCardHeight = useGrid
     ? undefined
-    : Math.min(
-        CARD_HEIGHT_MAX,
-        Math.max(
-          CARD_HEIGHT_MIN,
-          (height - PORTRAIT_OVERHEAD - PORTRAIT_CARD_GAP * 5) / 6
-        )
-      );
+    : isScaledUp
+      ? undefined
+      : Math.min(
+          CARD_HEIGHT_MAX,
+          Math.max(
+            CARD_HEIGHT_MIN,
+            (height - PORTRAIT_OVERHEAD - PORTRAIT_CARD_GAP * 5) / 6
+          )
+        );
 
   const profileMenuItems = [
     {
@@ -159,10 +164,10 @@ export function HomeScreen() {
         contentContainerStyle={[
           styles.content,
           useGrid && styles.contentLandscape,
-          !useGrid && styles.contentPortraitFit,
+          !useGrid && !isScaledUp && styles.contentPortraitFit,
         ]}
-        scrollEnabled={useGrid}
-        showsVerticalScrollIndicator={useGrid}
+        scrollEnabled={useGrid || isScaledUp}
+        showsVerticalScrollIndicator={useGrid || isScaledUp}
       >
         {useGrid ? (
           <View
@@ -217,8 +222,9 @@ export function HomeScreen() {
                 subtitle={f.subtitle}
                 img={f.img}
                 imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-                flexible
+                flexible={!isScaledUp}
                 cardHeight={portraitCardHeight}
+                allowGrow={isScaledUp}
                 onPress={() => {
                   if (f.id === "holdOn") navigation.navigate("HoldOn")
                   else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -228,7 +234,7 @@ export function HomeScreen() {
                 }}
               />
             ))}
-            <HomeLinksCards flexible cardHeight={portraitCardHeight} />
+            <HomeLinksCards flexible={!isScaledUp} cardHeight={portraitCardHeight} allowGrow={isScaledUp} />
           </View>
         )}
 

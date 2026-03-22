@@ -24,13 +24,15 @@ interface HomeLinksCardsProps {
   inGrid?: boolean
   flexible?: boolean
   cardHeight?: number
+  /** When true, use minHeight so cards can grow with scaled-up text. */
+  allowGrow?: boolean
 }
 
 /**
  * Two compact cards for the home screen: Example Videos and Drill Ideas.
  * Each opens a feature picker, then navigates to the appropriate screen.
  */
-export function HomeLinksCards({ inGrid, flexible, cardHeight = 100 }: HomeLinksCardsProps = {}) {
+export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }: HomeLinksCardsProps = {}) {
   const navigation = useNavigation<any>()
   const [exampleMenuVisible, setExampleMenuVisible] = useState(false)
   const [drillMenuVisible, setDrillMenuVisible] = useState(false)
@@ -47,7 +49,10 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100 }: HomeLinks
 
   const cardStyle = [
     styles.card,
-    (flexible || inGrid) && [styles.cardFlexible, cardHeight && { height: cardHeight }],
+    (flexible || inGrid || allowGrow) && [
+      styles.cardFlexible,
+      allowGrow ? { minHeight: 58 } : cardHeight && { height: cardHeight },
+    ],
     inGrid && styles.cardInGrid,
   ]
 
@@ -66,9 +71,9 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100 }: HomeLinks
           onPress={() => setExampleMenuVisible(true)}
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="play-circle" size={40} color="#6b7280" />
+            <Ionicons name="play-circle" size={36} color="#6b7280" />
           </View>
-          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && styles.labelCompact]}>
+          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
             Example Videos
           </Text>
         </TouchableOpacity>
@@ -79,9 +84,9 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100 }: HomeLinks
           onPress={() => setDrillMenuVisible(true)}
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="bulb" size={40} color="#6b7280" />
+            <Ionicons name="bulb" size={36} color="#6b7280" />
           </View>
-          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && styles.labelCompact]}>
+          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
             Drill Ideas
           </Text>
         </TouchableOpacity>
@@ -192,8 +197,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e5ddd0',
-    minHeight: 72,
-    paddingVertical: 12,
+    minHeight: 58,
+    paddingVertical: 8,
   },
   cardFlexible: {
     marginBottom: 0,
@@ -204,16 +209,16 @@ const styles = StyleSheet.create({
   iconWrap: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: '#374151',
     textAlign: 'center',
   },
   labelCompact: {
-    fontSize: 12,
+    fontSize: 14,
   },
   backdrop: {
     flex: 1,

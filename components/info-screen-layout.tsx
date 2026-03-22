@@ -80,19 +80,19 @@ const styles = StyleSheet.create({
 
 const contentStyles = StyleSheet.create({
   emphasis: {
-    fontSize: 16,
+    fontSize: 17,
     fontStyle: 'italic',
     color: '#374151',
     marginBottom: 16,
   },
   paragraph: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#374151',
-    lineHeight: 22,
+    lineHeight: 24,
     marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 8,

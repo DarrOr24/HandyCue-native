@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   text: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#5B9A8B',
     textDecorationLine: 'underline',
-    lineHeight: 22,
+    lineHeight: 24,
   },
 })

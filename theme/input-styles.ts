@@ -1,3 +1,5 @@
+import { PixelRatio } from 'react-native'
+
 /**
  * Shared input styling for features and settings.
  * Single source of truth — change here to update all inputs app-wide.
@@ -9,6 +11,11 @@ export const INPUT_BORDER_RADIUS = 10
 
 /** Fixed height for all feature inputs so NumberInput, SelectInput, etc. stay aligned. */
 export const INPUT_HEIGHT = 88
+
+/** When font scaled up, use minHeight so inputs can grow. Otherwise fixed height. */
+export function getInputHeightStyle(): { height?: number; minHeight?: number } {
+  return PixelRatio.getFontScale() > 1 ? { minHeight: 72 } : { height: INPUT_HEIGHT }
+}
 
 /** Floor for decrement: when min > 0 (0 not allowed), floor = step. When min is 0, allow 0. */
 export function decrementFloor(min: number, step: number): number {

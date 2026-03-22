@@ -31,7 +31,7 @@ import {
   runCallout,
   type CalloutConfig,
 } from '../services/drillDJ.service'
-import { decrementFloor, INPUT_HEIGHT } from '../theme/input-styles'
+import { decrementFloor, getInputHeightStyle } from '../theme/input-styles'
 import {
   drillDJDefaults,
   getFeatureInputSettings,
@@ -646,7 +646,7 @@ export function DrillDJScreen() {
         >
           <FeatureInputsGrid>
             <FeatureInputsGrid.GridItem>
-            <View style={[styles.toggleRow, isAndroidLandscape && styles.toggleRowLandscape]}>
+            <View style={[styles.toggleRow, isAndroidLandscape && [styles.toggleRowLandscape, getInputHeightStyle()]]}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Say reps
               </Text>
@@ -663,7 +663,7 @@ export function DrillDJScreen() {
             </View>
             </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
-            <View style={[styles.toggleRow, isAndroidLandscape && styles.toggleRowLandscape]}>
+            <View style={[styles.toggleRow, isAndroidLandscape && [styles.toggleRowLandscape, getInputHeightStyle()]]}>
               <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
                 Voice count
               </Text>
@@ -964,9 +964,7 @@ const styles = StyleSheet.create({
   toggleLabelDisabled: {
     color: '#999',
   },
-  toggleRowLandscape: {
-    height: INPUT_HEIGHT,
-  },
+  toggleRowLandscape: {},
   switchWrapperIOS: {
     alignItems: 'center',
     justifyContent: 'center',

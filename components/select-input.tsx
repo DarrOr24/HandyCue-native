@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { inputContainerStyle, INPUT_HEIGHT } from '../theme/input-styles'
+import { inputContainerStyle, getInputHeightStyle } from '../theme/input-styles'
 
 export interface SelectOption {
   value: string
@@ -48,7 +48,7 @@ export function SelectInput({
   }
 
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, getInputHeightStyle()]}>
       <View style={styles.labelRow}>
         <Text style={[styles.label, disabled && styles.labelDisabled]} numberOfLines={2}>
           {label}
@@ -151,7 +151,6 @@ export function SelectInput({
 const styles = StyleSheet.create({
   row: {
     width: '100%',
-    height: INPUT_HEIGHT,
     padding: 12,
     justifyContent: 'space-between',
     ...inputContainerStyle,
