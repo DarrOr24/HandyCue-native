@@ -15,7 +15,7 @@ export function EntryBuddyInfoScreen() {
 
       <InfoParagraph>
         EntryBuddy guides you through handstand entries with precision and timing.
-        Set your reps, sets, rest intervals, and hold times — and train with structure and flow.
+        Set your reps, interval between reps, sets, rest time, and hold times — and train with structure and flow.
       </InfoParagraph>
 
       <InfoParagraph>

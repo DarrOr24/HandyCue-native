@@ -480,7 +480,7 @@ export function EntryBuddyScreen() {
           </FeatureInputsGrid.GridItem>
           <FeatureInputsGrid.GridItem>
           <NumberInput
-            label="Time between"
+            label="Interval"
             value={timeBetween}
             onDecrease={() =>
               setTimeBetween((v) =>
