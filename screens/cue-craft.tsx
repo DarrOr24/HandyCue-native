@@ -310,16 +310,13 @@ export function CueCraftScreen() {
           <View style={styles.headerRow}>
             <View style={[styles.headerTextWrap, isAndroidLandscape && styles.headerTextWrapLandscape]}>
               <Text style={styles.sectionTitle}>Sequence</Text>
-              <Text style={styles.hint}>
-                Long-press the ≡ icon to drag and reorder
-              </Text>
             </View>
             <TouchableOpacity
               style={[styles.addBtnCompact, inputsDisabled && styles.addBtnDisabled]}
               onPress={() => setIsAddStepModalOpen(true)}
               disabled={inputsDisabled}
             >
-              <Ionicons name="add-circle" size={20} color={inputsDisabled ? '#999' : '#fff'} />
+              <Ionicons name="add" size={22} color={inputsDisabled ? '#999' : '#fff'} />
               <Text style={[styles.addBtnCompactText, inputsDisabled && styles.addBtnTextDisabled]}>
                 Add step
               </Text>
@@ -460,11 +457,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
-  },
-  hint: {
-    fontSize: 13,
-    color: '#6b7280',
-    marginTop: 2,
   },
   addBtn: {
     flexDirection: 'row',
