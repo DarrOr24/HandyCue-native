@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   contactText: {
-    fontSize: 15,
+    fontSize: 17,
     color: '#5B9A8B',
     fontWeight: '500',
   },
