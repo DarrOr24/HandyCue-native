@@ -54,6 +54,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
       allowGrow ? { minHeight: LINKS_CARD_HEIGHT_MIN, paddingVertical: 4, justifyContent: 'flex-start' } : cardHeight && { height: cardHeight },
     ],
     inGrid && styles.cardInGrid,
+    inGrid && allowGrow && { alignSelf: 'stretch' },
   ]
 
   return (
@@ -63,6 +64,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
           styles.row,
           flexible && { gap: PORTRAIT_CARD_GAP },
           inGrid && styles.rowInGrid,
+          inGrid && allowGrow && { flex: 1 },
         ]}
       >
         <TouchableOpacity

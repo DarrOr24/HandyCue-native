@@ -74,8 +74,9 @@ export function HomeScreen() {
   const isLandscape = width > height;
   const useGrid = Platform.OS === "android" && isLandscape;
   const numColumns = useGrid ? 2 : 1;
+  const landscapePadding = 48; // 24 each side
   const contentWidth = useGrid
-    ? Math.min(width - 40, MAX_CONTENT_WIDTH)
+    ? Math.min(width - landscapePadding, MAX_CONTENT_WIDTH)
     : width - 40;
   const cardWidth =
     numColumns === 1
@@ -170,16 +171,16 @@ export function HomeScreen() {
         showsVerticalScrollIndicator={useGrid || isScaledUp}
       >
         {useGrid ? (
-          <View
-            style={[
-              styles.cardGrid,
-              {
-                width: contentWidth,
-                gap: CARD_GAP,
-                alignSelf: "center",
-              },
-            ]}
-          >
+          <View style={styles.landscapeWrap}>
+            <View
+              style={[
+                styles.cardGrid,
+                {
+                  width: contentWidth,
+                  gap: CARD_GAP,
+                },
+              ]}
+            >
             {FEATURES.map((f) => (
               <View
                 key={f.id}
@@ -194,6 +195,7 @@ export function HomeScreen() {
                   img={f.img}
                   imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
                   inGrid
+                  allowGrow={isScaledUp}
                   onPress={() => {
                     if (f.id === "holdOn") navigation.navigate("HoldOn")
                     else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -210,8 +212,9 @@ export function HomeScreen() {
                 cardWidth !== undefined && { width: cardWidth },
               ]}
             >
-              <HomeLinksCards inGrid cardHeight={120} />
+              <HomeLinksCards inGrid cardHeight={isScaledUp ? undefined : 120} allowGrow={isScaledUp} />
             </View>
+          </View>
           </View>
         ) : (
           <View style={[styles.portraitCards, { gap: PORTRAIT_CARD_GAP }]}>
@@ -248,7 +251,16 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
-  contentLandscape: { paddingHorizontal: 32 },
+  contentLandscape: {
+    paddingHorizontal: 0,
+    paddingTop: 20,
+    paddingBottom: 24,
+  },
+  landscapeWrap: {
+    paddingHorizontal: 24,
+    alignSelf: "stretch",
+    alignItems: "center",
+  },
   contentPortraitFit: { flexGrow: 1 },
   portraitCards: {
     flex: 1,
