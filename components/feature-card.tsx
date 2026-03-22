@@ -34,14 +34,14 @@ export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGr
       activeOpacity={0.7}
       onPress={onPress}
     >
-      <View style={[styles.imageWrap, (flexible && cardHeight) && { width: cardHeight, height: cardHeight }, allowGrow && { width: CARD_HEIGHT_MIN, height: CARD_HEIGHT_MIN, backgroundColor: '#f5f7f6' }]}>
+      <View style={[styles.imageWrap, (flexible && cardHeight) && { width: cardHeight, height: cardHeight }, allowGrow && { width: CARD_HEIGHT_MIN, height: CARD_HEIGHT_MIN }]}>
         <Image
           source={img}
           style={[styles.image, { width: imgSize, height: imgSize }]}
           resizeMode="cover"
         />
       </View>
-      <View style={[styles.text, flexible && cardHeight && cardHeight < 108 && styles.textCompact]}>
+      <View style={[styles.text, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.textCompact, allowGrow && styles.textAllowGrow]}>
         <Text style={styles.label}>{label}</Text>
         <Text
           style={[
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    borderRadius: 12,
   },
   image: {
     width: 120,
@@ -97,6 +98,9 @@ const styles = StyleSheet.create({
   },
   textCompact: {
     padding: 12,
+  },
+  textAllowGrow: {
+    padding: 6,
   },
   label: { fontSize: 19, fontWeight: '600', marginBottom: 6 },
   subtitle: { fontSize: 16, color: '#666', lineHeight: 23 },

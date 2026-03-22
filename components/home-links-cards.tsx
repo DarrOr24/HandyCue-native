@@ -51,7 +51,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
     styles.card,
     (flexible || inGrid || allowGrow) && [
       styles.cardFlexible,
-      allowGrow ? { minHeight: 58 } : cardHeight && { height: cardHeight },
+      allowGrow ? { minHeight: LINKS_CARD_HEIGHT_MIN, paddingVertical: 4, justifyContent: 'flex-start' } : cardHeight && { height: cardHeight },
     ],
     inGrid && styles.cardInGrid,
   ]
@@ -71,7 +71,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
           onPress={() => setExampleMenuVisible(true)}
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="play-circle" size={36} color="#6b7280" />
+            <Ionicons name="play-circle" size={40} color="#6b7280" />
           </View>
           <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
             Example Videos
@@ -84,7 +84,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
           onPress={() => setDrillMenuVisible(true)}
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="bulb" size={36} color="#6b7280" />
+            <Ionicons name="bulb" size={40} color="#6b7280" />
           </View>
           <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
             Drill Ideas
@@ -107,6 +107,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
 }
 
 const PORTRAIT_CARD_GAP = 10
+const LINKS_CARD_HEIGHT_MIN = 95 // Same as feature cards – flexible when font scale > 1
 
 function FeaturePickerModal({
   visible,
@@ -197,8 +198,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e5ddd0',
-    minHeight: 58,
-    paddingVertical: 8,
+    minHeight: 72,
+    paddingVertical: 12,
   },
   cardFlexible: {
     marginBottom: 0,
@@ -209,16 +210,16 @@ const styles = StyleSheet.create({
   iconWrap: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     color: '#374151',
     textAlign: 'center',
   },
   labelCompact: {
-    fontSize: 14,
+    fontSize: 12,
   },
   backdrop: {
     flex: 1,
