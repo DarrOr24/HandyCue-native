@@ -454,7 +454,7 @@ export function ShapeJamScreen() {
                   color={inputsDisabled ? '#999' : '#5B9A8B'}
                 />
                 <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
-                  Add shape names
+                  New shape
                 </Text>
               </TouchableOpacity>
             </FeatureInputsGrid.GridItem>

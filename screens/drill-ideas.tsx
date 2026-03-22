@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '600', color: '#374151' },
   headerSpacer: { width: 32 },
   scroll: { flex: 1 },
-  content: { padding: 16, paddingBottom: 32 },
+  content: { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 40 },
   section: { marginBottom: 12 },
   majorSection: {
     marginBottom: 20,

@@ -160,7 +160,7 @@ export function FeatureScreenLayout({
               )}
             </View>
           </>
-          )
+        )
         ) : (
           <>
             <View style={styles.timerSection}>{timerContent}</View>
