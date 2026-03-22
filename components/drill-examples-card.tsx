@@ -79,7 +79,7 @@ export function DrillExamplesCard({ inGrid, flexible, cardHeight = 100 }: DrillE
           )}
         </View>
         <View style={[styles.text, flexible && cardHeight < 108 && styles.textCompact]}>
-          <Text style={styles.label}>Example Videos</Text>
+          <Text style={styles.label}>Demos</Text>
           <Text
             style={[
               styles.subtitle,

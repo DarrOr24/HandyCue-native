@@ -44,8 +44,8 @@ export function CueCraftInfoScreen() {
       <InfoParagraph>
         Audio Cues can have a duration: enter your text (e.g. "L sit" or "Hollow body") and set
         duration to 0 for a quick voice cue, or to a number of seconds for a timed hold. When
-        duration is greater than 0, you'll see <InfoBold>Callout every (sec)</InfoBold> — how often
-        the voice says elapsed time — and <InfoBold>Countdown from</InfoBold> — when it switches to
+        duration is greater than 0, you'll see <InfoBold>Callout</InfoBold> — how often the voice
+        says elapsed time — and <InfoBold>Countdown</InfoBold> — when it switches to
         counting down (e.g. 10, 9, 8...).
       </InfoParagraph>
 

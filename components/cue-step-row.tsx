@@ -56,7 +56,7 @@ export function CueStepRow({
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-        <Text style={styles.index}>{index + 1}</Text>
+        <Text style={styles.index} numberOfLines={1}>{index + 1}</Text>
         <View style={styles.labelWrap}>
           <Text style={styles.label}>{label}</Text>
           {hint && <Text style={styles.hint}>{hint}</Text>}
@@ -108,7 +108,7 @@ export function CueStepRow({
 
       {step.type === 'getReady' && (
         <View style={styles.durationRow}>
-          <Text style={styles.durationLabel}>Duration (sec)</Text>
+          <Text style={styles.durationLabel}>Duration</Text>
           <View style={styles.durationControls}>
             <TouchableOpacity
               disabled={disabled}
@@ -202,7 +202,7 @@ export function CueStepRow({
           {step.count >= 2 && (
             <>
               <View style={styles.durationRow}>
-                <Text style={styles.durationLabel}>Rest between (sec)</Text>
+                <Text style={styles.durationLabel}>Rest</Text>
                 <View style={styles.durationControls}>
                   <TouchableOpacity
                     disabled={disabled}
@@ -259,7 +259,7 @@ export function CueStepRow({
             submitBehavior="blurAndSubmit"
           />
           <View style={styles.durationRow}>
-            <Text style={styles.durationLabel}>Duration (sec)</Text>
+            <Text style={styles.durationLabel}>Duration</Text>
             <View style={styles.durationControls}>
               <TouchableOpacity
                 disabled={disabled}
@@ -299,7 +299,7 @@ export function CueStepRow({
           {(step.duration ?? 0) > 0 && (
             <>
               <View style={styles.durationRow}>
-                <Text style={styles.durationLabel}>Callout every (sec)</Text>
+                <Text style={styles.durationLabel}>Callout</Text>
                 <View style={styles.durationControls}>
                   <TouchableOpacity
                     disabled={disabled}
@@ -337,7 +337,7 @@ export function CueStepRow({
                 </View>
               </View>
               <View style={styles.durationRow}>
-                <Text style={styles.durationLabel}>Countdown from</Text>
+                <Text style={styles.durationLabel}>Countdown</Text>
                 <View style={styles.durationControls}>
                   <TouchableOpacity
                     disabled={disabled}
@@ -388,10 +388,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   index: {
-    width: 24,
+    minWidth: 28,
+    width: 28,
     fontSize: 14,
     fontWeight: '600',
     color: '#5B9A8B',
+    textAlign: 'left',
   },
   labelWrap: {
     flex: 1,

@@ -9,7 +9,6 @@ import {
   Image,
   useWindowDimensions,
   Platform,
-  PixelRatio,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -60,17 +59,14 @@ const FEATURES = [
 const CARD_GAP = 12;
 const MAX_CONTENT_WIDTH = 1500;
 const PORTRAIT_CARD_GAP = 10;
-const PORTRAIT_OVERHEAD = 170; // header, safe area, padding
-const CARD_HEIGHT_MIN = 95;
-const CARD_HEIGHT_MAX = 120;
+/** Min screen width (portrait) to use larger cards. Tweak for different device breakpoints. */
+const LARGE_PHONE_WIDTH = 410;
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
   const { session } = useAuth();
   const safeAreaEdges = useSafeAreaEdges(["bottom"]);
   const { width, height } = useWindowDimensions();
-  const fontScale = PixelRatio.getFontScale();
-  const isScaledUp = fontScale > 1;
   const isLandscape = width > height;
   const useGrid = Platform.OS === "android" && isLandscape;
   const numColumns = useGrid ? 2 : 1;
@@ -82,18 +78,7 @@ export function HomeScreen() {
     numColumns === 1
       ? undefined
       : (contentWidth - CARD_GAP * (numColumns - 1)) / numColumns;
-
-  const portraitCardHeight = useGrid
-    ? undefined
-    : isScaledUp
-      ? undefined
-      : Math.min(
-          CARD_HEIGHT_MAX,
-          Math.max(
-            CARD_HEIGHT_MIN,
-            (height - PORTRAIT_OVERHEAD - PORTRAIT_CARD_GAP * 5) / 6
-          )
-        );
+  const portraitCardSize = !useGrid && width >= LARGE_PHONE_WIDTH ? 120 : 95;
 
   const profileMenuItems = [
     {
@@ -165,10 +150,9 @@ export function HomeScreen() {
         contentContainerStyle={[
           styles.content,
           useGrid && styles.contentLandscape,
-          !useGrid && !isScaledUp && styles.contentPortraitFit,
         ]}
-        scrollEnabled={useGrid || isScaledUp}
-        showsVerticalScrollIndicator={useGrid || isScaledUp}
+        scrollEnabled
+        showsVerticalScrollIndicator
       >
         {useGrid ? (
           <View style={styles.landscapeWrap}>
@@ -195,7 +179,6 @@ export function HomeScreen() {
                   img={f.img}
                   imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
                   inGrid
-                  allowGrow={isScaledUp}
                   onPress={() => {
                     if (f.id === "holdOn") navigation.navigate("HoldOn")
                     else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -212,7 +195,7 @@ export function HomeScreen() {
                 cardWidth !== undefined && { width: cardWidth },
               ]}
             >
-              <HomeLinksCards inGrid cardHeight={isScaledUp ? undefined : 120} allowGrow={isScaledUp} />
+              <HomeLinksCards inGrid />
             </View>
           </View>
           </View>
@@ -225,9 +208,7 @@ export function HomeScreen() {
                 subtitle={f.subtitle}
                 img={f.img}
                 imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-                flexible={!isScaledUp}
-                cardHeight={portraitCardHeight}
-                allowGrow={isScaledUp}
+                cardSize={portraitCardSize}
                 onPress={() => {
                   if (f.id === "holdOn") navigation.navigate("HoldOn")
                   else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -237,7 +218,7 @@ export function HomeScreen() {
                 }}
               />
             ))}
-            <HomeLinksCards flexible={!isScaledUp} cardHeight={portraitCardHeight} allowGrow={isScaledUp} />
+            <HomeLinksCards />
           </View>
         )}
 
@@ -250,7 +231,7 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
-  content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
+  content: { padding: 20, paddingTop: 24, paddingBottom: 24 },
   contentLandscape: {
     paddingHorizontal: 0,
     paddingTop: 20,
@@ -261,10 +242,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     alignItems: "center",
   },
-  contentPortraitFit: { flexGrow: 1 },
-  portraitCards: {
-    flex: 1,
-  },
+  portraitCards: {},
   cardGrid: {
     flexDirection: "row",
     flexWrap: "wrap",

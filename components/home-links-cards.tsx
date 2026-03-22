@@ -22,17 +22,13 @@ const FEATURE_OPTIONS = [
 
 interface HomeLinksCardsProps {
   inGrid?: boolean
-  flexible?: boolean
-  cardHeight?: number
-  /** When true, use minHeight so cards can grow with scaled-up text. */
-  allowGrow?: boolean
 }
 
 /**
- * Two compact cards for the home screen: Example Videos and Drill Ideas.
+ * Two compact cards for the home screen: Demos and Drill Ideas.
  * Each opens a feature picker, then navigates to the appropriate screen.
  */
-export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }: HomeLinksCardsProps = {}) {
+export function HomeLinksCards({ inGrid }: HomeLinksCardsProps = {}) {
   const navigation = useNavigation<any>()
   const [exampleMenuVisible, setExampleMenuVisible] = useState(false)
   const [drillMenuVisible, setDrillMenuVisible] = useState(false)
@@ -49,12 +45,8 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
 
   const cardStyle = [
     styles.card,
-    (flexible || inGrid || allowGrow) && [
-      styles.cardFlexible,
-      allowGrow ? { minHeight: LINKS_CARD_HEIGHT_MIN, paddingVertical: 4, justifyContent: 'flex-start' } : cardHeight && { height: cardHeight },
-    ],
+    inGrid ? { minHeight: LINKS_CARD_HEIGHT_MIN, alignSelf: 'stretch' } : styles.cardPortrait,
     inGrid && styles.cardInGrid,
-    inGrid && allowGrow && { alignSelf: 'stretch' },
   ]
 
   return (
@@ -62,9 +54,8 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
       <View
         style={[
           styles.row,
-          flexible && { gap: PORTRAIT_CARD_GAP },
           inGrid && styles.rowInGrid,
-          inGrid && allowGrow && { flex: 1 },
+          inGrid && { flex: 1 },
         ]}
       >
         <TouchableOpacity
@@ -75,8 +66,8 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
           <View style={styles.iconWrap}>
             <Ionicons name="play-circle" size={40} color="#6b7280" />
           </View>
-          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
-            Example Videos
+          <Text style={styles.label}>
+            Demos
           </Text>
         </TouchableOpacity>
 
@@ -88,7 +79,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
           <View style={styles.iconWrap}>
             <Ionicons name="bulb" size={40} color="#6b7280" />
           </View>
-          <Text style={[styles.label, flexible && cardHeight && cardHeight < 108 && !allowGrow && styles.labelCompact]}>
+          <Text style={styles.label}>
             Drill Ideas
           </Text>
         </TouchableOpacity>
@@ -109,7 +100,7 @@ export function HomeLinksCards({ inGrid, flexible, cardHeight = 100, allowGrow }
 }
 
 const PORTRAIT_CARD_GAP = 10
-const LINKS_CARD_HEIGHT_MIN = 95 // Same as feature cards – flexible when font scale > 1
+const LINKS_CARD_HEIGHT_MIN = 95 // Same as feature cards
 
 function FeaturePickerModal({
   visible,
@@ -200,11 +191,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e5ddd0',
-    minHeight: 72,
-    paddingVertical: 12,
   },
-  cardFlexible: {
-    marginBottom: 0,
+  cardPortrait: {
+    minHeight: 88,
+    paddingVertical: 12,
   },
   cardInGrid: {
     marginBottom: 0,
@@ -215,13 +205,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: '#374151',
     textAlign: 'center',
-  },
-  labelCompact: {
-    fontSize: 12,
   },
   backdrop: {
     flex: 1,

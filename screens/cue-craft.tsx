@@ -7,7 +7,6 @@ import {
   Alert,
   TouchableOpacity,
   useWindowDimensions,
-  Platform,
 } from 'react-native'
 import {
   ScaleDecorator,
@@ -53,8 +52,6 @@ const FEATURE_KEY = 'cueCraft'
 export function CueCraftScreen() {
   const navigation = useNavigation<any>()
   const { session } = useAuth()
-  const { width, height } = useWindowDimensions()
-  const isAndroidLandscape = Platform.OS === 'android' && width > height
 
   const [steps, setSteps] = useState<CueStep[]>(getDefaultSteps())
   const [profile, setProfile] = useState<Awaited<ReturnType<typeof getProfile>>>(null)
@@ -279,6 +276,8 @@ export function CueCraftScreen() {
 
   const isActive = phase === 'getReady' || phase === 'running'
   const resetEnabled = isActive || phase === 'done'
+  const { width, height } = useWindowDimensions()
+  const isLandscape = width > height
   const inputsDisabled = isActive || phase === 'done'
 
   const timerContent =
@@ -308,7 +307,7 @@ export function CueCraftScreen() {
         }
         inputsDisabled={inputsDisabled}
         stickyHeader={
-          <View style={[styles.headerRow, isAndroidLandscape ? styles.headerRowCentered : styles.headerRowRight]}>
+          <View style={[styles.addStepHeader, isLandscape && styles.addStepHeaderLandscape]}>
             <TouchableOpacity
               style={[styles.addBtnCompact, inputsDisabled && styles.addBtnDisabled]}
               onPress={() => setIsAddStepModalOpen(true)}
@@ -414,16 +413,14 @@ export function CueCraftScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerRow: {
+  addStepHeader: {
     flexDirection: 'row',
-    alignItems: 'stretch',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     marginBottom: 12,
     flexShrink: 0,
   },
-  headerRowRight: {
-    justifyContent: 'flex-end',
-  },
-  headerRowCentered: {
+  addStepHeaderLandscape: {
     justifyContent: 'center',
   },
   addBtnCompact: {

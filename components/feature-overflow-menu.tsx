@@ -33,7 +33,7 @@ export function FeatureOverflowMenu({ handlersRef }: FeatureOverflowMenuProps) {
       ? [
           {
             icon: 'videocam-outline' as const,
-            label: 'Example videos',
+            label: 'Demos',
             onPress: () => void handlersRef.current.onExampleVideos?.(),
           },
         ]
