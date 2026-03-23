@@ -231,11 +231,11 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
-  content: { padding: 20, paddingTop: 24, paddingBottom: 16 },
+  content: { padding: 20, paddingTop: 16, paddingBottom: 16 },
   contentLandscape: {
     paddingHorizontal: 0,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   landscapeWrap: {
     paddingHorizontal: 24,
