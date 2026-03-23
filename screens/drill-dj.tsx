@@ -643,6 +643,7 @@ export function DrillDJScreen() {
           }
           inputsDisabled={inputsDisabled}
           footer={<Text style={styles.note}>* All time values are in seconds</Text>}
+          useNestableScroll
         >
           <FeatureInputsGrid>
             <FeatureInputsGrid.GridItem>
