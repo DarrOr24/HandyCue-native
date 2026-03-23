@@ -109,9 +109,9 @@ export function EntryBuddyScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('EntryBuddySettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'entryBuddy' })
+      navigation.navigate('Demos', { featureKey: 'entryBuddy' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()
@@ -134,9 +134,9 @@ export function EntryBuddyScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('EntryBuddySettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'entryBuddy' })
+      navigation.navigate('Demos', { featureKey: 'entryBuddy' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()

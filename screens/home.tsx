@@ -51,7 +51,7 @@ const FEATURES = [
   {
     id: "cueCraft",
     label: "CueCraft",
-    subtitle: "Build your own audio sequence from scratch",
+    subtitle: "Build your own audio sequence",
     img: require("../assets/imgs/cuecraft-tuck-handstand.png"),
   },
 ];
@@ -231,11 +231,11 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   container: { flex: 1 },
-  content: { padding: 20, paddingTop: 24, paddingBottom: 24 },
+  content: { padding: 20, paddingTop: 24, paddingBottom: 16 },
   contentLandscape: {
     paddingHorizontal: 0,
     paddingTop: 20,
-    paddingBottom: 24,
+    paddingBottom: 20,
   },
   landscapeWrap: {
     paddingHorizontal: 24,

@@ -1,11 +1,11 @@
-import type { ExampleVideo } from '../components/example-video-card'
+import type { Demo } from '../components/demo-card'
 
-export type ExampleVideosConfig = {
+export type DemosConfig = {
   title: string
-  videos: ExampleVideo[]
+  videos: Demo[]
 }
 
-export const EXAMPLE_VIDEOS: Record<string, ExampleVideosConfig> = {
+export const DEMOS: Record<string, DemosConfig> = {
   drillDJ: {
     title: 'DrillDJ',
     videos: [

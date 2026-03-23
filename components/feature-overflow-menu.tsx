@@ -8,7 +8,7 @@ export interface FeatureOverflowMenuHandlers {
   onFavorites: () => void
   onSave: () => void
   onSettings: () => void | Promise<void>
-  onExampleVideos?: () => void | Promise<void>
+  onDemos?: () => void | Promise<void>
   onDrillIdeas?: () => void | Promise<void>
   session: { user?: { id?: string } } | null
 }
@@ -29,12 +29,12 @@ export function FeatureOverflowMenu({ handlersRef }: FeatureOverflowMenuProps) {
       label: 'Info',
       onPress: () => handlersRef.current.onInfo(),
     },
-    ...(handlersRef.current.onExampleVideos
+    ...(handlersRef.current.onDemos
       ? [
           {
             icon: 'videocam-outline' as const,
             label: 'Demos',
-            onPress: () => void handlersRef.current.onExampleVideos?.(),
+            onPress: () => void handlersRef.current.onDemos?.(),
           },
         ]
       : []),

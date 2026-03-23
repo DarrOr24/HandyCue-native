@@ -197,9 +197,9 @@ export function DrillDJScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('DrillDJSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
+      navigation.navigate('Demos', { featureKey: 'drillDJ' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()
@@ -222,9 +222,9 @@ export function DrillDJScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('DrillDJSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'drillDJ' })
+      navigation.navigate('Demos', { featureKey: 'drillDJ' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()

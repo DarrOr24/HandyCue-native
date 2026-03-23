@@ -28,7 +28,7 @@ export {
 } from './holdOn.settings.service'
 
 export {
-  EXAMPLE_VIDEOS_STORAGE_BASE,
-  getExampleVideoUrl,
-  getExampleThumbnailUrl,
-} from './example-videos.service'
+  DEMOS_STORAGE_BASE,
+  getDemoVideoUrl,
+  getDemoThumbnailUrl,
+} from './demos.service'

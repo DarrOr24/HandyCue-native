@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { getExampleThumbnailUrl } from '../services/example-videos.service'
+import { getDemoThumbnailUrl } from '../services/demos.service'
 
 const HEEL_PULLS_THUMBNAIL = 'Float drill - heel pulls.jpeg'
 
@@ -35,7 +35,7 @@ interface DrillExamplesCardProps {
 
 /**
  * Card for the home screen that opens a feature picker, then navigates to that
- * feature's example videos page. Uses heel pulls thumbnail and distinct styling.
+ * feature's demos page. Uses heel pulls thumbnail and distinct styling.
  */
 export function DrillExamplesCard({ inGrid, flexible, cardHeight = 100 }: DrillExamplesCardProps = {}) {
   const navigation = useNavigation<any>()
@@ -44,11 +44,11 @@ export function DrillExamplesCard({ inGrid, flexible, cardHeight = 100 }: DrillE
   const { width, height } = useWindowDimensions()
   const isAndroidLandscape = Platform.OS === 'android' && width > height
 
-  const thumbnailUri = getExampleThumbnailUrl(HEEL_PULLS_THUMBNAIL)
+  const thumbnailUri = getDemoThumbnailUrl(HEEL_PULLS_THUMBNAIL)
 
   function handleFeatureSelect(featureKey: string) {
     setMenuVisible(false)
-    navigation.navigate('ExampleVideos', { featureKey })
+    navigation.navigate('Demos', { featureKey })
   }
 
   return (

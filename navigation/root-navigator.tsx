@@ -18,8 +18,8 @@ import { DrillDJSettingsScreen } from '../screens/drill-dj-settings'
 import { CueCraftScreen } from '../screens/cue-craft'
 import { CueCraftInfoScreen } from '../screens/cue-craft-info'
 import { CueCraftSettingsScreen } from '../screens/cue-craft-settings'
-import { ExampleVideosScreen } from '../screens/example-videos'
-import { ExampleVideoPlayerScreen } from '../screens/example-video-player'
+import { DemosScreen } from '../screens/demos'
+import { DemoPlayerScreen } from '../screens/demo-player'
 import { DrillIdeasScreen } from '../screens/drill-ideas'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
@@ -141,8 +141,8 @@ export function RootNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ExampleVideos"
-          component={ExampleVideosScreen}
+          name="Demos"
+          component={DemosScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -151,8 +151,8 @@ export function RootNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ExampleVideoPlayer"
-          component={ExampleVideoPlayerScreen}
+          name="DemoPlayer"
+          component={DemoPlayerScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

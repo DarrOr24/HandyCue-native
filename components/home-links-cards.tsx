@@ -35,7 +35,7 @@ export function HomeLinksCards({ inGrid }: HomeLinksCardsProps = {}) {
 
   function handleExampleSelect(featureKey: string) {
     setExampleMenuVisible(false)
-    navigation.navigate('ExampleVideos', { featureKey })
+    navigation.navigate('Demos', { featureKey })
   }
 
   function handleDrillSelect(featureKey: string) {

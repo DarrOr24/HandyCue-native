@@ -1,25 +1,25 @@
 import { StyleSheet, View, useWindowDimensions, Platform } from 'react-native'
-import { ExampleVideoCard, type ExampleVideo } from './example-video-card'
+import { DemoCard, type Demo } from './demo-card'
 
 const CARD_GAP = 12
 const CONTENT_PADDING_VERTICAL = 48
 const CARD_TITLE_HEIGHT = 44
 const THUMBNAIL_ASPECT = 9 / 16
 
-interface ExampleVideoGridProps {
-  videos: ExampleVideo[]
+interface DemoGridProps {
+  videos: Demo[]
   thumbnailBaseUrl: string
-  onVideoPress: (video: ExampleVideo) => void
+  onVideoPress: (video: Demo) => void
   /** Measured ScrollView height for Android landscape card sizing */
   containerHeight?: number
 }
 
-export function ExampleVideoGrid({
+export function DemoGrid({
   videos,
   thumbnailBaseUrl,
   onVideoPress,
   containerHeight,
-}: ExampleVideoGridProps) {
+}: DemoGridProps) {
   const { width, height } = useWindowDimensions()
   const isAndroidLandscape = Platform.OS === 'android' && width > height
 
@@ -34,7 +34,7 @@ export function ExampleVideoGrid({
   return (
     <View style={gridStyle}>
       {videos.map((video) => (
-        <ExampleVideoCard
+        <DemoCard
           key={video.title}
           video={video}
           onPress={() => onVideoPress(video)}

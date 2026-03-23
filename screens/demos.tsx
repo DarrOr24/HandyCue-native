@@ -5,30 +5,30 @@ import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 
-import { ExampleVideoGrid } from '../components/example-video-grid'
-import type { ExampleVideo } from '../components/example-video-card'
-import { EXAMPLE_VIDEOS } from '../data/example-videos'
+import { DemoGrid } from '../components/demo-grid'
+import type { Demo } from '../components/demo-card'
+import { DEMOS } from '../data/demos'
 import {
-  EXAMPLE_VIDEOS_STORAGE_BASE,
-  getExampleVideoUrl,
-} from '../services/example-videos.service'
+  DEMOS_STORAGE_BASE,
+  getDemoVideoUrl,
+} from '../services/demos.service'
 
-export function ExampleVideosScreen() {
+export function DemosScreen() {
   const navigation = useNavigation<any>()
   const route = useRoute<any>()
   const [scrollHeight, setScrollHeight] = useState(0)
   const featureKey = route.params?.featureKey ?? 'drillDJ'
-  const config = EXAMPLE_VIDEOS[featureKey]
+  const config = DEMOS[featureKey]
   const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
 
-  function handleVideoPress(video: ExampleVideo) {
+  function handleVideoPress(video: Demo) {
     if (video.available) {
-      const fullUrl = getExampleVideoUrl(video.url)
-      navigation.navigate('ExampleVideoPlayer', { videoUrl: fullUrl, title: video.title })
+      const fullUrl = getDemoVideoUrl(video.url)
+      navigation.navigate('DemoPlayer', { videoUrl: fullUrl, title: video.title })
     } else {
       Alert.alert(
         'Coming soon',
-        'This example video will be uploaded soon. Check back later!'
+        'This demo will be uploaded soon. Check back later!'
       )
     }
   }
@@ -44,17 +44,17 @@ export function ExampleVideosScreen() {
           >
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </TouchableOpacity>
-          <Text style={styles.title}>Example videos</Text>
+          <Text style={styles.title}>Demos</Text>
           <View style={styles.headerSpacer} />
         </View>
         <View style={styles.empty}>
-          <Text style={styles.emptyText}>No example videos for this feature yet.</Text>
+          <Text style={styles.emptyText}>No demos for this feature yet.</Text>
         </View>
       </SafeAreaView>
     )
   }
 
-  const pageTitle = `${config.title} – Example videos`
+  const pageTitle = `${config.title} – Demos`
 
   return (
     <SafeAreaView style={styles.container} edges={safeAreaEdges}>
@@ -76,9 +76,9 @@ export function ExampleVideosScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <ExampleVideoGrid
+          <DemoGrid
           videos={config.videos}
-          thumbnailBaseUrl={EXAMPLE_VIDEOS_STORAGE_BASE}
+          thumbnailBaseUrl={DEMOS_STORAGE_BASE}
           onVideoPress={handleVideoPress}
           containerHeight={scrollHeight}
         />

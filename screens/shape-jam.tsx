@@ -147,9 +147,9 @@ export function ShapeJamScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('ShapeJamSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'shapeJam' })
+      navigation.navigate('Demos', { featureKey: 'shapeJam' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()
@@ -172,9 +172,9 @@ export function ShapeJamScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('ShapeJamSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'shapeJam' })
+      navigation.navigate('Demos', { featureKey: 'shapeJam' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()

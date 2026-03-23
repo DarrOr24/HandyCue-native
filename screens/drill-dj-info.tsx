@@ -5,7 +5,7 @@ import {
   InfoSectionTitle,
   InfoBold,
 } from '../components/info-screen-layout'
-import { ExampleVideosLink } from '../components/example-videos-link'
+import { DemosLink } from '../components/demos-link'
 import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function DrillDJInfoScreen() {
@@ -45,7 +45,7 @@ export function DrillDJInfoScreen() {
         Enable Voice count to hear the count spoken aloud during longer phases — keeping your rhythm consistent.
       </InfoParagraph>
 
-      <ExampleVideosLink featureKey="drillDJ" />
+      <DemosLink featureKey="drillDJ" />
       <DrillIdeasLink featureKey="drillDJ" />
     </InfoScreenLayout>
   )

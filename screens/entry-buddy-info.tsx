@@ -4,7 +4,7 @@ import {
   InfoParagraph,
   InfoBold,
 } from "../components/info-screen-layout";
-import { ExampleVideosLink } from "../components/example-videos-link";
+import { DemosLink } from "../components/demos-link";
 import { DrillIdeasLink } from "../components/drill-ideas-link";
 
 export function EntryBuddyInfoScreen() {
@@ -38,7 +38,7 @@ export function EntryBuddyInfoScreen() {
         accurately.
       </InfoEmphasis>
 
-      <ExampleVideosLink featureKey="entryBuddy" />
+      <DemosLink featureKey="entryBuddy" />
       <DrillIdeasLink featureKey="entryBuddy" />
     </InfoScreenLayout>
   );

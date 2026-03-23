@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { useVideoPlayer, VideoView } from 'expo-video'
 
-export function ExampleVideoPlayerScreen() {
+export function DemoPlayerScreen() {
   const navigation = useNavigation<any>()
   const route = useRoute<any>()
   const { videoUrl, title } = route.params as { videoUrl: string; title: string }

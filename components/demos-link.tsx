@@ -1,20 +1,20 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-interface ExampleVideosLinkProps {
+interface DemosLinkProps {
   featureKey: 'holdOn' | 'entryBuddy' | 'shapeJam' | 'drillDJ' | 'cueCraft'
 }
 
-export function ExampleVideosLink({ featureKey }: ExampleVideosLinkProps) {
+export function DemosLink({ featureKey }: DemosLinkProps) {
   const navigation = useNavigation<any>()
 
   return (
     <Pressable
-      onPress={() => navigation.navigate('ExampleVideos', { featureKey })}
+      onPress={() => navigation.navigate('Demos', { featureKey })}
       style={({ pressed }) => [styles.link, pressed && styles.linkPressed]}
     >
       <Text style={styles.text}>
-        Check out the example videos to see this feature in action.
+        Check out the demos to see this feature in action.
       </Text>
     </Pressable>
   )

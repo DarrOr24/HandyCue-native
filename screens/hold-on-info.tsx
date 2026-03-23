@@ -3,7 +3,7 @@ import {
   InfoEmphasis,
   InfoParagraph,
 } from '../components/info-screen-layout'
-import { ExampleVideosLink } from '../components/example-videos-link'
+import { DemosLink } from '../components/demos-link'
 import { DrillIdeasLink } from '../components/drill-ideas-link'
 
 export function HoldOnInfoScreen() {
@@ -24,7 +24,7 @@ export function HoldOnInfoScreen() {
         Also great for plank holds, passive hangs, or any other endurance-based position!
       </InfoParagraph>
 
-      <ExampleVideosLink featureKey="holdOn" />
+      <DemosLink featureKey="holdOn" />
       <DrillIdeasLink featureKey="holdOn" />
     </InfoScreenLayout>
   )

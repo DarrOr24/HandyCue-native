@@ -90,9 +90,9 @@ export function HoldOnScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('HoldOnSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'holdOn' })
+      navigation.navigate('Demos', { featureKey: 'holdOn' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()
@@ -115,9 +115,9 @@ export function HoldOnScreen() {
       await saveCurrentInputsToProfile()
       navigation.navigate('HoldOnSettings')
     },
-    onExampleVideos: async () => {
+    onDemos: async () => {
       await saveCurrentInputsToProfile()
-      navigation.navigate('ExampleVideos', { featureKey: 'holdOn' })
+      navigation.navigate('Demos', { featureKey: 'holdOn' })
     },
     onDrillIdeas: async () => {
       await saveCurrentInputsToProfile()

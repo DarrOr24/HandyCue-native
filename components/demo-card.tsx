@@ -1,22 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
-export interface ExampleVideo {
+export interface Demo {
   title: string
   url: string
   available?: boolean
   thumbnailUrl?: string
 }
 
-interface ExampleVideoCardProps {
-  video: ExampleVideo
+interface DemoCardProps {
+  video: Demo
   onPress: () => void
   thumbnailBaseUrl?: string
   /** Fixed width for Android landscape grid */
   cardWidth?: number
 }
 
-export function ExampleVideoCard({ video, onPress, thumbnailBaseUrl, cardWidth }: ExampleVideoCardProps) {
+export function DemoCard({ video, onPress, thumbnailBaseUrl, cardWidth }: DemoCardProps) {
   const thumbnailUrl = video.thumbnailUrl && thumbnailBaseUrl
     ? thumbnailBaseUrl + encodeURIComponent(video.thumbnailUrl)
     : null
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
     color: '#374151',
     padding: 10,
