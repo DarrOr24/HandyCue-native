@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageSourcePropType } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ImageSourcePropType,
+  PixelRatio,
+} from 'react-native'
 
 interface FeatureCardProps {
   label: string
@@ -9,74 +17,91 @@ interface FeatureCardProps {
   imageZoom?: number
   /** When true, removes bottom margin (for grid layouts). */
   inGrid?: boolean
-  /** Card/image size. 95 compact, 120 larger. Default 95. Used in portrait; grid has its own sizing. */
-  cardSize?: number
 }
 
-const CARD_SIZE_SMALL = 95
-const CARD_SIZE_LARGE = 120
+/** Same footprint as the progression row thumbnail — readable, not oversized on large phones. */
+const THUMB_SIZE = 64
 
-export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGrid, cardSize = CARD_SIZE_SMALL }: FeatureCardProps) {
-  const size = inGrid ? CARD_SIZE_SMALL : cardSize
+export function FeatureCard({ label, subtitle, img, onPress, imageZoom = 1, inGrid }: FeatureCardProps) {
+  const fontScale = PixelRatio.getFontScale()
+  const extraVerticalPad = fontScale > 1 ? Math.min(10, (fontScale - 1) * 8) : 0
   const zoom = imageZoom > 1 ? imageZoom : 1
-  const imgSize = zoom > 1 ? size / zoom : size
+  const imgSize = zoom > 1 ? THUMB_SIZE / zoom : THUMB_SIZE
 
   return (
     <TouchableOpacity
       style={[
         styles.card,
         inGrid && styles.cardInGrid,
-        { minHeight: size, alignItems: 'center' },
+        { paddingVertical: 12 + extraVerticalPad },
       ]}
-      activeOpacity={0.7}
+      activeOpacity={0.75}
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}. ${subtitle}`}
     >
-      <View style={[styles.imageWrap, { width: size, height: size }]}>
+      <View style={[styles.imageWrap, { width: THUMB_SIZE, height: THUMB_SIZE }]}>
         <Image
           source={img}
           style={[styles.image, { width: imgSize, height: imgSize }]}
           resizeMode="cover"
         />
       </View>
-      <View style={[styles.text, size === CARD_SIZE_LARGE ? styles.textLarge : styles.textCompact]}>
+      <View style={styles.textCol}>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.subtitle}>
-          {subtitle}
-        </Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  /** Matches `homeSuggestionCardStyles.card` (progression / suggestions row). */
   card: {
     flexDirection: 'row',
-    backgroundColor: '#f5f7f6',
-    borderRadius: 12,
-    overflow: 'hidden',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#c5ddd4',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  cardInGrid: {},
+  cardInGrid: {
+    width: '100%',
+    alignSelf: 'stretch',
+  },
   imageWrap: {
-    backgroundColor: '#eef0ef',
+    backgroundColor: '#e8ebe9',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: 12,
+    borderRadius: 10,
+    marginTop: 2,
   },
   image: {},
-  text: {
+  textCol: {
     flex: 1,
     minWidth: 0,
-    justifyContent: 'center',
+    marginLeft: 12,
+    marginRight: 4,
+    paddingTop: 0,
   },
-  textCompact: {
-    padding: 6,
+  label: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#374151',
+    marginBottom: 4,
+    flexShrink: 1,
   },
-  textLarge: {
-    padding: 14,
+  subtitle: {
+    fontSize: 17,
+    color: '#6b7280',
+    flexShrink: 1,
   },
-  label: { fontSize: 20, fontWeight: '600', marginBottom: 6 },
-  subtitle: { fontSize: 17, color: '#555', lineHeight: 24 },
 })

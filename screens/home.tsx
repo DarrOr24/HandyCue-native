@@ -60,8 +60,6 @@ const FEATURES = [
 const CARD_GAP = 12;
 const MAX_CONTENT_WIDTH = 1500;
 const PORTRAIT_CARD_GAP = 10;
-/** Min screen width (portrait) to use larger cards. Tweak for different device breakpoints. */
-const LARGE_PHONE_WIDTH = 410;
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
@@ -79,8 +77,6 @@ export function HomeScreen() {
     numColumns === 1
       ? undefined
       : (contentWidth - CARD_GAP * (numColumns - 1)) / numColumns;
-  const portraitCardSize = !useGrid && width >= LARGE_PHONE_WIDTH ? 120 : 95;
-
   const profileMenuItems = [
     {
       icon: "person-outline" as const,
@@ -229,7 +225,6 @@ export function HomeScreen() {
                   subtitle={f.subtitle}
                   img={f.img}
                   imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-                  cardSize={portraitCardSize}
                   onPress={() => {
                     if (f.id === "holdOn") navigation.navigate("HoldOn")
                     else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
