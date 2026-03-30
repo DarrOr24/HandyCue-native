@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
@@ -19,7 +19,9 @@ export function DemosScreen() {
   const [scrollHeight, setScrollHeight] = useState(0)
   const featureKey = route.params?.featureKey ?? 'drillDJ'
   const config = DEMOS[featureKey]
-  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
+  const safeAreaEdges = useSafeAreaEdges(['top'])
+  const insets = useSafeAreaInsets()
+  const scrollBottomPad = 40 + insets.bottom
 
   function handleVideoPress(video: Demo) {
     if (video.available) {
@@ -47,7 +49,7 @@ export function DemosScreen() {
           <Text style={styles.title}>Demos</Text>
           <View style={styles.headerSpacer} />
         </View>
-        <View style={styles.empty}>
+        <View style={[styles.empty, { paddingBottom: 24 + insets.bottom }]}>
           <Text style={styles.emptyText}>No demos for this feature yet.</Text>
         </View>
       </SafeAreaView>
@@ -55,6 +57,7 @@ export function DemosScreen() {
   }
 
   const pageTitle = `${config.title} – Demos`
+  const hasDrillGuides = config.videos.some((v) => v.instructionId)
 
   return (
     <SafeAreaView style={styles.container} edges={safeAreaEdges}>
@@ -73,13 +76,23 @@ export function DemosScreen() {
       <View style={styles.scroll} onLayout={(e) => setScrollHeight(e.nativeEvent.layout.height)}>
         <ScrollView
           style={StyleSheet.absoluteFill}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[styles.content, { paddingBottom: scrollBottomPad }]}
           showsVerticalScrollIndicator={false}
         >
+          {hasDrillGuides ? (
+            <Text style={styles.guideHint}>
+              Some demos include a written drill guide—tap the info icon for technique, progressions, and more.
+            </Text>
+          ) : null}
           <DemoGrid
           videos={config.videos}
           thumbnailBaseUrl={DEMOS_STORAGE_BASE}
           onVideoPress={handleVideoPress}
+          onGuidePress={(video) => {
+            if (video.instructionId) {
+              navigation.navigate('DemoDrillGuide', { instructionId: video.instructionId })
+            }
+          }}
           containerHeight={scrollHeight}
         />
         </ScrollView>
@@ -103,7 +116,13 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '600', color: '#374151' },
   headerSpacer: { width: 32 },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 40 },
+  content: { paddingHorizontal: 20, paddingTop: 24 },
+  guideHint: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: '#6b7280',
+    marginBottom: 16,
+  },
   section: { marginBottom: 24 },
   empty: {
     flex: 1,

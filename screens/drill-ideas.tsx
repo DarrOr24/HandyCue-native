@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
@@ -14,7 +14,8 @@ export function DrillIdeasScreen() {
   const route = useRoute<any>()
   const featureKey = (route.params?.featureKey ?? 'holdOn') as DrillIdeasFeatureKey
   const config = DRILL_IDEAS[featureKey]
-  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
+  const safeAreaEdges = useSafeAreaEdges(['top'])
+  const insets = useSafeAreaInsets()
 
   if (!config) {
     return null
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '600', color: '#374151' },
   headerSpacer: { width: 32 },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 40 },
+  content: { paddingHorizontal: 20, paddingTop: 24 },
   section: { marginBottom: 12 },
   majorSection: {
     marginBottom: 20,

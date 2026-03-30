@@ -10,6 +10,7 @@ interface DemoGridProps {
   videos: Demo[]
   thumbnailBaseUrl: string
   onVideoPress: (video: Demo) => void
+  onGuidePress?: (video: Demo) => void
   /** Measured ScrollView height for Android landscape card sizing */
   containerHeight?: number
 }
@@ -18,6 +19,7 @@ export function DemoGrid({
   videos,
   thumbnailBaseUrl,
   onVideoPress,
+  onGuidePress,
   containerHeight,
 }: DemoGridProps) {
   const { width, height } = useWindowDimensions()
@@ -38,6 +40,11 @@ export function DemoGrid({
           key={video.title}
           video={video}
           onPress={() => onVideoPress(video)}
+          onGuidePress={
+            video.instructionId && onGuidePress
+              ? () => onGuidePress(video)
+              : undefined
+          }
           thumbnailBaseUrl={thumbnailBaseUrl}
           cardWidth={cardWidth}
         />

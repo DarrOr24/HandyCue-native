@@ -20,6 +20,7 @@ import { CueCraftInfoScreen } from '../screens/cue-craft-info'
 import { CueCraftSettingsScreen } from '../screens/cue-craft-settings'
 import { DemosScreen } from '../screens/demos'
 import { DemoPlayerScreen } from '../screens/demo-player'
+import { DemoDrillGuideScreen } from '../screens/demo-drill-guide'
 import { DrillIdeasScreen } from '../screens/drill-ideas'
 import { VoiceSetScreen } from '../screens/voice-set'
 import { AccountScreen } from '../screens/account'
@@ -153,6 +154,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="DemoPlayer"
           component={DemoPlayerScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DemoDrillGuide"
+          component={DemoDrillGuideScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
