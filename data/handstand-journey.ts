@@ -41,7 +41,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
   },
   {
     stage: 3,
-    title: 'Accumulate time off the wall',
+    title: 'Accumulate time off the wall in heel pulls',
     goal: 'Float away and hold balance with control',
     bullets: [
       'Target: 15 seconds average per float',

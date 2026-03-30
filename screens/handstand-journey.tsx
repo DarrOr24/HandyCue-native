@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   stageLabel: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
     color: '#5B9A8B',
     textTransform: 'uppercase',

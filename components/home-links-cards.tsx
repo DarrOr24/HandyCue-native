@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   label: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
     color: '#374151',
     textAlign: 'center',
@@ -227,7 +227,7 @@ const modalStyles = StyleSheet.create({
     overflow: 'hidden',
   },
   menuTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
     color: '#6b7280',
     textTransform: 'uppercase',
@@ -248,7 +248,7 @@ const modalStyles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#e5e7eb',
   },
-  menuLabel: { fontSize: 16, color: '#374151', fontWeight: '500' },
+  menuLabel: { fontSize: 17, color: '#374151', fontWeight: '500' },
   menuScrollContent: {
     paddingBottom: 16,
   },

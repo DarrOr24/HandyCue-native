@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
   textLarge: {
     padding: 14,
   },
-  label: { fontSize: 19, fontWeight: '600', marginBottom: 6 },
-  subtitle: { fontSize: 16, color: '#666', lineHeight: 23 },
+  label: { fontSize: 20, fontWeight: '600', marginBottom: 6 },
+  subtitle: { fontSize: 17, color: '#555', lineHeight: 24 },
 })

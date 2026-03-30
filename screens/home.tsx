@@ -278,23 +278,25 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   cardWrapper: {},
+  /** Teal uppercase section labels (Features / Suggestions). */
   sectionHeading: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "700",
     color: "#5B9A8B",
     textTransform: "uppercase",
-    letterSpacing: 0.7,
+    letterSpacing: 0.65,
     marginBottom: 4,
     alignSelf: "stretch",
   },
   sectionHeadingSpaced: {
     marginTop: 22,
   },
+  /** Subline under each section heading. */
   sectionSub: {
-    fontSize: 14,
+    fontSize: 17,
     color: "#6b7280",
     marginBottom: 12,
-    lineHeight: 20,
+    lineHeight: 24,
     alignSelf: "stretch",
   },
 });

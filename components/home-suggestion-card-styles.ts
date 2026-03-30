@@ -38,14 +38,14 @@ export const homeSuggestionCardStyles = StyleSheet.create({
     marginRight: 8,
   },
   kicker: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     color: '#5B9A8B',
     letterSpacing: 0.2,
     marginBottom: 4,
   },
   title: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: '700',
     color: '#374151',
     marginBottom: 4,
