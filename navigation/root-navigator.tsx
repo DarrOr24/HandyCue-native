@@ -27,6 +27,7 @@ import { AccountScreen } from '../screens/account'
 import { BillingScreen } from '../screens/billing'
 import { LoginScreen } from '../screens/login'
 import { BehindHandyCueScreen } from '../screens/behind-handycue'
+import { HandstandJourneyScreen } from '../screens/handstand-journey'
 
 const Stack = createNativeStackNavigator()
 
@@ -64,6 +65,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="BehindHandyCue"
           component={BehindHandyCueScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="HandstandJourney"
+          component={HandstandJourneyScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

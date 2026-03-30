@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { FeatureCard } from "../components/feature-card";
 import { HomeLinksCards } from "../components/home-links-cards";
+import { HandstandJourneyHomeCard } from "../components/handstand-journey-home-card";
 import { ProfileMenu } from "../components/profile-menu";
 import { OverflowMenu } from "../components/overflow-menu";
 import { MenuHint } from "../components/menu-hint";
@@ -156,29 +157,79 @@ export function HomeScreen() {
       >
         {useGrid ? (
           <View style={styles.landscapeWrap}>
+            <Text style={[styles.sectionHeading, { width: contentWidth }]}>
+              Features
+            </Text>
+            <Text style={[styles.sectionSub, { width: contentWidth }]}>
+              Voice-guided tools — get cues while upside down
+            </Text>
             <View
               style={[
                 styles.cardGrid,
                 {
                   width: contentWidth,
                   gap: CARD_GAP,
+                  marginBottom: 8,
                 },
               ]}
             >
-            {FEATURES.map((f) => (
-              <View
-                key={f.id}
-                style={[
-                  styles.cardWrapper,
-                  cardWidth !== undefined && { width: cardWidth },
-                ]}
-              >
+              {FEATURES.map((f) => (
+                <View
+                  key={f.id}
+                  style={[
+                    styles.cardWrapper,
+                    cardWidth !== undefined && { width: cardWidth },
+                  ]}
+                >
+                  <FeatureCard
+                    label={f.label}
+                    subtitle={f.subtitle}
+                    img={f.img}
+                    imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
+                    inGrid
+                    onPress={() => {
+                      if (f.id === "holdOn") navigation.navigate("HoldOn")
+                      else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
+                      else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
+                      else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
+                      else if (f.id === "cueCraft") navigation.navigate("CueCraft")
+                    }}
+                  />
+                </View>
+              ))}
+            </View>
+
+            <Text
+              style={[
+                styles.sectionHeading,
+                { width: contentWidth, marginTop: 12 },
+              ]}
+            >
+              Suggestions
+            </Text>
+            <Text style={[styles.sectionSub, { width: contentWidth }]}>
+              Path, demos, and drill inspiration
+            </Text>
+            <View style={{ width: contentWidth }}>
+              <HandstandJourneyHomeCard inGrid />
+              <HomeLinksCards inGrid />
+            </View>
+          </View>
+        ) : (
+          <>
+            <Text style={styles.sectionHeading}>Features</Text>
+            <Text style={styles.sectionSub}>
+              Voice-guided tools — get cues while upside down
+            </Text>
+            <View style={[styles.portraitCards, { gap: PORTRAIT_CARD_GAP }]}>
+              {FEATURES.map((f) => (
                 <FeatureCard
+                  key={f.id}
                   label={f.label}
                   subtitle={f.subtitle}
                   img={f.img}
                   imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-                  inGrid
+                  cardSize={portraitCardSize}
                   onPress={() => {
                     if (f.id === "holdOn") navigation.navigate("HoldOn")
                     else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
@@ -187,39 +238,18 @@ export function HomeScreen() {
                     else if (f.id === "cueCraft") navigation.navigate("CueCraft")
                   }}
                 />
-              </View>
-            ))}
-            <View
-              style={[
-                styles.cardWrapper,
-                cardWidth !== undefined && { width: cardWidth },
-              ]}
-            >
-              <HomeLinksCards inGrid />
+              ))}
             </View>
-          </View>
-          </View>
-        ) : (
-          <View style={[styles.portraitCards, { gap: PORTRAIT_CARD_GAP }]}>
-            {FEATURES.map((f) => (
-              <FeatureCard
-                key={f.id}
-                label={f.label}
-                subtitle={f.subtitle}
-                img={f.img}
-                imageZoom={f.id === "cueCraft" ? 1.55 : undefined}
-                cardSize={portraitCardSize}
-                onPress={() => {
-                  if (f.id === "holdOn") navigation.navigate("HoldOn")
-                  else if (f.id === "entryBuddy") navigation.navigate("EntryBuddy")
-                  else if (f.id === "shapeJam") navigation.navigate("ShapeJam")
-                  else if (f.id === "drillDJ") navigation.navigate("DrillDJ")
-                  else if (f.id === "cueCraft") navigation.navigate("CueCraft")
-                }}
-              />
-            ))}
-            <HomeLinksCards />
-          </View>
+
+            <Text style={[styles.sectionHeading, styles.sectionHeadingSpaced]}>
+              Suggestions
+            </Text>
+            <Text style={styles.sectionSub}>Path, demos, and drill inspiration</Text>
+            <View>
+              <HandstandJourneyHomeCard />
+              <HomeLinksCards />
+            </View>
+          </>
         )}
 
         <StatusBar style="auto" />
@@ -248,4 +278,23 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   cardWrapper: {},
+  sectionHeading: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#5B9A8B",
+    textTransform: "uppercase",
+    letterSpacing: 0.7,
+    marginBottom: 4,
+    alignSelf: "stretch",
+  },
+  sectionHeadingSpaced: {
+    marginTop: 22,
+  },
+  sectionSub: {
+    fontSize: 14,
+    color: "#6b7280",
+    marginBottom: 12,
+    lineHeight: 20,
+    alignSelf: "stretch",
+  },
 });

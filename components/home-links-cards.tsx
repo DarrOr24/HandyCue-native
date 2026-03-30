@@ -25,8 +25,7 @@ interface HomeLinksCardsProps {
 }
 
 /**
- * Two compact cards for the home screen: Demos and Drill Ideas.
- * Each opens a feature picker, then navigates to the appropriate screen.
+ * Two compact cards: Demos and Drill Ideas — same border/shadow vibe as the progression guide.
  */
 export function HomeLinksCards({ inGrid }: HomeLinksCardsProps = {}) {
   const navigation = useNavigation<any>()
@@ -43,45 +42,35 @@ export function HomeLinksCards({ inGrid }: HomeLinksCardsProps = {}) {
     navigation.navigate('DrillIdeas', { featureKey })
   }
 
-  const cardStyle = [
-    styles.card,
-    inGrid ? { minHeight: LINKS_CARD_HEIGHT_MIN, alignSelf: 'stretch' } : styles.cardPortrait,
-    inGrid && styles.cardInGrid,
-  ]
+  const cardStyle = [styles.card, inGrid && styles.cardInGrid]
 
   return (
     <>
-      <View
-        style={[
-          styles.row,
-          inGrid && styles.rowInGrid,
-          inGrid && { flex: 1 },
-        ]}
-      >
+      <View style={[styles.row, inGrid && styles.rowInGrid]}>
         <TouchableOpacity
           style={cardStyle}
-          activeOpacity={0.7}
+          activeOpacity={0.75}
           onPress={() => setExampleMenuVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Demos, choose a feature"
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="play-circle" size={40} color="#6b7280" />
+            <Ionicons name="play-circle" size={40} color="#5B9A8B" />
           </View>
-          <Text style={styles.label}>
-            Demos
-          </Text>
+          <Text style={styles.label}>Demos</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={cardStyle}
-          activeOpacity={0.7}
+          activeOpacity={0.75}
           onPress={() => setDrillMenuVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Drill ideas, choose a feature"
         >
           <View style={styles.iconWrap}>
-            <Ionicons name="bulb" size={40} color="#6b7280" />
+            <Ionicons name="bulb" size={40} color="#5B9A8B" />
           </View>
-          <Text style={styles.label}>
-            Drill Ideas
-          </Text>
+          <Text style={styles.label}>Drill ideas</Text>
         </TouchableOpacity>
       </View>
 
@@ -98,9 +87,6 @@ export function HomeLinksCards({ inGrid }: HomeLinksCardsProps = {}) {
     </>
   )
 }
-
-const PORTRAIT_CARD_GAP = 10
-const LINKS_CARD_HEIGHT_MIN = 95 // Same as feature cards
 
 function FeaturePickerModal({
   visible,
@@ -122,10 +108,10 @@ function FeaturePickerModal({
       onRequestClose={onClose}
       statusBarTranslucent={Platform.OS === 'android'}
     >
-      <Pressable style={styles.backdrop} onPress={onClose}>
+      <Pressable style={modalStyles.backdrop} onPress={onClose}>
         <View
           style={[
-            styles.menu,
+            modalStyles.menu,
             isAndroidLandscape && { maxHeight: height * 0.6 },
           ]}
           onStartShouldSetResponder={() => true}
@@ -134,32 +120,32 @@ function FeaturePickerModal({
             <ScrollView
               showsVerticalScrollIndicator={true}
               bounces={false}
-              contentContainerStyle={styles.menuScrollContent}
+              contentContainerStyle={modalStyles.menuScrollContent}
             >
-              <Text style={styles.menuTitle}>Choose feature</Text>
+              <Text style={modalStyles.menuTitle}>Choose feature</Text>
               {FEATURE_OPTIONS.map((opt, idx) => (
                 <TouchableOpacity
                   key={opt.id}
-                  style={[styles.menuItem, idx < FEATURE_OPTIONS.length - 1 && styles.menuItemBorder]}
+                  style={[modalStyles.menuItem, idx < FEATURE_OPTIONS.length - 1 && modalStyles.menuItemBorder]}
                   onPress={() => onSelect(opt.id)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.menuLabel}>{opt.label}</Text>
+                  <Text style={modalStyles.menuLabel}>{opt.label}</Text>
                   <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
                 </TouchableOpacity>
               ))}
             </ScrollView>
           ) : (
             <>
-              <Text style={styles.menuTitle}>Choose feature</Text>
+              <Text style={modalStyles.menuTitle}>Choose feature</Text>
               {FEATURE_OPTIONS.map((opt, idx) => (
                 <TouchableOpacity
                   key={opt.id}
-                  style={[styles.menuItem, idx < FEATURE_OPTIONS.length - 1 && styles.menuItemBorder]}
+                  style={[modalStyles.menuItem, idx < FEATURE_OPTIONS.length - 1 && modalStyles.menuItemBorder]}
                   onPress={() => onSelect(opt.id)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.menuLabel}>{opt.label}</Text>
+                  <Text style={modalStyles.menuLabel}>{opt.label}</Text>
                   <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
                 </TouchableOpacity>
               ))}
@@ -171,10 +157,13 @@ function FeaturePickerModal({
   )
 }
 
+const PORTRAIT_CARD_GAP = 10
+const LINKS_CARD_HEIGHT_MIN = 95
+
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    gap: 10,
+    gap: PORTRAIT_CARD_GAP,
     alignSelf: 'stretch',
     marginBottom: 14,
   },
@@ -186,17 +175,22 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f0ebe6',
-    borderRadius: 12,
-    overflow: 'hidden',
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e5ddd0',
-  },
-  cardPortrait: {
-    minHeight: 88,
+    borderColor: '#c5ddd4',
     paddingVertical: 12,
+    paddingHorizontal: 10,
+    minHeight: LINKS_CARD_HEIGHT_MIN,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+    overflow: 'hidden',
   },
   cardInGrid: {
+    alignSelf: 'stretch',
     marginBottom: 0,
   },
   iconWrap: {
@@ -210,6 +204,9 @@ const styles = StyleSheet.create({
     color: '#374151',
     textAlign: 'center',
   },
+})
+
+const modalStyles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
