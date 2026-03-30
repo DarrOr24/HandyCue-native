@@ -38,23 +38,26 @@ export function HandstandJourneyScreen() {
       >
         <Text style={styles.intro}>{HANDSTAND_JOURNEY_INTRO}</Text>
 
-        <Text style={styles.linkStripHeading}>Drills in this path</Text>
-        <View style={styles.linkChips}>
-          <TouchableOpacity
-            style={styles.chip}
+        <Text style={styles.pathDemosLine}>
+          <Text style={styles.pathDemosMuted}>Related demos: </Text>
+          <Text
+            style={styles.pathDemosLink}
             onPress={() => navigation.navigate('Demos', { featureKey: 'holdOn' })}
+            accessibilityRole="link"
           >
-            <Text style={styles.chipText}>Chest-to-wall and freestanding</Text>
-            <Ionicons name="open-outline" size={16} color="#5B9A8B" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.chip}
+            HoldOn
+          </Text>
+          <Text style={styles.pathDemosMuted}> (holds)</Text>
+          <Text style={styles.pathDemosMuted}> · </Text>
+          <Text
+            style={styles.pathDemosLink}
             onPress={() => navigation.navigate('Demos', { featureKey: 'drillDJ' })}
+            accessibilityRole="link"
           >
-            <Text style={styles.chipText}>Heel & toe floats</Text>
-            <Ionicons name="open-outline" size={16} color="#5B9A8B" />
-          </TouchableOpacity>
-        </View>
+            DrillDJ
+          </Text>
+          <Text style={styles.pathDemosMuted}> (heel & toe) — also under each stage.</Text>
+        </Text>
 
         {HANDSTAND_JOURNEY_STAGES.map((s) => (
           <View key={s.stage} style={styles.stage}>
@@ -126,25 +129,16 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 24,
   },
-  linkStripHeading: {
+  pathDemosLine: {
     fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  pathDemosMuted: { color: '#6b7280' },
+  pathDemosLink: {
+    color: '#5B9A8B',
     fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
   },
-  linkChips: { gap: 8, marginBottom: 28 },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f0f7f4',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#c5ddd4',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-  },
-  chipText: { fontSize: 15, fontWeight: '500', color: '#374151', flex: 1, marginRight: 8 },
   stage: {
     marginBottom: 28,
     paddingBottom: 24,

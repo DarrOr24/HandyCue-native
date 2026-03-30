@@ -24,7 +24,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
     goal: 'Build alignment, control, and shoulder strength',
     bullets: ['Target: 60 seconds of high-quality hold (tight line, active shoulders)'],
     moveOn: 'Move on when you can hold 60 seconds calmly for 1–2 sets',
-    demosLink: { featureKey: 'holdOn', label: 'HoldOn demos' },
+    demosLink: { featureKey: 'holdOn', label: 'Chest-to-wall demo' },
   },
   {
     stage: 2,
@@ -37,7 +37,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       '4s × 6 reps',
     ],
     moveOn: 'Move on when you can do 5 solid sets of 4-second heel pulls',
-    demosLink: { featureKey: 'drillDJ', label: 'DrillDJ demos' },
+    demosLink: { featureKey: 'drillDJ', label: 'Heel pulls demo' },
   },
   {
     stage: 3,
@@ -48,7 +48,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       'Progression: Accumulate 3 minutes in fewer than 10 floats',
     ],
     moveOn: 'Move on when 3-minute total feels clean and consistent',
-    demosLink: { featureKey: 'drillDJ', label: 'DrillDJ demos' },
+    demosLink: { featureKey: 'drillDJ', label: 'Heel pulls float demo' },
   },
   {
     stage: 4,
@@ -62,7 +62,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       '4s × 6 reps',
     ],
     moveOn: 'Move on when 4-second toe floats feel consistent',
-    demosLink: { featureKey: 'drillDJ', label: 'DrillDJ demos' },
+    demosLink: { featureKey: 'drillDJ', label: 'Toe pulls demo' },
   },
   {
     stage: 5,
@@ -84,7 +84,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       'When you can hold 5 clean sets of 60 seconds, you have built a strong foundation — and you are ready for whatever comes next.',
     ],
     moveOn: '',
-    demosLink: { featureKey: 'holdOn', label: 'HoldOn demos' },
+    demosLink: { featureKey: 'holdOn', label: 'Freestanding handstand demo' },
   },
 ]
 
