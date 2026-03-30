@@ -38,11 +38,10 @@ export const homeSuggestionCardStyles = StyleSheet.create({
     marginRight: 8,
   },
   kicker: {
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
     color: '#5B9A8B',
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
+    letterSpacing: 0.2,
     marginBottom: 4,
   },
   title: {
@@ -52,9 +51,7 @@ export const homeSuggestionCardStyles = StyleSheet.create({
     marginBottom: 4,
     flexShrink: 1,
   },
-  subtitle: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
+  /** Use when there is no subtitle under the title. */
+  titleTight: { marginBottom: 0 },
   chevron: { marginRight: 2, flexShrink: 0 },
 })

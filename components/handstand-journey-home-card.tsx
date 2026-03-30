@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native'
 import { HANDSTAND_JOURNEY_TITLE } from '../data/handstand-journey'
 import { homeSuggestionCardStyles as s } from './home-suggestion-card-styles'
 
-const JOURNEY_CARD_IMAGE = require('../assets/imgs/handstand-journey.png')
+/** Nearly square 1:1 thumb (`resizeMode` cover in a 64×64 dp slot). */
+const JOURNEY_CARD_IMAGE = require('../assets/imgs/handstand-journey-thumb.png')
 
 type Props = {
   inGrid?: boolean
@@ -24,8 +25,7 @@ export function HandstandJourneyHomeCard({ inGrid }: Props) {
       <Image source={JOURNEY_CARD_IMAGE} style={s.thumb} resizeMode="cover" />
       <View style={s.textCol}>
         <Text style={s.kicker}>Progression guide</Text>
-        <Text style={s.title}>{HANDSTAND_JOURNEY_TITLE}</Text>
-        <Text style={s.subtitle}>Chest-to-wall to free balance, with demos and links</Text>
+        <Text style={[s.title, s.titleTight]}>{HANDSTAND_JOURNEY_TITLE}</Text>
       </View>
       <Ionicons name="chevron-forward" size={22} color="#5B9A8B" style={s.chevron} />
     </TouchableOpacity>

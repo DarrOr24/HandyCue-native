@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
@@ -9,8 +9,6 @@ import {
   HANDSTAND_JOURNEY_STAGES,
   HANDSTAND_JOURNEY_TITLE,
 } from '../data/handstand-journey'
-
-const JOURNEY_HERO = require('../assets/imgs/handstand-journey.png')
 
 export function HandstandJourneyScreen() {
   const navigation = useNavigation<any>()
@@ -38,10 +36,6 @@ export function HandstandJourneyScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: 32 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.heroWrap}>
-          <Image source={JOURNEY_HERO} style={styles.hero} resizeMode="contain" />
-        </View>
-
         <Text style={styles.intro}>{HANDSTAND_JOURNEY_INTRO}</Text>
 
         <Text style={styles.linkStripHeading}>Drills in this path</Text>
@@ -50,7 +44,7 @@ export function HandstandJourneyScreen() {
             style={styles.chip}
             onPress={() => navigation.navigate('Demos', { featureKey: 'holdOn' })}
           >
-            <Text style={styles.chipText}>Chest-to-wall · freestanding</Text>
+            <Text style={styles.chipText}>Chest-to-wall and freestanding</Text>
             <Ionicons name="open-outline" size={16} color="#5B9A8B" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -126,19 +120,6 @@ const styles = StyleSheet.create({
   headerSpacer: { width: 32 },
   scroll: { flex: 1 },
   content: { paddingHorizontal: 20, paddingTop: 16 },
-  /** Fixed height + contain = full photo visible (cover + 16:9 was cropping portrait shots). */
-  heroWrap: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-    backgroundColor: '#e8ebe9',
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  hero: {
-    width: '100%',
-    height: '100%',
-  },
   intro: {
     fontSize: 17,
     color: '#374151',
