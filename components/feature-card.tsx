@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   /** Matches `homeSuggestionCardStyles.card` (progression / suggestions row). */
   card: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.92)',
     borderRadius: 14,
     borderWidth: 1,
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderRadius: 10,
-    marginTop: 2,
   },
   image: {},
   textCol: {
