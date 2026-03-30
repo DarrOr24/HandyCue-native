@@ -85,4 +85,22 @@ export const progressionDocScreenStyles = StyleSheet.create({
   },
   empty: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   emptyText: { fontSize: 16, color: '#6b7280', textAlign: 'center' },
+  /** Feature info screens (`InfoParagraph` / `InfoEmphasis`). */
+  infoParagraph: {
+    fontSize: 17,
+    color: '#374151',
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  infoEmphasis: {
+    fontSize: 17,
+    fontStyle: 'italic',
+    color: '#374151',
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  infoInlineBold: {
+    fontWeight: '600',
+    color: '#374151',
+  },
 })

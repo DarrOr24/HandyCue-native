@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { useFonts, DancingScript_400Regular } from '@expo-google-fonts/dancing-script'
@@ -16,35 +16,40 @@ import {
   InfoSectionTitle,
 } from '../components/info-screen-layout'
 import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
+import { progressionDocScreenStyles as p } from '../theme/progression-doc-screen'
 
 const CONTACT_EMAIL = 'darrmorgan@gmail.com'
 
 export function BehindHandyCueScreen() {
   const navigation = useNavigation<any>()
   const [fontsLoaded] = useFonts({ DancingScript_400Regular })
-  const safeAreaEdges = useSafeAreaEdges(['top', 'bottom'])
+  const safeAreaEdges = useSafeAreaEdges(['top'])
+  const insets = useSafeAreaInsets()
+  const scrollBottomPad = 32 + insets.bottom
 
   function handleContact() {
     Linking.openURL(`mailto:${CONTACT_EMAIL}`)
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={safeAreaEdges}>
-      <View style={styles.header}>
+    <SafeAreaView style={p.container} edges={safeAreaEdges}>
+      <View style={p.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.headerBtn}
+          style={p.headerBtn}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
           <Ionicons name="arrow-back" size={24} color="#374151" />
         </TouchableOpacity>
-        <Text style={styles.title}>Behind HandyCue</Text>
-        <View style={styles.headerSpacer} />
+        <Text style={p.headerTitle} numberOfLines={2}>
+          Behind HandyCue
+        </Text>
+        <View style={p.headerSpacer} />
       </View>
 
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
+        style={p.scroll}
+        contentContainerStyle={[p.content, { paddingBottom: scrollBottomPad }]}
         showsVerticalScrollIndicator={false}
       >
         <InfoEmphasis>Built from practice.</InfoEmphasis>
@@ -87,21 +92,6 @@ export function BehindHandyCueScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  headerBtn: { padding: 4 },
-  title: { fontSize: 18, fontWeight: '600', color: '#374151' },
-  headerSpacer: { width: 32 },
-  scroll: { flex: 1 },
-  content: { padding: 16, paddingBottom: 32 },
   signature: {
     fontSize: 22,
     color: '#374151',
