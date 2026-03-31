@@ -62,7 +62,8 @@ export const DEMOS: Record<string, DemosConfig> = {
       {
         title: 'Freestanding hold (straight)',
         url: 'HoldOn - freestanding hold.mp4',
-        available: false,
+        available: true,
+        thumbnailUrl: 'HoldOn - freestanding hold.jpeg',
         instructionId: 'freeBalanceHold',
       },
     ],
