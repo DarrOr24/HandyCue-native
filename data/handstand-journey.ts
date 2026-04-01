@@ -72,7 +72,8 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       'The partner acts like two walls — gentle contact on both sides to reduce fatigue and build confidence',
       'Start with 20 seconds per set',
     ],
-    moveOn: 'Move on when you feel calm and stable without touching the wall',
+    moveOn:
+      'Move on when you feel calm and stable and only rarely need your partner for a light balance touch',
   },
   {
     stage: 6,
