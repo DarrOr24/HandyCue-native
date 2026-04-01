@@ -2,9 +2,11 @@
  * Drill DJ–style timed interval: optional spoken countdown and display ticks.
  * Shared by Drill DJ (performPhase) and Shape Jam shape intervals.
  *
- * Countdown numbers are spoken without awaiting — wall-clock progress follows the 1s delays in the loop.
- * After the last spoken count (e.g. “1”), we still await one final 1s delay so that last second completes
- * before the function returns. Callers may add a short gap before the next cue if needed.
+ * Discrete-second model: numbers are spoken without awaiting; each tick ends with `delay(1000)`, **including
+ * after the last count**, so a duration of N seconds runs N full seconds (fixes the classic `i < n - 1` bug).
+ *
+ * Other features use wall-clock timers (`setInterval` + `elapsed >= duration`) or `runGetReadyCountdown`,
+ * which already include the final second — see comments there.
  */
 
 import { delay, formatTime, speak, type StoredVoice } from './core.service'

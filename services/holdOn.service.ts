@@ -1,6 +1,10 @@
 import { delay, formatTime, speak, type StoredVoice } from './core.service'
 
-/** Run get-ready countdown with voice callouts. Each tick is exactly 1 second apart. */
+/**
+ * Run get-ready countdown with voice callouts. Each tick is exactly 1 second apart.
+ * The last number still gets a full ~1s delay after it (while loop decrements after delay), so the final
+ * second is not cut short — same intent as `runDrillDjStyleInterval`’s trailing delay.
+ */
 export async function runGetReadyCountdown(options: {
   getReadyTime: number
   storedVoice: StoredVoice | null
@@ -77,7 +81,10 @@ export function runHoldInterval(options: {
   return () => clearInterval(interval)
 }
 
-/** Run rest phase - returns cleanup function. Timer ticks exactly every second using wall-clock time. */
+/**
+ * Run rest phase - returns cleanup function. Same wall-clock model as `runHoldInterval`: `onRestComplete`
+ * fires when elapsed time reaches `restTime`, so the last second is fully counted.
+ */
 export function runRestCycle(options: {
   restTime: number
   storedVoice: StoredVoice | null

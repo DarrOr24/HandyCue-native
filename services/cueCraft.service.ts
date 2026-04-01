@@ -71,6 +71,8 @@ async function runSteps(
           const calloutInterval = step.calloutInterval ?? (duration <= 24 ? 0 : 10)
           const useCallouts = duration > countdownFrom
           onDisplay(duration <= countdownFrom ? String(duration) : '0:00')
+          // Wall-clock timer: resolves when elapsed >= duration, so the final second after “1” is included
+          // (same idea as HoldOn rest/hold — not a discrete loop missing a trailing delay).
           await new Promise<void>((resolve) => {
             const startTime = Date.now()
             let lastElapsed = -1
