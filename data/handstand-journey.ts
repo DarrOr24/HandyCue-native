@@ -77,7 +77,7 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
   },
   {
     stage: 6,
-    title: 'Free balance',
+    title: 'Freehandstand hold',
     goal: 'Perform measurable freestanding handstand holds',
     bullets: [
       'Accumulate 30–60 seconds total, then build to:',

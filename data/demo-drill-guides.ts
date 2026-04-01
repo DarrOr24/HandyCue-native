@@ -309,9 +309,9 @@ export const DEMO_DRILL_GUIDES: Record<string, DemoDrillGuide> = {
       'Kick-up is the gateway to freestanding handstands. By refining hand placement, shoulder strength, and core engagement, you’ll learn to enter with confidence. Progressions like straddle, tuck, and pike variations add precision and versatility, transforming the kick-up from a lucky jump into a reliable, repeatable entry.',
   },
   freeBalanceHold: {
-    pageTitle: 'Free balance',
+    pageTitle: 'Freehandstand hold',
     intro:
-      'This is the ultimate goal of your foundational handstand training: holding a freestanding handstand with no assistance. Free balance marks the shift from accumulation-based floats to deliberate, measured sets — showing real control.',
+      'This is the ultimate goal of your foundational handstand training: holding a freestanding handstand with no assistance. This stage marks the shift from accumulation-based floats to deliberate, measured sets — showing real control.',
     sections: [
       {
         heading: 'Key benefits',
@@ -360,6 +360,6 @@ export const DEMO_DRILL_GUIDES: Record<string, DemoDrillGuide> = {
       },
     ],
     summary:
-      'Free balance is where training meets freedom. When you can hold steady handstands without the wall, even for 30–60 seconds, you’ve earned access to the world of advanced inversions — from presses to transitions to one-arm work.',
+      'This is where training meets freedom. When you can hold steady handstands without the wall, even for 30–60 seconds, you’ve earned access to the world of advanced inversions — from presses to transitions to one-arm work.',
   },
 }
