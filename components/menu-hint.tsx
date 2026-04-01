@@ -125,13 +125,14 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   bubble: {
-    backgroundColor: '#e8f0ee',
+    /** Slightly transparent so primary controls (e.g. play) remain visible underneath. */
+    backgroundColor: 'rgba(232, 240, 238, 0.78)',
     paddingHorizontal: 6,
     paddingTop: 5,
     paddingBottom: 4,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#d1e0dc',
+    borderColor: 'rgba(209, 224, 220, 0.85)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
