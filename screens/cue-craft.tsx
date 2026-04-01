@@ -7,7 +7,9 @@ import {
   Alert,
   TouchableOpacity,
   useWindowDimensions,
+  Platform,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   ScaleDecorator,
   NestableDraggableFlatList,
@@ -44,7 +46,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import { getProfile, saveCueCraftToProfile } from '../services/profile.service'
 import type { CueStep } from '../services/cueCraft.types'
-import { inputContainerStyle } from '../theme/input-styles'
+import { INPUT_BORDER_RADIUS } from '../theme/input-styles'
 
 const FEATURE_KEY = 'cueCraft'
 
@@ -277,7 +279,21 @@ export function CueCraftScreen() {
   const resetEnabled = isActive || phase === 'done'
   const { width, height } = useWindowDimensions()
   const isLandscape = width > height
+  const insets = useSafeAreaInsets()
   const inputsDisabled = isActive || phase === 'done'
+
+  const stickyAddStepControl = (
+    <View style={[styles.addStepHeader, isLandscape && styles.addStepHeaderLandscape]}>
+      <TouchableOpacity
+        style={[styles.addBtnPrimary, inputsDisabled && styles.addBtnDisabled]}
+        onPress={() => setIsAddStepModalOpen(true)}
+        disabled={inputsDisabled}
+      >
+        <Ionicons name="add" size={22} color="#fff" />
+        <Text style={styles.addBtnPrimaryLabel}>Add step</Text>
+      </TouchableOpacity>
+    </View>
+  )
 
   const timerContent =
     phase === 'done' ? (
@@ -291,7 +307,7 @@ export function CueCraftScreen() {
     )
 
   return (
-    <>
+    <View style={styles.screenRoot}>
       <MenuHint featureKey="cueCraft" />
       <FeatureScreenLayout
         timerContent={timerContent}
@@ -303,20 +319,7 @@ export function CueCraftScreen() {
           resetDisabled: !resetEnabled,
         }}
         inputsDisabled={inputsDisabled}
-        stickyHeader={
-          <View style={[styles.addStepHeader, isLandscape && styles.addStepHeaderLandscape]}>
-            <TouchableOpacity
-              style={[styles.addBtnCompact, inputsDisabled && styles.addBtnDisabled]}
-              onPress={() => setIsAddStepModalOpen(true)}
-              disabled={inputsDisabled}
-            >
-              <Ionicons name="add" size={22} color={inputsDisabled ? '#999' : '#5B9A8B'} />
-              <Text style={[styles.addBtnCompactText, inputsDisabled && styles.addBtnTextDisabled]}>
-                Add step
-              </Text>
-            </TouchableOpacity>
-          </View>
-        }
+        stickyHeader={isLandscape ? stickyAddStepControl : undefined}
         useNestableScroll
         useKeyboardAvoiding
         landscapeLayoutVariant="cueCraft"
@@ -325,6 +328,7 @@ export function CueCraftScreen() {
             data={steps}
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => setSteps(data)}
+            contentContainerStyle={!isLandscape ? styles.listContentPortraitFab : undefined}
             renderItem={({ item, drag, isActive, getIndex }) => {
               const index = getIndex() ?? 0
               return (
@@ -372,6 +376,25 @@ export function CueCraftScreen() {
           />
       </FeatureScreenLayout>
 
+      {!isLandscape && (
+        <TouchableOpacity
+          style={[
+            styles.addStepFab,
+            {
+              bottom: 16 + insets.bottom,
+              right: 16 + insets.right,
+            },
+            inputsDisabled && styles.addBtnDisabled,
+          ]}
+          onPress={() => setIsAddStepModalOpen(true)}
+          disabled={inputsDisabled}
+          activeOpacity={0.85}
+          accessibilityLabel="Add step"
+        >
+          <Ionicons name="add" size={22} color="#fff" />
+        </TouchableOpacity>
+      )}
+
       <AddStepModal
         visible={isAddStepModalOpen}
         onAdd={addStep}
@@ -405,11 +428,38 @@ export function CueCraftScreen() {
           }
         }}
       />
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  screenRoot: {
+    flex: 1,
+  },
+  /** Extra scroll padding so the last step clears the portrait FAB. */
+  listContentPortraitFab: {
+    paddingBottom: 88,
+  },
+  /** Primary green — stands out from input cards (portrait FAB). */
+  addStepFab: {
+    position: 'absolute',
+    width: 48,
+    height: 48,
+    borderRadius: INPUT_BORDER_RADIUS,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 40,
+    backgroundColor: '#5B9A8B',
+    borderWidth: 0,
+    ...(Platform.OS === 'ios'
+      ? {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.18,
+          shadowRadius: 4,
+        }
+      : { elevation: 6 }),
+  },
   addStepHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -420,19 +470,21 @@ const styles = StyleSheet.create({
   addStepHeaderLandscape: {
     justifyContent: 'center',
   },
-  addBtnCompact: {
+  addBtnPrimary: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    ...inputContainerStyle,
+    backgroundColor: '#5B9A8B',
+    borderRadius: INPUT_BORDER_RADIUS,
+    borderWidth: 0,
   },
-  addBtnCompactText: {
+  addBtnPrimaryLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#5B9A8B',
+    color: '#fff',
   },
   stepRowWrapper: {
     flexDirection: 'row',
@@ -445,26 +497,7 @@ const styles = StyleSheet.create({
   stepRowContent: {
     flex: 1,
   },
-  addBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    backgroundColor: '#5B9A8B',
-    borderRadius: 12,
-    marginTop: 8,
-  },
   addBtnDisabled: {
     opacity: 0.6,
-  },
-  addBtnText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  addBtnTextDisabled: {
-    color: '#999',
   },
 })

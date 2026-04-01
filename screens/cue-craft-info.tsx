@@ -19,6 +19,9 @@ export function CueCraftInfoScreen() {
         (≡), and the voice will guide you through. Save your favorite sequences for quick access.
       </InfoParagraph>
       <InfoParagraph>
+        Tap the green <InfoBold>+</InfoBold> button to add a step.
+      </InfoParagraph>
+      <InfoParagraph>
         Like in regular training, we have sets and reps.
       </InfoParagraph>
 
