@@ -1,6 +1,7 @@
 import {
   InfoScreenLayout,
   InfoEmphasis,
+  InfoBold,
   InfoParagraph,
 } from '../components/info-screen-layout'
 import { DemosLink } from '../components/demos-link'
@@ -14,19 +15,33 @@ export function ShapeJamInfoScreen() {
       </InfoEmphasis>
 
       <InfoParagraph>
-        ShapeJam guides you through dynamic handstand shape transitions using voice prompts and timed intervals.
-        Select your shapes (like tuck, straddle, pike), set how long each interval lasts, and build your own sequence.
-        Turn Voice count on for the same spoken countdown style as Drill DJ (or off for quiet timed segments).
-        You can add your own shape names through settings to customize the flow to your practice.
+        ShapeJam runs a sequence of handstand shapes on a timer. For each shape you set an{' '}
+        <InfoBold>interval</InfoBold> — how long that segment lasts before the next cue. You can use
+        intervals for a clean hold in one shape, or for a slow, counted transition into the next (see{' '}
+        <InfoBold>ShapeJam – Drill ideas</InfoBold> for examples).
       </InfoParagraph>
 
       <InfoParagraph>
-        The feature gives clear voice cues — helping you build a strong connection between verbal command and physical action.
-        Because there's no time to prepare between shapes, your transitions become more controlled, intentional, and refined.
+        <InfoBold>Voice count</InfoBold> uses the same spoken timing rules as Drill DJ: when it is on
+        and an interval is at least five seconds, you get the same countdown style (including the “last ten
+        seconds” style behavior on longer intervals). Turn it off if you only want the shape name and then
+        quiet timing — useful for very short switches where you do not want numbers in your ear.
       </InfoParagraph>
 
       <InfoParagraph>
-        Focus on precision, rhythm, and flow — whether you're training symmetry, creativity, or advanced transitions.
+        Add reps or sets, rest between sets when you use multiple sets, and customize shape names in
+        settings. The app speaks each shape, then runs the interval — so your transitions stay deliberate
+        and on the clock.
+      </InfoParagraph>
+
+      <InfoParagraph>
+        The feature strengthens the link between verbal cue and movement: little time to drift between
+        shapes, so transitions stay controlled and intentional.
+      </InfoParagraph>
+
+      <InfoParagraph>
+        Focus on precision, rhythm, and flow — whether you are training symmetry, creativity, or advanced
+        transitions.
       </InfoParagraph>
 
       <DemosLink featureKey="shapeJam" />

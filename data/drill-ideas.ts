@@ -78,23 +78,35 @@ export const DRILL_IDEAS: Record<DrillIdeasFeatureKey, DrillIdeasConfig> = {
   },
   shapeJam: {
     title: 'ShapeJam',
-    intro: 'Create your own flow with ShapeJam — a timer for transitioning between classic handstand shapes while building control, consistency, and endurance. Pick your shapes, set a hold time, and let voice cues guide each switch.',
+    intro:
+      'Create your own flow with ShapeJam — a timer for moving between classic handstand shapes while building control, consistency, and endurance. Pick your shapes, set an interval for each row, choose whether you want Voice count (same style as Drill DJ), and let the cues guide you.',
     sections: [
       {
-        content: 'ShapeJam is about clean, consistent, time-accurate shape transitions.',
+        content: 'ShapeJam is about clean, consistent, time-accurate segments — whether you hold a shape or use the time to transition.',
         items: [
           'Choose 2–4 shapes (avoid starting and ending with the same shape)',
-          'Set your hold time',
+          'Set an interval per shape (seconds)',
+          'Turn Voice count on for spoken countdown on longer intervals, or off for quiet timing',
           'Repeat the sequence for reps or sets',
           'Let the cue guide you',
         ],
       },
       {
-        title: 'Sample Sequences',
+        title: 'Slow counted shape transitions',
+        content:
+          'Slow counted shape transitions build control and endurance through every stage of the movement, not just the final shape. They help you move with precision and learn to pause with strength in each position along the way.',
+        items: [
+          'Example: straddle → straight with a 10 second interval — use the interval to complete the transition with control; Voice count matches Drill DJ rules on longer segments.',
+          'Builds control in the transitions, not only in the end shape.',
+        ],
+      },
+      {
+        title: 'Sample sequences',
         items: ['Tuck → Diamond → Straddle', 'Straddle → Pike → Tuck', 'Diamond → Straight → Straddle → Tuck'],
       },
       {
-        content: 'Play around with tempo-based shape transitions — use longer holds to build strength, or quicker transitions to develop coordination.',
+        content:
+          'Experiment with tempo: longer intervals for strength and shape quality, shorter ones for coordination and quick switches. For fully custom steps and wording, use CueCraft.',
       },
     ],
   },
