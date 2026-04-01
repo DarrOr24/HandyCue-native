@@ -48,7 +48,6 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       'Progression: Accumulate 3 minutes in fewer than 10 floats',
     ],
     moveOn: 'Move on when 3-minute total feels clean and consistent',
-    demosLink: { featureKey: 'drillDJ', label: 'Heel pulls float demo' },
   },
   {
     stage: 4,

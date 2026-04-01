@@ -38,27 +38,6 @@ export function HandstandJourneyScreen() {
       >
         <Text style={styles.intro}>{HANDSTAND_JOURNEY_INTRO}</Text>
 
-        <Text style={styles.pathDemosLine}>
-          <Text style={styles.pathDemosMuted}>Related demos: </Text>
-          <Text
-            style={styles.pathDemosLink}
-            onPress={() => navigation.navigate('Demos', { featureKey: 'holdOn' })}
-            accessibilityRole="link"
-          >
-            HoldOn
-          </Text>
-          <Text style={styles.pathDemosMuted}> (holds)</Text>
-          <Text style={styles.pathDemosMuted}> · </Text>
-          <Text
-            style={styles.pathDemosLink}
-            onPress={() => navigation.navigate('Demos', { featureKey: 'drillDJ' })}
-            accessibilityRole="link"
-          >
-            DrillDJ
-          </Text>
-          <Text style={styles.pathDemosMuted}> (heel & toe) — also under each stage.</Text>
-        </Text>
-
         {HANDSTAND_JOURNEY_STAGES.map((s) => (
           <View key={s.stage} style={styles.stage}>
             <Text style={styles.stageLabel}>Stage {s.stage}</Text>
@@ -128,16 +107,6 @@ const styles = StyleSheet.create({
     color: '#374151',
     lineHeight: 24,
     marginBottom: 24,
-  },
-  pathDemosLine: {
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 24,
-  },
-  pathDemosMuted: { color: '#6b7280' },
-  pathDemosLink: {
-    color: '#5B9A8B',
-    fontWeight: '600',
   },
   stage: {
     marginBottom: 28,
