@@ -29,6 +29,12 @@ export function ShapeJamInfoScreen() {
       </InfoParagraph>
 
       <InfoParagraph>
+        <InfoBold>Same interval</InfoBold> copies <InfoBold>Interval 1</InfoBold> (the time for your first
+        shape) to every other shape in the list. Use it when you want every segment the same length without
+        tapping each interval field.
+      </InfoParagraph>
+
+      <InfoParagraph>
         Add reps or sets, rest between sets when you use multiple sets, and customize shape names in
         settings. The app speaks each shape, then runs the interval — so your transitions stay deliberate
         and on the clock.
