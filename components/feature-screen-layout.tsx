@@ -14,12 +14,15 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
 import { NestableScrollContainer } from 'react-native-draggable-flatlist'
 import { FEATURE_INPUTS_GRID_ROW_GAP } from './feature-inputs-grid'
+import { ActionButton } from './action-button'
+import type { FeatureActionButtonsProps } from './feature-action-buttons'
 
 const LANDSCAPE_LEFT_COLUMN_WIDTH = 200
 
 interface FeatureScreenLayoutProps {
   timerContent: ReactNode
-  actions: ReactNode
+  /** Play/pause + reset; portrait uses instrument row reset | timer | play. */
+  actionButtons: FeatureActionButtonsProps
   children: ReactNode
   inputsDisabled?: boolean
   footer?: ReactNode
@@ -37,11 +40,11 @@ interface FeatureScreenLayoutProps {
 
 /**
  * Template layout for coach features: timer display, action buttons, inputs.
- * All features (HoldOn, EntryBuddy, ShapeJam, DrillDJ) use this structure.
+ * Portrait: instrument row — reset | timer | play. Android landscape: unchanged two-column layout.
  */
 export function FeatureScreenLayout({
   timerContent,
-  actions,
+  actionButtons,
   children,
   inputsDisabled = false,
   footer,
@@ -56,6 +59,23 @@ export function FeatureScreenLayout({
   const useLandscapeLayout =
     Platform.OS === 'android' && width > height
   const safeAreaEdges = useSafeAreaEdges(['bottom'])
+
+  const actionsRow = (
+    <>
+      <ActionButton
+        icon={actionButtons.primaryIcon}
+        onPress={actionButtons.onPrimaryPress}
+        disabled={actionButtons.primaryDisabled}
+        variant="primary"
+      />
+      <ActionButton
+        icon="refresh"
+        onPress={actionButtons.onReset}
+        disabled={actionButtons.resetDisabled}
+        variant="danger"
+      />
+    </>
+  )
 
   return (
     <SafeAreaView style={styles.container} edges={safeAreaEdges}>
@@ -76,7 +96,7 @@ export function FeatureScreenLayout({
               <View style={styles.cueCraftLeftColumn}>
                 <View style={styles.cueCraftTopSection}>
                   <View style={styles.timerSection}>{timerContent}</View>
-                  <View style={styles.actionsSection}>{actions}</View>
+                  <View style={styles.actionsSection}>{actionsRow}</View>
                 </View>
                 <View style={styles.cueCraftBottomSection}>
                   <View style={styles.cueCraftStickyHeaderWrap}>{stickyHeader}</View>
@@ -126,7 +146,7 @@ export function FeatureScreenLayout({
             <View style={styles.leftColumn}>
               <View style={styles.timerActionsWrapper}>
                 <View style={styles.timerSection}>{timerContent}</View>
-                <View style={styles.actionsSection}>{actions}</View>
+                <View style={styles.actionsSection}>{actionsRow}</View>
               </View>
               {footer && <View style={styles.footerLandscape}>{footer}</View>}
             </View>
@@ -172,9 +192,24 @@ export function FeatureScreenLayout({
         )
         ) : (
           <>
-            <View style={styles.portraitTimerActionsRow}>
-              <View style={styles.portraitTimerColumn}>{timerContent}</View>
-              <View style={styles.portraitActionsColumn}>{actions}</View>
+            <View style={styles.portraitInstrumentRow}>
+              <View style={styles.portraitInstrumentSide}>
+                <ActionButton
+                  icon="refresh"
+                  onPress={actionButtons.onReset}
+                  disabled={actionButtons.resetDisabled}
+                  variant="danger"
+                />
+              </View>
+              <View style={styles.portraitInstrumentCenter}>{timerContent}</View>
+              <View style={styles.portraitInstrumentSide}>
+                <ActionButton
+                  icon={actionButtons.primaryIcon}
+                  onPress={actionButtons.onPrimaryPress}
+                  disabled={actionButtons.primaryDisabled}
+                  variant="primary"
+                />
+              </View>
             </View>
             {stickyHeader}
             {useKeyboardAvoiding ? (
@@ -287,27 +322,24 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
-  /** Phone/tablet portrait: timer and actions side by side; each column centers its content. */
-  portraitTimerActionsRow: {
+  /** Portrait: reset | timer | play (instrument panel). */
+  portraitInstrumentRow: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
     marginTop: Platform.OS === 'ios' ? 0 : 8,
     marginBottom: FEATURE_INPUTS_GRID_ROW_GAP,
   },
-  portraitTimerColumn: {
+  portraitInstrumentSide: {
     flex: 1,
     minWidth: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  portraitActionsColumn: {
-    flex: 1,
-    minWidth: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
+  portraitInstrumentCenter: {
+    flexShrink: 0,
     alignItems: 'center',
-    gap: 16,
+    justifyContent: 'center',
   },
   keyboardAvoidingWrapper: { flex: 1, minHeight: 0 },
   inputsSection: { flex: 1, width: '100%', minHeight: 0 },

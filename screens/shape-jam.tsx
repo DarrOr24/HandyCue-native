@@ -19,7 +19,6 @@ import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
-import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { NumberInput } from '../components/number-input'
 import { SelectInput, type SelectOption } from '../components/select-input'
 
@@ -481,15 +480,13 @@ export function ShapeJamScreen() {
       <View style={styles.screenWrapper}>
         <FeatureScreenLayout
         timerContent={timerContent}
-        actions={
-          <FeatureActionButtons
-            primaryIcon={startPlayIcon}
-            onPrimaryPress={handleStart}
-            primaryDisabled={startPlayDisabled}
-            onReset={handleReset}
-            resetDisabled={!resetEnabled}
-          />
-        }
+        actionButtons={{
+          primaryIcon: startPlayIcon,
+          onPrimaryPress: handleStart,
+          primaryDisabled: startPlayDisabled,
+          onReset: handleReset,
+          resetDisabled: !resetEnabled,
+        }}
         inputsDisabled={inputsDisabled}
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
         useNestableScroll

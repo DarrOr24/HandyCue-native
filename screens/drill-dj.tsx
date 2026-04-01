@@ -18,7 +18,6 @@ import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
-import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { NumberInput } from '../components/number-input'
 import { SelectInput, type SelectOption } from '../components/select-input'
 
@@ -632,15 +631,13 @@ export function DrillDJScreen() {
       <View style={styles.screenWrapper}>
         <FeatureScreenLayout
           timerContent={timerContent}
-          actions={
-            <FeatureActionButtons
-              primaryIcon="play"
-              onPrimaryPress={handleStart}
-              primaryDisabled={inputsDisabled}
-              onReset={handleReset}
-              resetDisabled={!sessionDone && phase === 'idle'}
-            />
-          }
+          actionButtons={{
+            primaryIcon: 'play',
+            onPrimaryPress: handleStart,
+            primaryDisabled: inputsDisabled,
+            onReset: handleReset,
+            resetDisabled: !sessionDone && phase === 'idle',
+          }}
           inputsDisabled={inputsDisabled}
           footer={<Text style={styles.note}>* All time values are in seconds</Text>}
           useNestableScroll

@@ -9,7 +9,6 @@ import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
-import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { NumberInput } from '../components/number-input'
 import { stopSpeech, createResetSignal, speak } from '../services/core.service'
 import { getVoice } from '../services/voice.service'
@@ -450,15 +449,13 @@ export function HoldOnScreen() {
           }
         />
       }
-      actions={
-        <FeatureActionButtons
-          primaryIcon={startPlayIcon}
-          onPrimaryPress={onStartPlayPress}
-          primaryDisabled={startPlayDisabled}
-          onReset={handleReset}
-          resetDisabled={!resetEnabled}
-        />
-      }
+      actionButtons={{
+        primaryIcon: startPlayIcon,
+        onPrimaryPress: onStartPlayPress,
+        primaryDisabled: startPlayDisabled,
+        onReset: handleReset,
+        resetDisabled: !resetEnabled,
+      }}
       inputsDisabled={inputsDisabled}
       footer={<Text style={styles.note}>* All time values are in seconds</Text>}
     >

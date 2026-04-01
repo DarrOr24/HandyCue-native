@@ -19,7 +19,6 @@ import { TimerDisplay } from '../components/timer-display'
 import { FeatureScreenLayout } from '../components/feature-screen-layout'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
-import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { CueStepRow } from '../components/cue-step-row'
 import { AddStepModal } from '../components/Modals/AddStepModal'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
@@ -296,15 +295,13 @@ export function CueCraftScreen() {
       <MenuHint featureKey="cueCraft" />
       <FeatureScreenLayout
         timerContent={timerContent}
-        actions={
-          <FeatureActionButtons
-            primaryIcon="play"
-            onPrimaryPress={handleStart}
-            primaryDisabled={phase === 'getReady' || steps.length === 0}
-            onReset={handleReset}
-            resetDisabled={!resetEnabled}
-          />
-        }
+        actionButtons={{
+          primaryIcon: 'play',
+          onPrimaryPress: handleStart,
+          primaryDisabled: phase === 'getReady' || steps.length === 0,
+          onReset: handleReset,
+          resetDisabled: !resetEnabled,
+        }}
         inputsDisabled={inputsDisabled}
         stickyHeader={
           <View style={[styles.addStepHeader, isLandscape && styles.addStepHeaderLandscape]}>

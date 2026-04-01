@@ -10,7 +10,6 @@ import { FeatureInputsGrid } from '../components/feature-inputs-grid'
 import { NumberInput } from '../components/number-input'
 import { FeatureOverflowMenu } from '../components/feature-overflow-menu'
 import { FeatureHeaderRight } from '../components/feature-header-right'
-import { FeatureActionButtons } from '../components/feature-action-buttons'
 import { SaveFavoriteModal } from '../components/Modals/SaveFavoriteModal'
 import { FavoritesModal } from '../components/Modals/FavoritesModal'
 import { MenuHint } from '../components/menu-hint'
@@ -414,15 +413,13 @@ export function EntryBuddyScreen() {
             }
           />
         }
-        actions={
-          <FeatureActionButtons
-            primaryIcon={primaryIcon}
-            onPrimaryPress={handleStart}
-            primaryDisabled={primaryDisabled}
-            onReset={handleReset}
-            resetDisabled={!resetEnabled}
-          />
-        }
+        actionButtons={{
+          primaryIcon,
+          onPrimaryPress: handleStart,
+          primaryDisabled,
+          onReset: handleReset,
+          resetDisabled: !resetEnabled,
+        }}
         inputsDisabled={inputsDisabled}
         footer={<Text style={styles.note}>* All time values are in seconds</Text>}
       >
