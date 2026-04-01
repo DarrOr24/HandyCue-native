@@ -14,8 +14,9 @@ export function ShapeJamInfoScreen() {
       </InfoEmphasis>
 
       <InfoParagraph>
-        ShapeJam guides you through dynamic handstand shape transitions using voice prompts and timed holds.
-        Select your shapes (like tuck, straddle, pike), assign hold times, and build your own sequence.
+        ShapeJam guides you through dynamic handstand shape transitions using voice prompts and timed intervals.
+        Select your shapes (like tuck, straddle, pike), set how long each interval lasts, and build your own sequence.
+        Turn Voice count on for the same spoken countdown style as Drill DJ (or off for quiet timed segments).
         You can add your own shape names through settings to customize the flow to your practice.
       </InfoParagraph>
 

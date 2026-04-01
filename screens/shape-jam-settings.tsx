@@ -138,7 +138,7 @@ export function ShapeJamSettingsScreen() {
       />
 
       <SettingGroup
-        title="Hold Time (per shape)"
+        title="Interval (per shape)"
         step={holdTimeStep}
         onStepChange={setHoldTimeStep}
         startValue={holdTimeDefault ?? shapeJamDefaults.defaultValues.holdTime}

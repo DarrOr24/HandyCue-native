@@ -2,8 +2,9 @@
  * ShapeJam service - get ready, run shape sets, rest cycle.
  */
 
-import { delay, speak, type StoredVoice } from './core.service'
+import { speak, type StoredVoice } from './core.service'
 import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
+import { runDrillDjStyleInterval } from './voiceCountInterval.service'
 
 export { runGetReadyCountdown, runRestCycle }
 
@@ -15,6 +16,7 @@ export async function runShapeSets(options: {
   shapes: ShapeItem[]
   restTime: number
   storedVoice: StoredVoice | null
+  voiceCountEnabled: boolean
   onDisplay: (content: string) => void
   onRestTick: (elapsed: number, displayContent: string) => void
   isCancelled: () => boolean
@@ -25,6 +27,7 @@ export async function runShapeSets(options: {
     shapes,
     restTime,
     storedVoice,
+    voiceCountEnabled,
     onDisplay,
     onRestTick,
     isCancelled,
@@ -51,6 +54,7 @@ export async function runShapeSets(options: {
       numReps,
       shapes,
       storedVoice,
+      voiceCountEnabled,
       onDisplay,
       isCancelled,
     })
@@ -78,10 +82,11 @@ async function runShapes(options: {
   numReps: number
   shapes: ShapeItem[]
   storedVoice: StoredVoice | null
+  voiceCountEnabled: boolean
   onDisplay: (content: string) => void
   isCancelled: () => boolean
 }): Promise<void> {
-  const { numReps, shapes, storedVoice, onDisplay, isCancelled } = options
+  const { numReps, shapes, storedVoice, voiceCountEnabled, onDisplay, isCancelled } = options
 
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
   for (let rep = 1; rep <= numReps; rep++) {
@@ -92,7 +97,16 @@ async function runShapes(options: {
       onDisplay(displayShape)
       await speak(displayShape, storedVoice)
       if (isCancelled()) return
-      await delay(holdTime * 1000)
+      await runDrillDjStyleInterval({
+        duration: holdTime,
+        voice: storedVoice,
+        enableVoiceCount: voiceCountEnabled,
+        onTick:
+          holdTime >= 5 && voiceCountEnabled
+            ? (_, display) => onDisplay(display)
+            : undefined,
+        isCancelled,
+      })
     }
   }
 }

@@ -9,6 +9,7 @@ export type ShapeJamInputs = {
   numReps: number
   numSets: number
   restTime: number
+  voiceCountEnabled?: boolean
   shapes: { shape: string; holdTime: number }[]
 }
 

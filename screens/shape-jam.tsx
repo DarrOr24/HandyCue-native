@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   TouchableOpacity,
+  Switch,
   useWindowDimensions,
   Platform,
 } from 'react-native'
@@ -58,6 +59,7 @@ export function ShapeJamScreen() {
   const [numReps, setNumReps] = useState<number>(shapeJamDefaults.defaultValues.numReps)
   const [numSets, setNumSets] = useState<number>(shapeJamDefaults.defaultValues.numSets)
   const [restTime, setRestTime] = useState<number>(shapeJamDefaults.defaultValues.restTime)
+  const [voiceCountEnabled, setVoiceCountEnabled] = useState<boolean>(true)
   const [shapes, setShapes] = useState<{ shape: string; holdTime: number }[]>(
     (shapeJamDefaults.defaultValues.shapes ?? ['tuck', 'straight']).map((shape) => ({
       shape: shape.toLowerCase(),
@@ -97,6 +99,7 @@ export function ShapeJamScreen() {
     numReps,
     numSets,
     restTime,
+    voiceCountEnabled,
     shapes,
   })
   inputsRef.current = {
@@ -104,6 +107,7 @@ export function ShapeJamScreen() {
     numReps,
     numSets,
     restTime,
+    voiceCountEnabled,
     shapes,
   }
 
@@ -129,6 +133,7 @@ export function ShapeJamScreen() {
       restTime,
       holdTime: holdTimeVal,
       shapes: shapes.map((s) => s.shape),
+      voiceCountEnabled,
     })
   }
 
@@ -222,6 +227,11 @@ export function ShapeJamScreen() {
           setNumReps((dv.numReps as number) ?? shapeJamDefaults.defaultValues.numReps)
           setNumSets((dv.numSets as number) ?? shapeJamDefaults.defaultValues.numSets)
           setRestTime((dv.restTime as number) ?? shapeJamDefaults.defaultValues.restTime)
+          if (dv.voiceCountEnabled != null) {
+            setVoiceCountEnabled(dv.voiceCountEnabled as boolean)
+          } else {
+            setVoiceCountEnabled(shapeJamDefaults.defaultValues.voiceCountEnabled ?? true)
+          }
           const defaultShapes = (dv.shapes as string[]) ?? shapeJamDefaults.defaultValues.shapes ?? []
           if (defaultShapes.length > 0) {
             setShapes(
@@ -312,6 +322,7 @@ export function ShapeJamScreen() {
       shapes,
       restTime,
       storedVoice: voiceRef.current,
+      voiceCountEnabled,
       onDisplay: setDisplayContent,
       onRestTick: (_, display) => setDisplayContent(display),
       isCancelled: () => resetSignalRef.current.isCancelled(),
@@ -396,11 +407,13 @@ export function ShapeJamScreen() {
   function loadFavorite(name: string) {
     const fav = favorites.find((f) => f.name === name)
     if (!fav) return
-    const { getReadyTime: gr, numReps: nr, numSets: ns, restTime: rt, shapes: sh } = fav.inputs
+    const { getReadyTime: gr, numReps: nr, numSets: ns, restTime: rt, shapes: sh, voiceCountEnabled: vc } =
+      fav.inputs
     setGetReadyTime(gr)
     setNumReps(nr)
     setNumSets(ns)
     setRestTime(rt)
+    if (vc != null) setVoiceCountEnabled(vc)
     setShapes(sh ?? shapes)
     setIsFavoritesModalOpen(false)
   }
@@ -436,6 +449,28 @@ export function ShapeJamScreen() {
         useNestableScroll
         >
           <FeatureInputsGrid>
+            <FeatureInputsGrid.GridItem>
+              <View
+                style={[
+                  styles.toggleRow,
+                  isAndroidLandscape && [styles.toggleRowLandscape, getInputHeightStyle()],
+                ]}
+              >
+                <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
+                  Voice count
+                </Text>
+                <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                  <Switch
+                    value={voiceCountEnabled}
+                    onValueChange={setVoiceCountEnabled}
+                    disabled={inputsDisabled}
+                    trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                    thumbColor="#fff"
+                    style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                  />
+                </View>
+              </View>
+            </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
               <TouchableOpacity
                 style={[
@@ -529,7 +564,7 @@ export function ShapeJamScreen() {
               </FeatureInputsGrid.GridItem>
               <FeatureInputsGrid.GridItem>
                 <NumberInput
-                  label={`Hold ${idx + 1}`}
+                  label={`Interval ${idx + 1}`}
                   value={shapeObj.holdTime}
                   onDecrease={() =>
                     updateShape(
@@ -639,6 +674,35 @@ export function ShapeJamScreen() {
 const styles = StyleSheet.create({
   screenWrapper: {
     flex: 1,
+  },
+  toggleRow: {
+    width: '100%',
+    minHeight: 72,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    backgroundColor: '#f5f7f6',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  toggleLabel: {
+    flex: 1,
+    fontSize: 15,
+    color: '#374151',
+    lineHeight: Platform.OS === 'ios' ? 31 : undefined,
+  },
+  toggleLabelDisabled: {
+    color: '#999',
+  },
+  toggleRowLandscape: {},
+  switchWrapperIOS: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  switchIOS: {
+    transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
   },
   topBtn: {
     flexDirection: 'row',

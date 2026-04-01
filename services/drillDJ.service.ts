@@ -2,10 +2,12 @@
  * DrillDJ service - perform phases with optional voice count.
  */
 
-import { delay, formatTime, speak, type StoredVoice } from './core.service'
+import { speak, type StoredVoice } from './core.service'
 import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
+import { runDrillDjStyleInterval } from './voiceCountInterval.service'
 
 export { runGetReadyCountdown, runRestCycle }
+export { runDrillDjStyleInterval } from './voiceCountInterval.service'
 
 export async function performPhase(options: {
   label: string
@@ -39,55 +41,16 @@ export async function performPhase(options: {
   await speak(announceLabel, voice)
   if (isCancelled()) return
 
-  if (duration < 5 || !enableMetronome) {
-    await delay(duration * 1000)
-    return
-  }
-
-  onPhaseStart?.()
-  const COUNT_INTERVAL_MS = 1000
-
-  for (let i = 0; i < duration; i++) {
-    const secondsLeft = duration - i
-    if (onTick) {
-      if (duration >= 25) {
-        onTick(i, secondsLeft <= 10 ? String(secondsLeft) : formatTime(i))
-      } else if (secondsLeft <= 10 && secondsLeft >= 1) {
-        onTick(i, String(secondsLeft))
-      }
-    }
-    if (isCancelled()) break
-
-    let countWord: string | null = null
-
-    if (duration >= 25) {
-      // HoldOn-style: say elapsed every 10s when remaining > 10, then countdown from 10
-      if (secondsLeft > 10 && i > 0 && i % 10 === 0) {
-        countWord = String(i)
-      } else if (secondsLeft <= 10 && secondsLeft >= 1) {
-        countWord = String(secondsLeft)
-      }
-    } else if (duration >= 12) {
-      // 12–24 seconds: countdown from 10 only
-      if (secondsLeft <= 10 && secondsLeft >= 1) {
-        countWord = String(secondsLeft)
-      }
-    } else {
-      // 5–11 seconds: countdown when remaining <= 10 (or from duration if smaller)
-      if (secondsLeft <= 10 && secondsLeft >= 1) {
-        countWord = String(secondsLeft)
-      }
-    }
-
-    if (countWord) {
-      speak(countWord, voice)
-    }
-    if (isCancelled()) break
-    if (i < duration - 1) {
-      await delay(COUNT_INTERVAL_MS)
-    }
-  }
-  onPhaseEnd?.()
+  const willCount = duration >= 5 && enableMetronome
+  if (willCount) onPhaseStart?.()
+  await runDrillDjStyleInterval({
+    duration,
+    voice,
+    enableVoiceCount: enableMetronome,
+    onTick,
+    isCancelled,
+  })
+  if (willCount) onPhaseEnd?.()
 }
 
 export type CalloutConfig = {
