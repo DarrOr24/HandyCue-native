@@ -1,6 +1,10 @@
 /**
  * Drill DJ–style timed interval: optional spoken countdown and display ticks.
  * Shared by Drill DJ (performPhase) and Shape Jam shape intervals.
+ *
+ * Countdown numbers are spoken without awaiting — wall-clock progress follows the 1s delays in the loop.
+ * After the last spoken count (e.g. “1”), we still await one final 1s delay so that last second completes
+ * before the function returns. Callers may add a short gap before the next cue if needed.
  */
 
 import { delay, formatTime, speak, type StoredVoice } from './core.service'
@@ -50,12 +54,11 @@ export async function runDrillDjStyleInterval(options: {
       }
     }
 
+    // Do not await speech: cadence follows the 1s delays below, not TTS length.
     if (countWord) {
       speak(countWord, voice)
     }
     if (isCancelled()) break
-    if (i < duration - 1) {
-      await delay(COUNT_INTERVAL_MS)
-    }
+    await delay(COUNT_INTERVAL_MS)
   }
 }

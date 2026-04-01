@@ -2,13 +2,16 @@
  * ShapeJam service - get ready, run shape sets, rest cycle.
  */
 
-import { speak, type StoredVoice } from './core.service'
+import { delay, speak, type StoredVoice } from './core.service'
 import { runGetReadyCountdown, runRestCycle } from './holdOn.service'
 import { runDrillDjStyleInterval } from './voiceCountInterval.service'
 
 export { runGetReadyCountdown, runRestCycle }
 
 export type ShapeItem = { shape: string; holdTime: number }
+
+/** Shape Jam only, when Voice count is on: brief pause after the shape cue before the countdown starts. */
+const SHAPE_VOICE_COUNT_GAP_MS = 700
 
 export async function runShapeSets(options: {
   numSets: number
@@ -97,6 +100,10 @@ async function runShapes(options: {
       onDisplay(displayShape)
       await speak(displayShape, storedVoice)
       if (isCancelled()) return
+      if (voiceCountEnabled) {
+        await delay(SHAPE_VOICE_COUNT_GAP_MS)
+        if (isCancelled()) return
+      }
       await runDrillDjStyleInterval({
         duration: holdTime,
         voice: storedVoice,
@@ -107,6 +114,7 @@ async function runShapes(options: {
             : undefined,
         isCancelled,
       })
+      if (isCancelled()) return
     }
   }
 }
