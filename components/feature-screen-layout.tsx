@@ -13,6 +13,7 @@ import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ReactNode } from 'react'
 import { NestableScrollContainer } from 'react-native-draggable-flatlist'
+import { FEATURE_INPUTS_GRID_ROW_GAP } from './feature-inputs-grid'
 
 const LANDSCAPE_LEFT_COLUMN_WIDTH = 200
 
@@ -171,8 +172,10 @@ export function FeatureScreenLayout({
         )
         ) : (
           <>
-            <View style={styles.timerSection}>{timerContent}</View>
-            <View style={styles.actionsSection}>{actions}</View>
+            <View style={styles.portraitTimerActionsRow}>
+              <View style={styles.portraitTimerColumn}>{timerContent}</View>
+              <View style={styles.portraitActionsColumn}>{actions}</View>
+            </View>
             {stickyHeader}
             {useKeyboardAvoiding ? (
               <KeyboardAvoidingView
@@ -272,9 +275,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
     minHeight: 0,
   },
+  /** Android landscape only: space between digital display and play/reset. */
   timerSection: {
     marginTop: Platform.OS === 'ios' ? 0 : 8,
-    marginBottom: 8,
+    marginBottom: 22,
   },
   actionsSection: {
     flexDirection: 'row',
@@ -282,6 +286,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 16,
     marginBottom: 24,
+  },
+  /** Phone/tablet portrait: timer and actions side by side; each column centers its content. */
+  portraitTimerActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: Platform.OS === 'ios' ? 0 : 8,
+    marginBottom: FEATURE_INPUTS_GRID_ROW_GAP,
+  },
+  portraitTimerColumn: {
+    flex: 1,
+    minWidth: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  portraitActionsColumn: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
   },
   keyboardAvoidingWrapper: { flex: 1, minHeight: 0 },
   inputsSection: { flex: 1, width: '100%', minHeight: 0 },

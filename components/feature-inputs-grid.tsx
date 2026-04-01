@@ -5,6 +5,9 @@ const GAP = 12
 const CELL_WIDTH_2COL = '48%'
 const CELL_WIDTH_3COL = '31%'
 
+/** Vertical gap between wrapped rows; keep in sync with header spacing below the timer row. */
+export const FEATURE_INPUTS_GRID_ROW_GAP = 24
+
 const CellWidthContext = createContext<string>(CELL_WIDTH_2COL)
 
 /**
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     width: '100%',
     columnGap: GAP,
-    rowGap: 24,
+    rowGap: FEATURE_INPUTS_GRID_ROW_GAP,
   },
   cell: {
     flexGrow: 0,
