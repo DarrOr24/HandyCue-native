@@ -79,7 +79,7 @@ export const DRILL_IDEAS: Record<DrillIdeasFeatureKey, DrillIdeasConfig> = {
   shapeJam: {
     title: 'ShapeJam',
     intro:
-      'Create your own flow with ShapeJam — a timer for moving between classic handstand shapes while building control, consistency, and endurance. Pick your shapes, set an interval for each row, choose whether you want Voice count (same style as Drill DJ), and let the cues guide you.',
+      'Create your own flow with ShapeJam — a timer for moving between classic handstand shapes while building control, consistency, and endurance. Pick your shapes, set an interval for each row, choose whether you want Voice count (same style as Drill DJ), and let the cues guide you. Shuffle mode (when every interval matches) keeps the order unpredictable. ShapeJam is also a natural fit for group routines — everyone on the same timed sequence with other handstanders.',
     sections: [
       {
         content: 'ShapeJam is about clean, consistent, time-accurate segments — whether you hold a shape or use the time to transition.',
@@ -90,6 +90,16 @@ export const DRILL_IDEAS: Record<DrillIdeasFeatureKey, DrillIdeasConfig> = {
           'Repeat the sequence for reps or sets',
           'Let the cue guide you',
         ],
+      },
+      {
+        title: 'Shuffle surprise drill',
+        content:
+          'Pick several shapes, make every interval the same (use Same interval), then turn on Shuffle. The app calls shapes in random order and never the same shape twice in a row — so you practice responding to the cue instead of anticipating the next shape. Great when you know the movements but want a little chaos.',
+      },
+      {
+        title: 'Group routine',
+        content:
+          'Training with other handstanders? Build one sequence in ShapeJam and run it together — everyone hears the same voice cues on the same clock, so you stay coordinated without counting each other in. Handy for partner or small-group sessions where you want one shared rhythm.',
       },
       {
         title: 'Slow counted shape transitions',
