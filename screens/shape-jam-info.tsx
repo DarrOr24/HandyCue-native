@@ -35,6 +35,12 @@ export function ShapeJamInfoScreen() {
       </InfoParagraph>
 
       <InfoParagraph>
+        <InfoBold>Shuffle</InfoBold> is only available when every interval matches (use <InfoBold>Same
+        interval</InfoBold> first if needed). When it is on, each cue picks a random shape from your list, but
+        the app never calls the same shape twice in a row — so you will not hear back-to-back identical cues.
+      </InfoParagraph>
+
+      <InfoParagraph>
         Add reps or sets, rest between sets when you use multiple sets, and customize shape names in
         settings. The app speaks each shape, then runs the interval — so your transitions stay deliberate
         and on the clock.

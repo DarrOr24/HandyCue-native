@@ -28,6 +28,7 @@ import { getVoice } from '../services/voice.service'
 import {
   runGetReadyCountdown,
   runShapeSets,
+  shapeJamIntervalsAllSame,
 } from '../services/shapeJam.service'
 import {
   shapeJamDefaults,
@@ -295,6 +296,12 @@ export function ShapeJamScreen() {
     }
   }, [])
 
+  useEffect(() => {
+    if (shuffleEnabled && !shapeJamIntervalsAllSame(shapes)) {
+      setShuffleEnabled(false)
+    }
+  }, [shapes, shuffleEnabled])
+
   const inputsDisabled = phase !== 'idle' && phase !== 'done'
   const sessionDone = phase === 'done'
   const hasStarted = phase !== 'idle'
@@ -335,6 +342,8 @@ export function ShapeJamScreen() {
       restTime,
       storedVoice: voiceRef.current,
       voiceCountEnabled,
+      shuffleEnabled:
+        shuffleEnabled && shapeJamIntervalsAllSame(shapes),
       onDisplay: setDisplayContent,
       onRestTick: (_, display) => setDisplayContent(display),
       isCancelled: () => resetSignalRef.current.isCancelled(),
@@ -384,8 +393,20 @@ export function ShapeJamScreen() {
       numSets,
       restTime,
       voiceCountEnabled,
+      shuffleEnabled,
       shapes: shapes.map(({ shape, holdTime }) => ({ shape, holdTime })),
     }
+  }
+
+  function handleShuffleToggle(next: boolean) {
+    if (next && !shapeJamIntervalsAllSame(shapes)) {
+      Alert.alert(
+        'Same interval required',
+        'Shuffle only works when every interval matches. Use Same interval or set each interval to the same value, then try again.'
+      )
+      return
+    }
+    setShuffleEnabled(next)
   }
 
   function saveFavorite(name: string) {
@@ -511,7 +532,7 @@ export function ShapeJamScreen() {
                 <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
                   <Switch
                     value={shuffleEnabled}
-                    onValueChange={setShuffleEnabled}
+                    onValueChange={handleShuffleToggle}
                     disabled={inputsDisabled}
                     trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
                     thumbColor="#fff"
