@@ -19,6 +19,7 @@ export type ShapeJamUserSettings = {
     numReps?: number
     shapes?: string[]
     voiceCountEnabled?: boolean
+    shuffleEnabled?: boolean
   }
 }
 
@@ -65,6 +66,7 @@ export const shapeJamDefaults = {
     shapes: ['tuck', 'straight'],
     holdTime: 1,
     voiceCountEnabled: true,
+    shuffleEnabled: false,
   },
 } as const
 

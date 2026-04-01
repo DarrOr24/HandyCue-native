@@ -10,6 +10,7 @@ const CellWidthContext = createContext<string>(CELL_WIDTH_2COL)
 /**
  * Grid layout for feature screens. 2 columns in portrait, 3 columns on Android landscape.
  * Wrap each input in GridItem. Use SingleInput for a single cell in the last row (left-aligned).
+ * Use FullWidthRow for a single row that spans the grid width (e.g. three narrow buttons).
  */
 export function FeatureInputsGrid({ children }: { children: ReactNode }) {
   const { width, height } = useWindowDimensions()
@@ -49,8 +50,14 @@ function SingleInput({ children }: { children: ReactNode }) {
   )
 }
 
+/** One row spanning full grid width; children laid out in a horizontal row (e.g. flex: 1 each). */
+function FullWidthRow({ children }: { children: ReactNode }) {
+  return <View style={styles.fullWidthRow}>{children}</View>
+}
+
 FeatureInputsGrid.GridItem = GridItem
 FeatureInputsGrid.SingleInput = SingleInput
+FeatureInputsGrid.FullWidthRow = FullWidthRow
 
 const styles = StyleSheet.create({
   grid: {
@@ -67,5 +74,12 @@ const styles = StyleSheet.create({
   },
   singleCell: {
     alignSelf: 'flex-start',
+  },
+  fullWidthRow: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    columnGap: GAP,
+    alignItems: 'stretch',
   },
 })

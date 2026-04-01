@@ -60,6 +60,7 @@ export function ShapeJamScreen() {
   const [numSets, setNumSets] = useState<number>(shapeJamDefaults.defaultValues.numSets)
   const [restTime, setRestTime] = useState<number>(shapeJamDefaults.defaultValues.restTime)
   const [voiceCountEnabled, setVoiceCountEnabled] = useState<boolean>(true)
+  const [shuffleEnabled, setShuffleEnabled] = useState<boolean>(false)
   const [shapes, setShapes] = useState<{ shape: string; holdTime: number }[]>(
     (shapeJamDefaults.defaultValues.shapes ?? ['tuck', 'straight']).map((shape) => ({
       shape: shape.toLowerCase(),
@@ -100,6 +101,7 @@ export function ShapeJamScreen() {
     numSets,
     restTime,
     voiceCountEnabled,
+    shuffleEnabled,
     shapes,
   })
   inputsRef.current = {
@@ -108,6 +110,7 @@ export function ShapeJamScreen() {
     numSets,
     restTime,
     voiceCountEnabled,
+    shuffleEnabled,
     shapes,
   }
 
@@ -134,6 +137,7 @@ export function ShapeJamScreen() {
       holdTime: holdTimeVal,
       shapes: shapes.map((s) => s.shape),
       voiceCountEnabled,
+      shuffleEnabled,
     })
   }
 
@@ -232,6 +236,11 @@ export function ShapeJamScreen() {
           } else {
             setVoiceCountEnabled(shapeJamDefaults.defaultValues.voiceCountEnabled ?? true)
           }
+          if (dv.shuffleEnabled != null) {
+            setShuffleEnabled(dv.shuffleEnabled as boolean)
+          } else {
+            setShuffleEnabled(shapeJamDefaults.defaultValues.shuffleEnabled ?? false)
+          }
           const defaultShapes = (dv.shapes as string[]) ?? shapeJamDefaults.defaultValues.shapes ?? []
           if (defaultShapes.length > 0) {
             setShapes(
@@ -247,7 +256,8 @@ export function ShapeJamScreen() {
           setInputSettings(shapeJamDefaults.inputSettings)
         })
       return () => {
-        const { getReadyTime: g, numReps: nr, numSets: ns, restTime: r, shapes: s } = inputsRef.current
+        const { getReadyTime: g, numReps: nr, numSets: ns, restTime: r, voiceCountEnabled: vc, shuffleEnabled: sh, shapes: s } =
+          inputsRef.current
         const holdTimeVal = s[0]?.holdTime ?? shapeJamDefaults.defaultValues.holdTime
         if (session?.user?.id) {
           saveInputsToProfile(session.user.id, FEATURE_KEY, {
@@ -257,6 +267,8 @@ export function ShapeJamScreen() {
             restTime: r,
             holdTime: holdTimeVal,
             shapes: s.map((x) => x.shape),
+            voiceCountEnabled: vc,
+            shuffleEnabled: sh,
           }).catch(() => {})
         }
       }
@@ -359,12 +371,19 @@ export function ShapeJamScreen() {
     setShapes(updated)
   }
 
+  function matchAllIntervalsToFirst() {
+    const first = shapes[0]?.holdTime
+    if (first == null) return
+    setShapes(shapes.map((s) => ({ ...s, holdTime: first })))
+  }
+
   function getCurrentInputs(): ShapeJamInputs {
     return {
       getReadyTime,
       numReps,
       numSets,
       restTime,
+      voiceCountEnabled,
       shapes: shapes.map(({ shape, holdTime }) => ({ shape, holdTime })),
     }
   }
@@ -407,14 +426,22 @@ export function ShapeJamScreen() {
   function loadFavorite(name: string) {
     const fav = favorites.find((f) => f.name === name)
     if (!fav) return
-    const { getReadyTime: gr, numReps: nr, numSets: ns, restTime: rt, shapes: sh, voiceCountEnabled: vc } =
-      fav.inputs
+    const {
+      getReadyTime: gr,
+      numReps: nr,
+      numSets: ns,
+      restTime: rt,
+      shapes: shapesFav,
+      voiceCountEnabled: vc,
+      shuffleEnabled: shuffleFav,
+    } = fav.inputs
     setGetReadyTime(gr)
     setNumReps(nr)
     setNumSets(ns)
     setRestTime(rt)
     if (vc != null) setVoiceCountEnabled(vc)
-    setShapes(sh ?? shapes)
+    if (shuffleFav != null) setShuffleEnabled(shuffleFav)
+    setShapes(shapesFav ?? shapes)
     setIsFavoritesModalOpen(false)
   }
 
@@ -472,10 +499,54 @@ export function ShapeJamScreen() {
               </View>
             </FeatureInputsGrid.GridItem>
             <FeatureInputsGrid.GridItem>
+              <View
+                style={[
+                  styles.toggleRow,
+                  isAndroidLandscape && [styles.toggleRowLandscape, getInputHeightStyle()],
+                ]}
+              >
+                <Text style={[styles.toggleLabel, inputsDisabled && styles.toggleLabelDisabled]}>
+                  Shuffle
+                </Text>
+                <View style={Platform.OS === 'ios' ? styles.switchWrapperIOS : undefined}>
+                  <Switch
+                    value={shuffleEnabled}
+                    onValueChange={setShuffleEnabled}
+                    disabled={inputsDisabled}
+                    trackColor={{ false: '#d1d5db', true: '#5B9A8B' }}
+                    thumbColor="#fff"
+                    style={Platform.OS === 'ios' ? styles.switchIOS : undefined}
+                  />
+                </View>
+              </View>
+            </FeatureInputsGrid.GridItem>
+            <FeatureInputsGrid.FullWidthRow>
               <TouchableOpacity
                 style={[
-                  styles.topBtn,
-                  isAndroidLandscape && [styles.topBtnLandscape, getInputHeightStyle()],
+                  styles.compactTopBtn,
+                  isAndroidLandscape && [styles.compactTopBtnLandscape, getInputHeightStyle()],
+                  inputsDisabled && styles.topBtnDisabled,
+                ]}
+                onPress={addShape}
+                disabled={inputsDisabled}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={20}
+                  color={inputsDisabled ? '#999' : '#5B9A8B'}
+                />
+                <Text
+                  style={[styles.compactTopBtnText, inputsDisabled && styles.topBtnTextDisabled]}
+                  numberOfLines={2}
+                >
+                  Add shape
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.compactTopBtn,
+                  isAndroidLandscape && [styles.compactTopBtnLandscape, getInputHeightStyle()],
                   inputsDisabled && styles.topBtnDisabled,
                 ]}
                 onPress={async () => {
@@ -486,35 +557,39 @@ export function ShapeJamScreen() {
               >
                 <Ionicons
                   name="create-outline"
-                  size={22}
+                  size={20}
                   color={inputsDisabled ? '#999' : '#5B9A8B'}
                 />
-                <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
+                <Text
+                  style={[styles.compactTopBtnText, inputsDisabled && styles.topBtnTextDisabled]}
+                  numberOfLines={2}
+                >
                   New shape
                 </Text>
               </TouchableOpacity>
-            </FeatureInputsGrid.GridItem>
-            <FeatureInputsGrid.GridItem>
               <TouchableOpacity
                 style={[
-                  styles.topBtn,
-                  isAndroidLandscape && [styles.topBtnLandscape, getInputHeightStyle()],
+                  styles.compactTopBtn,
+                  isAndroidLandscape && [styles.compactTopBtnLandscape, getInputHeightStyle()],
                   inputsDisabled && styles.topBtnDisabled,
                 ]}
-                onPress={addShape}
+                onPress={matchAllIntervalsToFirst}
                 disabled={inputsDisabled}
                 activeOpacity={0.7}
               >
                 <Ionicons
-                  name="add-circle-outline"
-                  size={24}
+                  name="copy-outline"
+                  size={20}
                   color={inputsDisabled ? '#999' : '#5B9A8B'}
                 />
-                <Text style={[styles.topBtnText, inputsDisabled && styles.topBtnTextDisabled]}>
-                  Add Shape
+                <Text
+                  style={[styles.compactTopBtnText, inputsDisabled && styles.topBtnTextDisabled]}
+                  numberOfLines={2}
+                >
+                  Same interval
                 </Text>
               </TouchableOpacity>
-            </FeatureInputsGrid.GridItem>
+            </FeatureInputsGrid.FullWidthRow>
             <FeatureInputsGrid.GridItem>
             <NumberInput
             label="Get ready"
@@ -570,15 +645,14 @@ export function ShapeJamScreen() {
                     updateShape(
                       idx,
                       'holdTime',
-                      Math.max(decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step), shapeObj.holdTime - inputSettings.holdTime.step)
+                      Math.max(
+                        decrementFloor(inputSettings.holdTime.min, inputSettings.holdTime.step),
+                        shapeObj.holdTime - inputSettings.holdTime.step
+                      )
                     )
                   }
                   onIncrease={() =>
-                    updateShape(
-                      idx,
-                      'holdTime',
-                      shapeObj.holdTime + inputSettings.holdTime.step
-                    )
+                    updateShape(idx, 'holdTime', shapeObj.holdTime + inputSettings.holdTime.step)
                   }
                   disabled={inputsDisabled}
                 />
@@ -713,6 +787,27 @@ const styles = StyleSheet.create({
     minHeight: 72,
     padding: 12,
     ...inputContainerStyle,
+  },
+  /** Narrow action buttons in one row (icon above label). */
+  compactTopBtn: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    minHeight: 72,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    ...inputContainerStyle,
+  },
+  compactTopBtnLandscape: {},
+  compactTopBtnText: {
+    fontSize: 13,
+    lineHeight: 16,
+    color: '#5B9A8B',
+    fontWeight: '500',
+    textAlign: 'center',
   },
   topBtnLandscape: {},
   topBtnDisabled: {
