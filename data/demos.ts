@@ -73,3 +73,10 @@ export const DEMOS: Record<string, DemosConfig> = {
     videos: [],
   },
 }
+
+/** Resolve a clip from a feature’s demo list (e.g. deep links from Handstand Journey). */
+export function findDemoVideo(featureKey: string, videoUrl: string): Demo | undefined {
+  const config = DEMOS[featureKey]
+  if (!config) return undefined
+  return config.videos.find((v) => v.url === videoUrl)
+}

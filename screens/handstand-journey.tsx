@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useSafeAreaEdges } from '../hooks/useSafeAreaEdges'
 import { useNavigation } from '@react-navigation/native'
@@ -9,6 +16,8 @@ import {
   HANDSTAND_JOURNEY_STAGES,
   HANDSTAND_JOURNEY_TITLE,
 } from '../data/handstand-journey'
+import { findDemoVideo } from '../data/demos'
+import { getDemoVideoUrl } from '../services/demos.service'
 
 export function HandstandJourneyScreen() {
   const navigation = useNavigation<any>()
@@ -59,15 +68,53 @@ export function HandstandJourneyScreen() {
               </Text>
             ) : null}
             {s.demosLink ? (
-              <TouchableOpacity
-                style={styles.demosBtn}
-                onPress={() =>
-                  navigation.navigate('Demos', { featureKey: s.demosLink!.featureKey })
-                }
-              >
-                <Ionicons name="play-circle-outline" size={20} color="#fff" />
-                <Text style={styles.demosBtnText}>{s.demosLink.label}</Text>
-              </TouchableOpacity>
+              <View style={styles.demosLinkRow}>
+                <TouchableOpacity
+                  style={[styles.demosLinkBtn, styles.demosLinkBtnPrimary]}
+                  onPress={() => {
+                    const link = s.demosLink!
+                    const demo = findDemoVideo(link.featureKey, link.videoUrl)
+                    if (demo?.available === false) {
+                      Alert.alert(
+                        'Coming soon',
+                        'This demo will be uploaded soon. Check back later!'
+                      )
+                      return
+                    }
+                    navigation.navigate('DemoPlayer', {
+                      videoUrl: getDemoVideoUrl(link.videoUrl),
+                      title: demo?.title ?? 'Demo',
+                    })
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Watch demo video for ${s.title}`}
+                >
+                  <Ionicons name="play-circle-outline" size={22} color="#fff" />
+                  <Text style={styles.demosLinkBtnTextPrimary}>Watch</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.demosLinkBtn, styles.demosLinkBtnSecondary]}
+                  onPress={() => {
+                    const link = s.demosLink!
+                    const demo = findDemoVideo(link.featureKey, link.videoUrl)
+                    if (!demo?.instructionId) {
+                      Alert.alert(
+                        'Guide unavailable',
+                        'There is no written guide for this demo yet.'
+                      )
+                      return
+                    }
+                    navigation.navigate('DemoDrillGuide', {
+                      instructionId: demo.instructionId,
+                    })
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Open technique guide for ${s.title}`}
+                >
+                  <Ionicons name="information-circle-outline" size={22} color="#5B9A8B" />
+                  <Text style={styles.demosLinkBtnTextSecondary}>Guide</Text>
+                </TouchableOpacity>
+              </View>
             ) : null}
           </View>
         ))}
@@ -146,18 +193,42 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   moveOnBold: { fontWeight: '600', fontStyle: 'normal', color: '#374151' },
-  demosBtn: {
+  demosLinkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 14,
+  },
+  demosLinkBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    marginTop: 14,
-    backgroundColor: '#5B9A8B',
     borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
   },
-  demosBtnText: { fontSize: 16, fontWeight: '600', color: '#fff' },
+  demosLinkBtnPrimary: {
+    backgroundColor: '#5B9A8B',
+  },
+  demosLinkBtnSecondary: {
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: '#5B9A8B',
+  },
+  demosLinkBtnTextPrimary: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  demosLinkBtnTextSecondary: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#5B9A8B',
+    textAlign: 'center',
+  },
   footnote: {
     marginTop: 8,
     paddingTop: 8,

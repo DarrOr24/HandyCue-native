@@ -1,6 +1,7 @@
 export type JourneyDemosLink = {
   featureKey: string
-  label: string
+  /** Filename matching `Demo.url` in `data/demos.ts` for this feature. */
+  videoUrl: string
 }
 
 export type HandstandJourneyStage = {
@@ -15,7 +16,7 @@ export type HandstandJourneyStage = {
 export const HANDSTAND_JOURNEY_TITLE = 'The handstand journey to balance'
 
 export const HANDSTAND_JOURNEY_INTRO =
-  'A progression from chest-to-wall through heel and toe work to freestanding balance — with clear goals and when to move on. Drill demos and written guides live under each feature’s Demos screen.'
+  'A progression from chest-to-wall through heel and toe work to freestanding balance — with clear goals and when to move on. Where a stage includes demos, use Watch for the clip and Guide for the written technique.'
 
 export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
   {
@@ -24,7 +25,10 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
     goal: 'Build alignment, control, and shoulder strength',
     bullets: ['Target: 60 seconds of high-quality hold (tight line, active shoulders)'],
     moveOn: 'Move on when you can hold 60 seconds calmly for 1–2 sets',
-    demosLink: { featureKey: 'holdOn', label: 'Chest-to-wall demo' },
+    demosLink: {
+      featureKey: 'holdOn',
+      videoUrl: 'HoldOn - chest to wall hold.mp4',
+    },
   },
   {
     stage: 2,
@@ -37,7 +41,10 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       '4s × 6 reps',
     ],
     moveOn: 'Move on when you can do 5 solid sets of 4-second heel pulls',
-    demosLink: { featureKey: 'drillDJ', label: 'Heel pulls demo' },
+    demosLink: {
+      featureKey: 'drillDJ',
+      videoUrl: 'Float drill - heel pulls.mp4',
+    },
   },
   {
     stage: 3,
@@ -61,7 +68,10 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       '4s × 6 reps',
     ],
     moveOn: 'Move on when 4-second toe floats feel consistent',
-    demosLink: { featureKey: 'drillDJ', label: 'Toe pulls demo' },
+    demosLink: {
+      featureKey: 'drillDJ',
+      videoUrl: 'Float drill - toe pulls.mp4',
+    },
   },
   {
     stage: 5,
@@ -84,7 +94,10 @@ export const HANDSTAND_JOURNEY_STAGES: HandstandJourneyStage[] = [
       'When you can hold 5 clean sets of 60 seconds, you have built a strong foundation — and you are ready for whatever comes next.',
     ],
     moveOn: '',
-    demosLink: { featureKey: 'holdOn', label: 'Freestanding handstand demo' },
+    demosLink: {
+      featureKey: 'holdOn',
+      videoUrl: 'HoldOn - freestanding hold.mp4',
+    },
   },
 ]
 
