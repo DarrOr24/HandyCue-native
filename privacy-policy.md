@@ -1,6 +1,6 @@
 HandyCue Privacy Policy
 
-Last updated: March 2026
+Last updated: April 2026
 
 HandyCue respects your privacy. This Privacy Policy explains how information is collected and used in the HandyCue mobile application.
 
@@ -41,6 +41,18 @@ HandyCue does not sell or share personal information.
 Data Storage
 
 User data is securely stored using Supabase infrastructure.
+
+Data Retention and Account Deletion
+
+HandyCue retains user account data only for as long as necessary to provide app functionality, maintain user accounts, and support legitimate operational, security, and legal requirements.
+
+Users can delete their account directly in the app by opening the account menu and going to:
+Account > Delete my account
+
+When an account is deleted, the user's account information, profile data, and associated personal data stored by HandyCue are deleted within a reasonable period, except where retention is required by law or for legitimate purposes such as security, fraud prevention, or dispute resolution.
+
+If you need assistance with account deletion, you may also contact:
+darrmorgan@gmail.com
 
 Third-Party Services
 
