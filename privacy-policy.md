@@ -2,7 +2,7 @@ HandyCue Privacy Policy
 
 Last updated: April 2026
 
-HandyCue respects your privacy. This Privacy Policy explains how information is collected and used in the HandyCue mobile application.
+HandyCue respects your privacy. This Privacy Policy explains how information is collected, used, stored, and deleted in the HandyCue mobile application.
 
 Information We Collect
 
@@ -16,7 +16,7 @@ Profile Images
 Users may optionally upload a profile picture. This image is stored securely and used only for displaying the user profile within the app.
 
 App Settings
-The app stores certain settings to personalize your experience including:
+The app stores certain settings to personalize your experience, including:
 - Voice preferences
 - Training settings
 - Favorites
@@ -49,7 +49,7 @@ HandyCue retains user account data only for as long as necessary to provide app 
 Users can delete their account directly in the app by opening the account menu and going to:
 Account > Delete my account
 
-When an account is deleted, the user's account information, profile data, and associated personal data stored by HandyCue are deleted within a reasonable period, except where retention is required by law or for legitimate purposes such as security, fraud prevention, or dispute resolution.
+When an account is deleted, the user's account information, profile data, and associated personal data stored by HandyCue are typically deleted within 30 days, except where retention is required by law or for legitimate purposes such as security, fraud prevention, dispute resolution, or temporary backup retention.
 
 If you need assistance with account deletion, you may also contact:
 darrmorgan@gmail.com
@@ -65,6 +65,6 @@ HandyCue is not directed toward children under the age of 13.
 
 Contact
 
-If you have questions regarding this Privacy Policy you may contact:
+If you have questions regarding this Privacy Policy, you may contact:
 
 darrmorgan@gmail.com
