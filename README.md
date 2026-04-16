@@ -14,7 +14,7 @@
       </td>
       <td valign="middle" style="border: none; padding-left: 12px;">
         <a href="https://play.google.com/store/apps/details?id=com.darrmorgan.handycue&pcampaignid=web_share" target="_blank" rel="noreferrer">
-          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="48" />
+          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="58" />
         </a>
       </td>
     </tr>
