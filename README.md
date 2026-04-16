@@ -4,6 +4,23 @@
   <img src="assets/app-icon.png" alt="HandyCue app icon" width="128" height="128" />
 </p>
 
+<div align="center">
+  <table>
+    <tr>
+      <td valign="middle" style="border: none;">
+        <a href="https://apple.co/47YUSVS" target="_blank" rel="noreferrer">
+          <img src="assets/download-app-store-black.svg" alt="Download on the App Store" height="48" />
+        </a>
+      </td>
+      <td valign="middle" style="border: none; padding-left: 12px;">
+        <a href="https://play.google.com/store/apps/details?id=com.darrmorgan.handycue&pcampaignid=web_share" target="_blank" rel="noreferrer">
+          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="48" />
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+
 React Native (Expo) app — migrated from the HandyCue PWA, powered by Supabase.
 
 ## About HandyCue
